@@ -118,13 +118,26 @@ jobs:
             exit 1
           fi
 
+          # A publishable key (sb_publishable_...) is not a JWT: sending it as a
+          # Bearer token makes the server parse it as one and 401. JWTs take
+          # both headers, so probe each key with the form that suits it.
+          probe() {
+            key="$1"
+            case "$key" in
+              eyJ*) curl -s -o /dev/null -w '%{http_code}' \
+                      "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
+                      -H "apikey: $key" -H "Authorization: Bearer $key" ;;
+              *)    curl -s -o /dev/null -w '%{http_code}' \
+                      "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
+                      -H "apikey: $key" ;;
+            esac
+          }
+
           pick_key() {
-            for name in ANON_KEY PUBLISHABLE_KEY; do
+            for name in PUBLISHABLE_KEY ANON_KEY; do
               key="$(eval "printf '%s' \"\${$name:-}\"")"
               [ -n "$key" ] || continue
-              code="$(curl -s -o /dev/null -w '%{http_code}' \
-                "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
-                -H "apikey: $key" -H "Authorization: Bearer $key")"
+              code="$(probe "$key")"
               echo "  $name -> HTTP $code" >&2
               if [ "$code" = "200" ]; then printf '%s' "$key"; return 0; fi
             done

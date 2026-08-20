@@ -18,9 +18,18 @@ const ANON = process.env.SUPABASE_ANON_KEY
 const enabled = Boolean(URL_ && ANON)
 
 const rest = (path: string) => `${URL_}/rest/v1/${path}`
-const headers = () => ({
+
+/**
+ * Legacy anon keys are JWTs and are accepted in both `apikey` and
+ * `Authorization: Bearer`. The newer publishable keys (`sb_publishable_…`) are
+ * not JWTs — sending one as a Bearer token makes the server try to parse it as
+ * one and reject the request with 401.
+ */
+const isJwt = (key: string) => key.startsWith('eyJ')
+
+const headers = (): Record<string, string> => ({
   apikey: ANON!,
-  Authorization: `Bearer ${ANON!}`,
+  ...(isJwt(ANON!) ? { Authorization: `Bearer ${ANON!}` } : {}),
   'Content-Type': 'application/json',
 })
 
