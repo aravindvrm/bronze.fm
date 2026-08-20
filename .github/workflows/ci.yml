@@ -104,21 +104,38 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Key names differ across CLI versions (ANON_KEY vs PUBLISHABLE_KEY),
-          # so source the whole env rather than grepping for one name. Print the
-          # names — never the values — to make a future rename obvious.
+          # Key names AND which key PostgREST accepts vary across CLI versions:
+          # newer local stacks expose both a legacy ANON_KEY JWT and a newer
+          # PUBLISHABLE_KEY, and the legacy one may be rejected. Probe rather
+          # than guess — an unaccepted key 401s every request, which reads like
+          # a broken RLS policy instead of a broken credential.
           echo "keys exposed: $(supabase status -o env | cut -d= -f1 | tr '\n' ' ')"
           eval "$(supabase status -o env)"
 
           export SUPABASE_URL="${API_URL:-}"
-          export SUPABASE_ANON_KEY="${ANON_KEY:-${PUBLISHABLE_KEY:-}}"
-
-          # Fail loudly here: an empty key makes every request 401, which reads
-          # like a broken RLS policy rather than a broken lookup.
-          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
-            echo "::error::Could not read API_URL / anon key from supabase status"
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "::error::Could not read API_URL from supabase status"
             exit 1
           fi
+
+          pick_key() {
+            for name in ANON_KEY PUBLISHABLE_KEY; do
+              key="$(eval "printf '%s' \"\${$name:-}\"")"
+              [ -n "$key" ] || continue
+              code="$(curl -s -o /dev/null -w '%{http_code}' \
+                "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
+                -H "apikey: $key" -H "Authorization: Bearer $key")"
+              echo "  $name -> HTTP $code" >&2
+              if [ "$code" = "200" ]; then printf '%s' "$key"; return 0; fi
+            done
+            return 1
+          }
+
+          if ! SUPABASE_ANON_KEY="$(pick_key)"; then
+            echo "::error::No exposed key was accepted by PostgREST"
+            exit 1
+          fi
+          export SUPABASE_ANON_KEY
 
           npx vitest run tests/rls.test.ts
 
