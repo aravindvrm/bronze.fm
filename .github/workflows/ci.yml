@@ -121,16 +121,25 @@ jobs:
           # A publishable key (sb_publishable_...) is not a JWT: sending it as a
           # Bearer token makes the server parse it as one and 401. JWTs take
           # both headers, so probe each key with the form that suits it.
+          # Print the response body, not just the status. A 401 says *why* it
+          # rejected the key, and guessing at that from the status code alone
+          # burned several CI cycles.
           probe() {
             key="$1"
             case "$key" in
-              eyJ*) curl -s -o /dev/null -w '%{http_code}' \
-                      "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
-                      -H "apikey: $key" -H "Authorization: Bearer $key" ;;
-              *)    curl -s -o /dev/null -w '%{http_code}' \
-                      "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
-                      -H "apikey: $key" ;;
+              eyJ*) body="$(curl -s "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
+                      -H "apikey: $key" -H "Authorization: Bearer $key")" ;;
+              *)    body="$(curl -s "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
+                      -H "apikey: $key")" ;;
             esac
+            case "$key" in
+              eyJ*) code="$(curl -s -o /dev/null -w '%{http_code}' "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
+                      -H "apikey: $key" -H "Authorization: Bearer $key")" ;;
+              *)    code="$(curl -s -o /dev/null -w '%{http_code}' "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
+                      -H "apikey: $key")" ;;
+            esac
+            echo "      body: $body" >&2
+            printf '%s' "$code"
           }
 
           pick_key() {
@@ -145,6 +154,10 @@ jobs:
           }
 
           if ! SUPABASE_ANON_KEY="$(pick_key)"; then
+            echo "--- diagnostics ---"
+            echo "API_URL=$SUPABASE_URL"
+            echo "REST_URL=${REST_URL:-unset}"
+            curl -s -i "$SUPABASE_URL/rest/v1/" | head -20 || true
             echo "::error::No exposed key was accepted by PostgREST"
             exit 1
           fi
