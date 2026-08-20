@@ -60,18 +60,19 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }, [_sync, next])
 
   // ── OS media session: lock screen, headphones, car ────────────────────
-  const track = usePlayer((s) => s.queue[s.index] ?? null)
-  const release = usePlayer((s) => s.release)
+  const item = usePlayer((s) => s.queue[s.index] ?? null)
+  const content = usePlayer((s) => s.content)
 
   useEffect(() => {
-    if (!('mediaSession' in navigator) || !track || !release) return
+    if (!('mediaSession' in navigator) || !item || !content) return
 
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: track.title,
-      artist: release.artistName,
-      album: release.title,
+      title: item.title,
+      // Primary attributed Creator; falls back to the owner.
+      artist: content.credits[0]?.name ?? content.ownerSlug,
+      album: content.title,
       artwork: [512, 256, 192].map((size) => ({
-        src: artUrl(`${release.slug}-cover`, 'cover', size),
+        src: artUrl(`${content.slug}-cover`, 'cover', size),
         sizes: `${size}x${size}`,
         type: 'image/svg+xml',
       })),
@@ -93,7 +94,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         /* action unsupported on this platform */
       }
     }
-  }, [track, release, toggle, next, prev, seek])
+  }, [item, content, toggle, next, prev, seek])
 
   const isPlaying = usePlayer((s) => s.isPlaying)
   const position = usePlayer((s) => s.position)

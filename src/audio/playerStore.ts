@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Release, Track } from '@/content/types'
+import type { Content, ContentItem } from '@/content/types'
 
 /**
  * ONE audio element for the whole app, held at module scope — deliberately
@@ -21,8 +21,8 @@ export function audioEl(): HTMLAudioElement {
 }
 
 export interface PlayerState {
-  release: Release | null
-  queue: Track[]
+  content: Content | null
+  queue: ContentItem[]
   index: number
 
   /** Mirrors the element's real state — never set optimistically on click. */
@@ -41,7 +41,7 @@ export interface PlayerState {
 }
 
 interface PlayerActions {
-  loadRelease: (release: Release) => void
+  loadContent: (content: Content) => void
   playAt: (index: number) => void
   toggle: () => void
   next: () => void
@@ -54,7 +54,7 @@ interface PlayerActions {
 }
 
 export const usePlayer = create<PlayerState & PlayerActions>((set, get) => ({
-  release: null,
+  content: null,
   queue: [],
   index: 0,
   isPlaying: false,
@@ -65,21 +65,21 @@ export const usePlayer = create<PlayerState & PlayerActions>((set, get) => ({
   scrubbing: false,
   error: null,
 
-  loadRelease: (release) => {
-    const { queue } = get()
-    if (queue.length) return // already primed
-    set({ release, queue: release.tracks, index: 0 })
+  loadContent: (content) => {
+    // Re-priming on the same Content would restart the queue mid-playback.
+    if (get().content?.id === content.id) return
+    set({ content, queue: content.items, index: 0 })
   },
 
   playAt: (index) => {
     const { queue } = get()
-    const track = queue[index]
-    if (!track) return
+    const item = queue[index]
+    if (!item) return
     const a = audioEl()
 
     // Only reset the source when the track actually changes — reassigning
     // src to the same URL restarts the download and audibly stutters.
-    const nextSrc = new URL(track.url, window.location.origin).href
+    const nextSrc = new URL(item.url, window.location.origin).href
     if (a.src !== nextSrc) {
       a.src = nextSrc
       set({ position: 0, duration: 0 })
@@ -142,4 +142,4 @@ if (import.meta.env.DEV) {
   ;(window as unknown as { __player: typeof usePlayer }).__player = usePlayer
 }
 
-export const currentTrack = (s: PlayerState): Track | null => s.queue[s.index] ?? null
+export const currentItem = (s: PlayerState): ContentItem | null => s.queue[s.index] ?? null

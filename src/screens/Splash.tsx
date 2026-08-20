@@ -1,31 +1,31 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { usePlayer } from '@/audio/playerStore'
+import { useCreator } from '@/content/CreatorContext'
+import { creatorPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 
 /**
- * Album-cover splash.
+ * Cover-art splash for the Creator's primary Content.
  *
- * Entry is tap-gated rather than timed, which is deliberate: the tap is the
- * user gesture browsers require before audio may play. Auto-advancing here
- * would mean the first play attempt on Home trips the autoplay policy and
- * silently fails — the exact failure mode the send-to player never handled.
+ * Entry is tap-gated rather than timed, deliberately: the tap is the user
+ * gesture browsers require before audio may play. Auto-advancing would mean
+ * the first play attempt trips the autoplay policy and fails silently.
  */
 export function Splash() {
   const navigate = useNavigate()
-  const release = usePlayer((s) => s.release)
-  const cover = artUrl('bronze-cover', 'cover', 1400)
+  const creator = useCreator()
+  const content = usePlayer((s) => s.content)
+  const cover = artUrl(`${content?.slug ?? 'bronze'}-cover`, 'cover', 1400)
 
   return (
     <motion.div
-      onClick={() => navigate('/home')}
+      onClick={() => navigate(creatorPath(creator.slug, 'home'))}
       className="grain relative h-full w-full cursor-pointer overflow-hidden bg-void"
-      exit={{ opacity: 0, scale: 1.06 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
       <motion.img
         src={cover}
-        alt="Bronze album cover"
+        alt={`${content?.title ?? ''} cover`}
         initial={{ scale: 1.18, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
@@ -34,7 +34,7 @@ export function Splash() {
       <div className="absolute inset-0 bg-gradient-to-b from-void/20 via-transparent to-void" />
 
       <div
-        className="relative flex h-full flex-col items-center justify-end pb-20 text-center"
+        className="relative flex h-full flex-col items-center justify-end text-center"
         style={{ paddingBottom: 'calc(var(--safe-b) + 5rem)' }}
       >
         <motion.p
@@ -43,7 +43,7 @@ export function Splash() {
           transition={{ delay: 0.5, duration: 0.9 }}
           className="text-[10px] uppercase tracking-[0.4em] text-gilt/70"
         >
-          {release?.artistName ?? 'Dean'}
+          {creator.name}
         </motion.p>
 
         <motion.h1
@@ -52,7 +52,7 @@ export function Splash() {
           transition={{ delay: 0.68, duration: 1 }}
           className="mt-3 font-display text-6xl tracking-tight text-parchment"
         >
-          Bronze
+          {content?.title ?? ''}
         </motion.h1>
 
         <motion.span

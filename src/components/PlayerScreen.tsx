@@ -12,8 +12,8 @@ import { ChevronDown } from '@/components/Icons'
  * store so it is a view of playback rather than an owner of it.
  */
 export function PlayerScreen() {
-  const track = usePlayer((s) => s.queue[s.index] ?? null)
-  const release = usePlayer((s) => s.release)
+  const item = usePlayer((s) => s.queue[s.index] ?? null)
+  const content = usePlayer((s) => s.content)
   const index = usePlayer((s) => s.index)
   const queue = usePlayer((s) => s.queue)
   const error = usePlayer((s) => s.error)
@@ -22,9 +22,9 @@ export function PlayerScreen() {
   const prev = usePlayer((s) => s.prev)
   const startX = useRef(0)
 
-  if (!track) return null
+  if (!item) return null
 
-  const art = artUrl(track.hash, 'track', 1200)
+  const art = artUrl(item.hash, 'item', 1200)
 
   return (
     <motion.div
@@ -44,7 +44,7 @@ export function PlayerScreen() {
     >
       {/* Ambient backdrop — blown-up, blurred artwork. */}
       <motion.img
-        key={track.hash}
+        key={item.hash}
         src={art}
         alt=""
         initial={{ opacity: 0, scale: 1.15 }}
@@ -63,7 +63,7 @@ export function PlayerScreen() {
             <ChevronDown />
           </button>
           <div className="text-center">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-parchment/40">{release?.title}</div>
+            <div className="text-[10px] uppercase tracking-[0.22em] text-parchment/40">{content?.title}</div>
           </div>
           <div className="w-6" />
         </header>
@@ -72,7 +72,7 @@ export function PlayerScreen() {
           <motion.img
             layoutId="player-art"
             src={art}
-            alt={`${track.title} artwork`}
+            alt={`${item.title} artwork`}
             transition={{ type: 'spring', stiffness: 300, damping: 34 }}
             className="aspect-square w-full max-w-[min(78vw,26rem)] rounded-2xl object-cover shadow-2xl shadow-black/70"
           />
@@ -81,8 +81,8 @@ export function PlayerScreen() {
         <div className="pb-2">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="truncate font-display text-[1.75rem] leading-tight text-parchment">{track.title}</h1>
-              <p className="mt-1 truncate text-sm text-parchment/50">{release?.artistName}</p>
+              <h1 className="truncate font-display text-[1.75rem] leading-tight text-parchment">{item.title}</h1>
+              <p className="mt-1 truncate text-sm text-parchment/50">{content?.credits[0]?.name ?? content?.ownerSlug}</p>
             </div>
             <span className="shrink-0 pb-1 text-[11px] tabular-nums text-parchment/35">
               {index + 1} / {queue.length}

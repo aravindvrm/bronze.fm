@@ -14,7 +14,8 @@ First tenant: **Dean / _Bronze_**.
 | Delivery | Supabase Storage CDN. No S3/CloudFront. Static build on a CDN-backed static host |
 | Caching | Content-addressed assets + manifest hash diffing, immutable cache headers |
 | Auth | None in v1. Tenant shape exists in schema from day one |
-| Tenancy | tenant = **artist**; releases are children and carry their own theme |
+| Tenancy | tenant = **Creator**; Content has one owner Creator, many attributed |
+| Routing | Path today (`bronze.fm/dean`); host checked first so premium Creators can be promoted to `dean.bronze.fm` |
 
 ### Departures from the original diagram
 
@@ -105,31 +106,68 @@ iOS Safari caps origin storage and evicts aggressively. Therefore:
 
 ---
 
-## 3. Data model
+## 3. Data model — Creator / Content
 
-Every content table carries `artist_id` so RLS is one uniform predicate.
+Tenant = **Creator**. Content has exactly **one owner Creator**, which drives
+the URL, the storage prefix and the RLS predicate. Additional Creators are
+attributed through a join table.
+
+This split is the GitHub shape: a repo lives at `github.com/{owner}/{repo}` —
+one owner determines the namespace — while contributors are attribution shown
+alongside. Without an owner column, many-to-many attribution would leave no
+answer to *whose namespace does this file live under*, and would turn every
+read policy into a join subquery.
 
 ```
-artists        id, slug ('dean'), name, created_at            ← tenant root
-releases       id, artist_id→, slug ('bronze'), title, release_date,
-               cover_asset_id→, theme jsonb, published bool default false
-assets         id, artist_id→, kind ('audio'|'image'|'video'),
-               storage_path, content_hash, bytes, mime,
-               duration_ms?, width?, height?
-               unique (artist_id, content_hash, kind)
-tracks         id, release_id→, artist_id→, track_no, title,
-               audio_asset_id→, art_asset_id? (falls back to release cover),
-               credits jsonb          unique (release_id, track_no)
-videos         id, artist_id→, release_id?, title,
-               video_asset_id→, poster_asset_id→, sort_order
-merch_items    id, artist_id→, title, price_cents, currency,
-               external_url, image_asset_id→, available bool     ← stub in v1
-events         id, artist_id→, starts_at, venue, city, country,
-               ticket_url, on_sale bool                          ← stub in v1
+creators        id, slug ('dean'), name, bio,
+                subdomain?, custom_domain?, tier          ← tenant root
+assets          id, creator_id→, kind ('audio'|'image'|'video'),
+                storage_path, content_hash, bytes, mime,
+                duration_ms?, width?, height?
+                unique (creator_id, content_hash, kind)
+content         id, owner_creator_id→, type ('music'|'video'),
+                slug, title, description, release_date,
+                cover_asset_id→, theme jsonb, published bool
+                unique (owner_creator_id, slug)
+content_items   id, content_id→, creator_id→ (owner, denormalised for RLS),
+                position, title, is_interlude,
+                media_asset_id→, art_asset_id?, credits jsonb
+                unique (content_id, position)
+content_creators  content_id→, creator_id→, role, sort_order
+                  pk (content_id, creator_id, role)       ← attribution
+merch_items     id, creator_id→, title, price_cents, ...  ← stub in v1
+events          id, creator_id→, starts_at, venue, ...    ← stub in v1
 ```
 
-`releases.published` enforces the private-until-launch posture **in the
-database**, rather than relying on an unguessable URL.
+A **music** Content is an album holding ordered `content_items`; a **video**
+Content holds a single item. New types slot in without reshaping anything.
+
+`merch_items` and `events` are deliberately *not* Content types — they are
+commerce and scheduling records, not publishable media works, and forcing them
+into the Content shape would abstract away the fields that matter (price,
+inventory, venue, ticket links).
+
+Attribution is Content-level for now, matching the contributors model. Per-item
+credits (per-track features and producers, which music genuinely needs) can be
+added as `content_item_creators` later without reshaping what exists.
+
+`content.published` enforces private-until-launch **in the database**, rather
+than relying on an unguessable URL.
+
+### Routing and tenant resolution
+
+Path-based today: `bronze.fm/dean`, `bronze.fm/dean/music`. The resolver in
+`src/lib/tenant.ts` checks **host first**, then path, so promoting a premium
+Creator to `dean.bronze.fm` is a DNS record plus setting `creators.subdomain` —
+no code change, and their existing path URLs keep working.
+
+Verified behaviour: `dean.bronze.fm → dean`, while `www` / `app` / `staging`
+are rejected as reserved, and bare hosts fall through to path.
+
+**Known gap:** a custom domain (`deansite.com`) cannot be parsed into a slug the
+way a subdomain can. The `custom_domain` column stores the mapping, but
+resolving it needs a lookup — edge config or a boot-time query — that does not
+exist yet.
 
 ### RLS posture (v1, no auth)
 
@@ -137,33 +175,25 @@ Reads are public but gated on publication; writes have **no anon policy at all**
 and are therefore denied by default:
 
 ```sql
-alter table tracks enable row level security;
-
-create policy "anon reads published tracks"
-  on tracks for select to anon
+create policy "anon reads items of published content"
+  on content_items for select to anon
   using (exists (
-    select 1 from releases r
-    where r.id = tracks.release_id and r.published
+    select 1 from content c
+    where c.id = content_items.content_id and c.published
   ));
 ```
 
+Verified against the live project: anon `SELECT` returns `200`; anon `INSERT`
+into `creators`, `content` and `content_creators` all return
+`42501 new row violates row-level security policy`.
+
 All writes (seeding, ingest) go through the **service-role key from CLI scripts
-only**. The service-role key never enters the browser bundle.
+only**. It never enters the browser bundle.
 
-Storage gets the matching policy on `storage.objects`, keyed on the path prefix:
-
-```sql
-create policy "anon reads published media"
-  on storage.objects for select to anon
-  using (bucket_id = 'media' and (storage.foldername(name))[1] = 'dean');
-```
-
-While unreleased, the bucket stays **private** and the manifest carries
-short-TTL signed URLs. Flipping to public at launch is a policy change plus
-dropping the signing step — the client code is identical either way, because it
-only ever reads URLs from the manifest.
-
----
+Storage is one private bucket, prefix-namespaced by owner:
+`{creator_slug}/{content_slug}/{kind}/{hash}.{ext}`. Going public at launch is a
+policy change plus dropping the signing step — the client is unchanged either
+way, because it only ever reads URLs from the manifest.
 
 ## 4. Salvage assessment — send-to player
 
@@ -236,13 +266,49 @@ work is blocked on Supabase or on the real asset files**.
 
 ---
 
-## 6. Open items
+## 6. Status — Phases 0 and 1 complete
 
-1. **The _Bronze_ assets.** Currently in a private drive folder. Needed: audio
-   files, cover art, track titles and running order, any video. Phases 0–2 can
-   proceed on placeholders; Phase 3 cannot start without them.
-2. **Launch posture confirmation.** Plan assumes private-until-release
-   (`published=false`, private bucket, signed URLs). Confirm before launch.
-3. **Supabase project** — does one exist, or should it be created?
-4. **Merch / Events** — confirm stub-only for v1. Merch eventually points at
-   Stripe or Shopify; no cart is being built now.
+Built and verified:
+
+- **Scaffold** — Vite + React 18 + TS + Tailwind v4 + Framer Motion + Zustand.
+  Production build clean at **98 KB gzipped**.
+- **Persistent audio** — one `HTMLAudioElement` at module scope. Verified by
+  navigating `/home → /music` mid-track: progress advanced 2.36% → 3.34% with
+  playback uninterrupted. Network shows `206 Partial Content`, confirming the
+  Range behaviour §2.4 warns about.
+- **Screens** — splash, home (4 tiles), music track list, and Videos/Merch/
+  Events stub grids. Full player verified showing real `loadedmetadata`
+  duration (`4:03`) and live position.
+- **Fixtures** — generated from the 14 local rough mixes, 37m53s total.
+- **Schema** — written with RLS at
+  `supabase/migrations/20260820000000_initial_schema.sql`. **Not yet applied.**
+
+### Verification caveat
+
+Animation could not be verified in this environment. The automated browser pane
+runs with `document.visibilityState === "hidden"`, which means
+`requestAnimationFrame` never fires — measured at **0 frames/sec** — so
+Framer Motion freezes every animation at its `initial` value. Layout was
+verified instead by rendering the settled state directly. **Motion timing and
+the artwork morph need a human eye in a real browser.**
+
+### Deferred
+
+- Loudness normalisation — deliberately skipped; the mixes are unmastered, so
+  the 128/180/320 kbps spread is expected at this stage. Revisit at Phase 3
+  ingest once masters land.
+- Track titles still carry working-title stamps (`7.6 Say It`, `8.10 Closure`,
+  `8.3 The Wait Is Over`, `8.3 Forevermore, I Pray`).
+
+## 7. Open items
+
+1. **Real artwork and final track titles** from Dean. Placeholder art is
+   procedural and swaps out via one field per track.
+2. **Launch posture.** Still assumes private-until-release. The bucket is
+   created private; going public is a policy flip plus dropping the signing
+   step, with no client change.
+3. **Apply the migration** — `supabase link` then `supabase db push`. Needs the
+   database password.
+4. **Egress.** 66 MB per full album stream against a 5 GB free-tier monthly
+   allowance is ~75 complete listens. The Phase 4 client cache is what keeps
+   repeat listeners free.

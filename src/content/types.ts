@@ -1,14 +1,46 @@
 /**
- * The shape screens consume. Deliberately independent of where content came
- * from — fixtures today, Supabase in Phase 3 — so no screen changes when the
+ * The shape screens consume. Independent of where content came from —
+ * fixtures today, Supabase in Phase 3 — so no screen changes when the
  * backend lands.
+ *
+ * Tenancy: tenant = Creator. Content has exactly one owner Creator, which
+ * drives the URL, the storage prefix and the RLS predicate. Additional
+ * Creators are attributed via `credits`.
  */
 
-export interface Track {
+export type ContentType = 'music' | 'video'
+
+export type CreditRole =
+  | 'artist'
+  | 'featured'
+  | 'producer'
+  | 'engineer'
+  | 'writer'
+  | 'director'
+
+export interface Creator {
   id: string
-  trackNo: number
+  slug: string
+  name: string
+  bio?: string
+  /** Set only for Creators promoted to their own subdomain. */
+  subdomain?: string | null
+  customDomain?: string | null
+  tier: 'standard' | 'premium'
+}
+
+/** A Creator attributed on a Content — the contributors list, not ownership. */
+export interface Credit {
+  creatorSlug: string
+  name: string
+  role: CreditRole
+}
+
+/** One item inside a Content: a track on an album, or the file of a video. */
+export interface ContentItem {
+  id: string
+  position: number
   title: string
-  /** Skits/interludes render differently and are skipped by "skip interludes". */
   isInterlude: boolean
   /** Content hash — the cache key. New master ⇒ new hash ⇒ new URL. */
   hash: string
@@ -20,16 +52,19 @@ export interface Track {
   url: string
 }
 
-export interface Release {
+/** One publishable work. Music holds ordered items; video holds one. */
+export interface Content {
   id: string
-  artistSlug: string
+  type: ContentType
+  ownerSlug: string
   slug: string
   title: string
-  artistName: string
-  /** Mirrors releases.published in Postgres; gates public read via RLS. */
+  description?: string
+  /** Mirrors content.published in Postgres; gates public read via RLS. */
   published: boolean
   totalDurationMs: number
-  tracks: Track[]
+  items: ContentItem[]
+  credits: Credit[]
 }
 
 export type StubKind = 'video' | 'merch' | 'event'
@@ -43,6 +78,9 @@ export interface StubItem {
 }
 
 export interface ContentAdapter {
-  getRelease(): Promise<Release>
+  getCreator(slug: string): Promise<Creator | null>
+  /** All Content of a type owned by a Creator, in display order. */
+  listContent(creatorSlug: string, type: ContentType): Promise<Content[]>
+  getContent(creatorSlug: string, contentSlug: string): Promise<Content | null>
   getStubs(kind: StubKind): Promise<StubItem[]>
 }

@@ -26,9 +26,9 @@ function rng(seed: string) {
 /** Bronze range: deep patina through polished highlight. */
 const BRONZE = ['#1a0f07', '#3d2614', '#6b4423', '#9c6b34', '#cd7f32', '#d9a05b', '#e8c48a', '#f5e3c0']
 
-export type ArtVariant = 'cover' | 'track' | 'video' | 'merch' | 'event'
+export type ArtVariant = 'cover' | 'item' | 'video' | 'merch' | 'event'
 
-export function artSvg(seed: string, variant: ArtVariant = 'track', size = 800): string {
+export function artSvg(seed: string, variant: ArtVariant = 'item', size = 800): string {
   const r = rng(seed + variant)
   const pick = (lo: number, hi: number) => BRONZE[Math.floor(r() * (hi - lo + 1)) + lo]
 
@@ -84,7 +84,7 @@ ${bands}
 }
 
 /** Data URI, safe for <img src> and CSS url(). */
-export function artUrl(seed: string, variant: ArtVariant = 'track', size = 800): string {
+export function artUrl(seed: string, variant: ArtVariant = 'item', size = 800): string {
   return `data:image/svg+xml,${encodeURIComponent(artSvg(seed, variant, size))}`
 }
 

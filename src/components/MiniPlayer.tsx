@@ -10,11 +10,11 @@ import { Transport } from '@/components/Transport'
  * and playback is entirely unaffected by the transition.
  */
 export function MiniPlayer() {
-  const track = usePlayer((s) => s.queue[s.index] ?? null)
+  const item = usePlayer((s) => s.queue[s.index] ?? null)
   const setExpanded = usePlayer((s) => s.setExpanded)
   const isPlaying = usePlayer((s) => s.isPlaying)
 
-  if (!track) return null
+  if (!item) return null
 
   return (
     <motion.div
@@ -38,12 +38,12 @@ export function MiniPlayer() {
           >
             <motion.img
               layoutId="player-art"
-              src={artUrl(track.hash, 'track', 256)}
+              src={artUrl(item.hash, 'item', 256)}
               alt=""
               className="size-11 shrink-0 rounded-lg object-cover"
             />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-medium text-parchment">{track.title}</span>
+              <span className="block truncate text-sm font-medium text-parchment">{item.title}</span>
               <span className="block truncate text-xs text-parchment/45">
                 {isPlaying ? 'Now playing' : 'Paused'}
               </span>

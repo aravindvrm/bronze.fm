@@ -2,20 +2,30 @@
 // Source: ./Bronze (gitignored, unmastered rough mixes).
 // Regenerate: npm run fixtures
 
-import type { Release } from '@/content/types'
+import type { Content, Creator } from '@/content/types'
 
-export const bronze: Release = {
-  id: 'rel_bronze',
-  artistSlug: 'dean',
+export const dean: Creator = {
+  id: 'crt_dean',
+  slug: 'dean',
+  name: 'Dean',
+  tier: 'standard',
+  subdomain: null,
+  customDomain: null,
+}
+
+export const bronze: Content = {
+  id: 'cnt_bronze',
+  type: 'music',
+  ownerSlug: 'dean',
   slug: 'bronze',
   title: 'Bronze',
-  artistName: 'Dean',
   published: false,
   totalDurationMs: 2272825,
-  tracks: [
+  credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+  items: [
     {
-      "id": "trk_01",
-      "trackNo": 1,
+      "id": "itm_01",
+      "position": 1,
       "title": "Bronze Age (Skit)",
       "isInterlude": true,
       "hash": "54350c3939798715",
@@ -27,8 +37,8 @@ export const bronze: Release = {
       "url": "/media/audio/01%20-%20Bronze%20Age%20(Skit).mp3"
     },
     {
-      "id": "trk_02",
-      "trackNo": 2,
+      "id": "itm_02",
+      "position": 2,
       "title": "Bronze",
       "isInterlude": false,
       "hash": "e4384bea4ab9f70f",
@@ -40,8 +50,8 @@ export const bronze: Release = {
       "url": "/media/audio/02%20-%20Bronze.mp3"
     },
     {
-      "id": "trk_03",
-      "trackNo": 3,
+      "id": "itm_03",
+      "position": 3,
       "title": "Let's Play A Game",
       "isInterlude": false,
       "hash": "0bdcdeac4b7f7b10",
@@ -53,8 +63,8 @@ export const bronze: Release = {
       "url": "/media/audio/03%20-%20Let_s%20Play%20A%20Game.mp3"
     },
     {
-      "id": "trk_04",
-      "trackNo": 4,
+      "id": "itm_04",
+      "position": 4,
       "title": "Kissy Face Emoji",
       "isInterlude": false,
       "hash": "c5b0a68381f00620",
@@ -66,8 +76,8 @@ export const bronze: Release = {
       "url": "/media/audio/04%20-%20Kissy%20Face%20Emoji.mp3"
     },
     {
-      "id": "trk_05",
-      "trackNo": 5,
+      "id": "itm_05",
+      "position": 5,
       "title": "Polished Bronze (Skit)",
       "isInterlude": true,
       "hash": "71600fe0b2bfe283",
@@ -79,8 +89,8 @@ export const bronze: Release = {
       "url": "/media/audio/05%20-%20Polished%20Bronze%20(Skit).mp3"
     },
     {
-      "id": "trk_06",
-      "trackNo": 6,
+      "id": "itm_06",
+      "position": 6,
       "title": "Summer Flame",
       "isInterlude": false,
       "hash": "fccbb84e9142880d",
@@ -92,8 +102,8 @@ export const bronze: Release = {
       "url": "/media/audio/06%20-%20Summer%20Flame.mp3"
     },
     {
-      "id": "trk_07",
-      "trackNo": 7,
+      "id": "itm_07",
+      "position": 7,
       "title": "Naked",
       "isInterlude": false,
       "hash": "8b0ee262ec087ab4",
@@ -105,8 +115,8 @@ export const bronze: Release = {
       "url": "/media/audio/07%20-%20Naked.mp3"
     },
     {
-      "id": "trk_08",
-      "trackNo": 8,
+      "id": "itm_08",
+      "position": 8,
       "title": "Bronze Alloy (Skit)",
       "isInterlude": true,
       "hash": "b88413d26035c7dd",
@@ -118,8 +128,8 @@ export const bronze: Release = {
       "url": "/media/audio/08%20-%20Bronze%20Alloy%20(Skit).mp3"
     },
     {
-      "id": "trk_09",
-      "trackNo": 9,
+      "id": "itm_09",
+      "position": 9,
       "title": "No Vacancy",
       "isInterlude": false,
       "hash": "e588baa91d34e304",
@@ -131,8 +141,8 @@ export const bronze: Release = {
       "url": "/media/audio/09%20-%20No%20Vacancy.mp3"
     },
     {
-      "id": "trk_10",
-      "trackNo": 10,
+      "id": "itm_10",
+      "position": 10,
       "title": "7.6 Say It",
       "isInterlude": false,
       "hash": "a475dd202c9c083e",
@@ -144,8 +154,8 @@ export const bronze: Release = {
       "url": "/media/audio/10%20-%207.6%20Say%20It.mp3"
     },
     {
-      "id": "trk_11",
-      "trackNo": 11,
+      "id": "itm_11",
+      "position": 11,
       "title": "Bronze Medal (Skit)",
       "isInterlude": true,
       "hash": "5d8583bd295443d7",
@@ -157,8 +167,8 @@ export const bronze: Release = {
       "url": "/media/audio/11%20-%20Bronze%20Medal%20(Skit).mp3"
     },
     {
-      "id": "trk_12",
-      "trackNo": 12,
+      "id": "itm_12",
+      "position": 12,
       "title": "8.10 Closure",
       "isInterlude": false,
       "hash": "c9ba8aede47a2f58",
@@ -170,8 +180,8 @@ export const bronze: Release = {
       "url": "/media/audio/12%20-%208.10%20Closure.mp3"
     },
     {
-      "id": "trk_13",
-      "trackNo": 13,
+      "id": "itm_13",
+      "position": 13,
       "title": "8.3 The Wait Is Over",
       "isInterlude": false,
       "hash": "38007b00c3d83f49",
@@ -183,8 +193,8 @@ export const bronze: Release = {
       "url": "/media/audio/13%20-%208.3%20The%20Wait%20Is%20Over.mp3"
     },
     {
-      "id": "trk_14",
-      "trackNo": 14,
+      "id": "itm_14",
+      "position": 14,
       "title": "8.3 Forevermore, I Pray",
       "isInterlude": false,
       "hash": "3cb8ae61b6861275",
