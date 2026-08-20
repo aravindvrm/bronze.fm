@@ -103,9 +103,23 @@ jobs:
       - name: Assert RLS against the local instance
         run: |
           set -euo pipefail
-          SUPABASE_URL="$(supabase status -o env | grep '^API_URL=' | cut -d= -f2- | tr -d '"')"
-          SUPABASE_ANON_KEY="$(supabase status -o env | grep '^ANON_KEY=' | cut -d= -f2- | tr -d '"')"
-          export SUPABASE_URL SUPABASE_ANON_KEY
+
+          # Key names differ across CLI versions (ANON_KEY vs PUBLISHABLE_KEY),
+          # so source the whole env rather than grepping for one name. Print the
+          # names — never the values — to make a future rename obvious.
+          echo "keys exposed: $(supabase status -o env | cut -d= -f1 | tr '\n' ' ')"
+          eval "$(supabase status -o env)"
+
+          export SUPABASE_URL="${API_URL:-}"
+          export SUPABASE_ANON_KEY="${ANON_KEY:-${PUBLISHABLE_KEY:-}}"
+
+          # Fail loudly here: an empty key makes every request 401, which reads
+          # like a broken RLS policy rather than a broken lookup.
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::Could not read API_URL / anon key from supabase status"
+            exit 1
+          fi
+
           npx vitest run tests/rls.test.ts
 
       - name: Stop local Supabase
