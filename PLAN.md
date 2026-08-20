@@ -266,44 +266,68 @@ work is blocked on Supabase or on the real asset files**.
 
 ---
 
-## 6. Status — Phases 0 and 1 complete
-
-Built and verified:
+## 6. Status — Phases 0–4 built
 
 - **Scaffold** — Vite + React 18 + TS + Tailwind v4 + Framer Motion + Zustand.
-  Production build clean at **98 KB gzipped**.
-- **Persistent audio** — one `HTMLAudioElement` at module scope. Verified by
-  navigating `/home → /music` mid-track: progress advanced 2.36% → 3.34% with
-  playback uninterrupted. Network shows `206 Partial Content`, confirming the
-  Range behaviour §2.4 warns about.
-- **Screens** — splash, home (4 tiles), music track list, and Videos/Merch/
-  Events stub grids. Full player verified showing real `loadedmetadata`
-  duration (`4:03`) and live position.
-- **Fixtures** — generated from the 14 local rough mixes, 37m53s total.
-- **Schema** — written with RLS at
-  `supabase/migrations/20260820000000_initial_schema.sql`. **Not yet applied.**
+- **Persistent audio** — one `HTMLAudioElement` at module scope. Playback
+  verified surviving route changes across Creator sections.
+- **Screens** — splash, home, music, in-player queue, stub grids, all under
+  `/:creator`.
+- **Creator / Content model** — applied; RLS verified against the live project.
+- **Caching (Phase 4)** — service worker, manifest hash diffing, offline save.
+
+### Phase 4 — what was verified
+
+**Range reconstruction**, the piece that decides whether cached audio works on
+iPhone, is in `src/lib/rangeResponse.ts` — extracted from the worker precisely
+so it could be tested. All eleven cases pass, checking byte *content* and not
+just headers: explicit windows, `bytes=0-`, the suffix form (`bytes=-500` →
+the last 500 bytes), clamping past EOF, and 416 for malformed, inverted,
+zero-suffix, out-of-range and multi-range requests.
+
+**End to end through the worker**: a synthetic body was cached under a media
+URL with no file behind it, so every byte returned necessarily came from
+cache. Windows, suffix ranges and 416 all correct. Real playback then seeked
+from 0 to 121 s without error while the worker was intercepting.
+
+**Hash diffing**: changing an item's hash while leaving its URL untouched is
+correctly reported stale — the development case a URL-only check would miss.
+
+### Two caching decisions worth knowing
+
+**Cache misses pass through to the network untouched.** `<audio>` opens with a
+small Range probe, so caching on miss would turn skipping past a track into a
+full download of it — 66 MB to skim this album on cellular. Caching is
+deliberate instead: a track is kept once it has actually been played past the
+halfway mark, or when the listener explicitly saves the album.
+
+**`cacheOne` fetches with `cache: 'no-store'`.** A plain fetch can be satisfied
+from the browser's HTTP cache with a 206 left over from playback, and only a
+complete 200 is safe to store — so saving would have silently failed on
+exactly the tracks already listened to.
+
+### Fixed: masters were being published by the build
+
+`public/media/audio` was a symlink to the master folder, and `vite build`
+copies `public/` into `dist/` — so every build embedded 66 MB of unreleased
+audio, and deploying `dist/` would have served the album as plain downloadable
+files. Media is now served in development by a Vite middleware with
+`apply: 'serve'`, which cannot run during a build. `dist/` went from 70 MB to
+3.6 MB with zero audio files, verified.
 
 ### Verification caveat
 
-Animation could not be verified in this environment. The automated browser pane
-runs with `document.visibilityState === "hidden"`, which means
-`requestAnimationFrame` never fires — measured at **0 frames/sec** — so
-Framer Motion freezes every animation at its `initial` value. Layout was
-verified instead by rendering the settled state directly. **Motion timing and
-the artwork morph need a human eye in a real browser.**
-
-### Deferred
-
-- Loudness normalisation — deliberately skipped; the mixes are unmastered, so
-  the 128/180/320 kbps spread is expected at this stage. Revisit at Phase 3
-  ingest once masters land.
-- Track titles still carry working-title stamps (`7.6 Say It`, `8.10 Closure`,
-  `8.3 The Wait Is Over`, `8.3 Forevermore, I Pray`).
+Animation still cannot be verified in this environment: the automated browser
+pane runs with `document.visibilityState === "hidden"`, so
+`requestAnimationFrame` never fires and Framer Motion freezes every animation
+at its `initial` value. Layout and behaviour were verified through measured
+DOM geometry instead. **Motion timing and the swipe gestures need a human on a
+real device.**
 
 ## 7. Open items
 
 1. **Real artwork and final track titles** from Dean. Placeholder art is
-   procedural and swaps out via one field per track.
+   procedural and swaps out via one field per item.
 2. **Launch posture.** Still assumes private-until-release. The bucket is
    created private; going public is a policy flip plus dropping the signing
    step, with no client change.

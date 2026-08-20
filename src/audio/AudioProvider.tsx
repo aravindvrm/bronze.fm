@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { audioEl, usePlayer } from '@/audio/playerStore'
 import { artUrl } from '@/lib/art'
+import { useOpportunisticCache } from '@/audio/useOpportunisticCache'
 
 /**
  * Binds the singleton audio element to the store and to the OS media session.
@@ -10,6 +11,8 @@ import { artUrl } from '@/lib/art'
  * outside the page — lock screen, headphone buttons, a car head unit.
  */
 export function AudioProvider({ children }: { children: React.ReactNode }) {
+  useOpportunisticCache()
+
   const _sync = usePlayer((s) => s._sync)
   const next = usePlayer((s) => s.next)
   const prev = usePlayer((s) => s.prev)

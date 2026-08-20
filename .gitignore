@@ -31,7 +31,8 @@ dist-ssr/
 !.vscode/extensions.json
 .idea/
 
-# Dev-only symlink to gitignored master audio
+# Master audio is served in dev by a Vite middleware (vite.config.ts).
+# It must never live under public/ — the build copies public/ into dist/.
 public/media/
 
 # TS incremental build artifacts

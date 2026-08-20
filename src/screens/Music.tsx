@@ -3,6 +3,7 @@ import { usePlayer } from '@/audio/playerStore'
 import { artUrl } from '@/lib/art'
 import { formatTime } from '@/lib/format'
 import { ScreenHeader } from '@/components/ScreenHeader'
+import { OfflineControl } from '@/components/OfflineControl'
 
 /**
  * Item list for the Creator's primary music Content. Once a Creator has more
@@ -22,6 +23,10 @@ export function Music() {
   return (
     <div className="min-h-full bg-void">
       <ScreenHeader title={content.title} />
+
+      <div className="px-5 pb-2">
+        <OfflineControl />
+      </div>
 
       <ul className="px-3" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
         {content.items.map((item, i) => {
