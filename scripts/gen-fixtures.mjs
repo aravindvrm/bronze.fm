@@ -59,6 +59,11 @@ const items = files.map((f, i) => {
     position: i + 1,
     title: cleanTitle(f),
     isInterlude: /\(skit\)/i.test(f),
+    // Placeholder until Dean supplies real per-track credits. Interludes get
+    // none; everything else is attributed to the owner.
+    credits: /\(skit\)/i.test(f)
+      ? []
+      : [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
     hash,
     bytes: fs.statSync(full).size,
     durationMs,

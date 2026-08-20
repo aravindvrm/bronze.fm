@@ -38,3 +38,26 @@ export const BackIcon = ({ className = 'size-6' }: P) => (
     <path d="m15 18-6-6 6-6" />
   </svg>
 )
+
+export const QueueIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
+    <path d="M4 6h11M4 12h11M4 18h7" />
+    <path d="M18 10v8.5" />
+    <circle cx="16.4" cy="18.6" r="1.9" fill="currentColor" stroke="none" />
+    <path d="M18 10c1.2.5 2.4.7 3 .7" />
+  </svg>
+)
+
+export const VolumeIcon = ({ className = 'size-5', muted = false }: P & { muted?: boolean }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <path d="M11 5 6.5 9H3v6h3.5L11 19V5Z" fill="currentColor" />
+    {muted ? (
+      <path d="m16 9 5 6M21 9l-5 6" />
+    ) : (
+      <>
+        <path d="M15.5 8.8a4.5 4.5 0 0 1 0 6.4" />
+        <path d="M18.5 6.2a8.5 8.5 0 0 1 0 11.6" />
+      </>
+    )}
+  </svg>
+)

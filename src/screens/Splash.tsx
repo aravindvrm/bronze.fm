@@ -33,10 +33,7 @@ export function Splash() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-void/20 via-transparent to-void" />
 
-      <div
-        className="relative flex h-full flex-col items-center justify-end text-center"
-        style={{ paddingBottom: 'calc(var(--safe-b) + 5rem)' }}
-      >
+      <div className="relative flex h-full flex-col items-center justify-center px-8 text-center">
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -59,7 +56,8 @@ export function Splash() {
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 0.75, 0.35, 0.75] }}
           transition={{ delay: 1.5, duration: 3.2, repeat: Infinity, repeatType: 'reverse' }}
-          className="mt-12 text-[10px] uppercase tracking-[0.3em] text-parchment/50"
+          className="absolute inset-x-0 text-[10px] uppercase tracking-[0.3em] text-parchment/50"
+          style={{ bottom: 'calc(var(--safe-b) + 3.5rem)' }}
         >
           Tap to enter
         </motion.span>

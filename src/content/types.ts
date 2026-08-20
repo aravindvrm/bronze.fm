@@ -42,6 +42,12 @@ export interface ContentItem {
   position: number
   title: string
   isInterlude: boolean
+  /**
+   * Per-item attribution — features and per-track producers. Distinct from
+   * Content.credits, which answers "who made this album"; this answers "who
+   * is on this track", which a roll-up cannot express.
+   */
+  credits: Credit[]
   /** Content hash — the cache key. New master ⇒ new hash ⇒ new URL. */
   hash: string
   bytes: number

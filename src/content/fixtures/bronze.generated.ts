@@ -28,6 +28,7 @@ export const bronze: Content = {
       "position": 1,
       "title": "Bronze Age (Skit)",
       "isInterlude": true,
+      "credits": [],
       "hash": "54350c3939798715",
       "bytes": 224828,
       "durationMs": 13009,
@@ -41,6 +42,13 @@ export const bronze: Content = {
       "position": 2,
       "title": "Bronze",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "e4384bea4ab9f70f",
       "bytes": 5385119,
       "durationMs": 243912,
@@ -54,6 +62,13 @@ export const bronze: Content = {
       "position": 3,
       "title": "Let's Play A Game",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "0bdcdeac4b7f7b10",
       "bytes": 5190188,
       "durationMs": 222120,
@@ -67,6 +82,13 @@ export const bronze: Content = {
       "position": 4,
       "title": "Kissy Face Emoji",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "c5b0a68381f00620",
       "bytes": 5221453,
       "durationMs": 230688,
@@ -80,6 +102,7 @@ export const bronze: Content = {
       "position": 5,
       "title": "Polished Bronze (Skit)",
       "isInterlude": true,
+      "credits": [],
       "hash": "71600fe0b2bfe283",
       "bytes": 160462,
       "durationMs": 8986,
@@ -93,6 +116,13 @@ export const bronze: Content = {
       "position": 6,
       "title": "Summer Flame",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "fccbb84e9142880d",
       "bytes": 3432784,
       "durationMs": 152904,
@@ -106,6 +136,13 @@ export const bronze: Content = {
       "position": 7,
       "title": "Naked",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "8b0ee262ec087ab4",
       "bytes": 5316284,
       "durationMs": 234432,
@@ -119,6 +156,7 @@ export const bronze: Content = {
       "position": 8,
       "title": "Bronze Alloy (Skit)",
       "isInterlude": true,
+      "credits": [],
       "hash": "b88413d26035c7dd",
       "bytes": 173419,
       "durationMs": 9796,
@@ -132,6 +170,13 @@ export const bronze: Content = {
       "position": 9,
       "title": "No Vacancy",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "e588baa91d34e304",
       "bytes": 3995374,
       "durationMs": 167280,
@@ -145,6 +190,13 @@ export const bronze: Content = {
       "position": 10,
       "title": "7.6 Say It",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "a475dd202c9c083e",
       "bytes": 10319168,
       "durationMs": 257976,
@@ -158,6 +210,7 @@ export const bronze: Content = {
       "position": 11,
       "title": "Bronze Medal (Skit)",
       "isInterlude": true,
+      "credits": [],
       "hash": "5d8583bd295443d7",
       "bytes": 188884,
       "durationMs": 10762,
@@ -171,6 +224,13 @@ export const bronze: Content = {
       "position": 12,
       "title": "8.10 Closure",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "c9ba8aede47a2f58",
       "bytes": 9431168,
       "durationMs": 235776,
@@ -184,6 +244,13 @@ export const bronze: Content = {
       "position": 13,
       "title": "8.3 The Wait Is Over",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "38007b00c3d83f49",
       "bytes": 9510848,
       "durationMs": 237768,
@@ -197,6 +264,13 @@ export const bronze: Content = {
       "position": 14,
       "title": "8.3 Forevermore, I Pray",
       "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "dean",
+          "name": "Dean",
+          "role": "artist"
+        }
+      ],
       "hash": "3cb8ae61b6861275",
       "bytes": 9896768,
       "durationMs": 247416,

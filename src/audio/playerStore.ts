@@ -20,6 +20,17 @@ export function audioEl(): HTMLAudioElement {
   return el
 }
 
+/** Probes whether this platform honours volume assignment. */
+function detectVolumeSupport(): boolean {
+  try {
+    const probe = new Audio()
+    probe.volume = 0.5
+    return Math.abs(probe.volume - 0.5) < 0.01
+  } catch {
+    return false
+  }
+}
+
 export interface PlayerState {
   content: Content | null
   queue: ContentItem[]
@@ -34,6 +45,16 @@ export interface PlayerState {
 
   /** Full-screen player is presented over the current route. */
   expanded: boolean
+  /** Queue panel inside the full-screen player. */
+  queueOpen: boolean
+
+  volume: number
+  /**
+   * iOS Safari makes HTMLMediaElement.volume read-only — Apple mandates
+   * hardware volume control — so assignments are silently ignored there.
+   * Detected at runtime rather than sniffed from the user agent.
+   */
+  volumeSupported: boolean
   /** True while the user drags the scrub handle; suppresses timeupdate writes. */
   scrubbing: boolean
 
@@ -49,6 +70,8 @@ interface PlayerActions {
   seek: (seconds: number) => void
   setScrubbing: (v: boolean) => void
   setExpanded: (v: boolean) => void
+  setQueueOpen: (v: boolean) => void
+  setVolume: (v: number) => void
   /** Internal — called only by the event bindings. */
   _sync: (patch: Partial<PlayerState>) => void
 }
@@ -62,6 +85,9 @@ export const usePlayer = create<PlayerState & PlayerActions>((set, get) => ({
   position: 0,
   duration: 0,
   expanded: false,
+  queueOpen: false,
+  volume: 1,
+  volumeSupported: detectVolumeSupport(),
   scrubbing: false,
   error: null,
 
@@ -133,7 +159,17 @@ export const usePlayer = create<PlayerState & PlayerActions>((set, get) => ({
   },
 
   setScrubbing: (v) => set({ scrubbing: v }),
-  setExpanded: (v) => set({ expanded: v }),
+  setExpanded: (v) => set({ expanded: v, queueOpen: v ? get().queueOpen : false }),
+  setQueueOpen: (v) => set({ queueOpen: v }),
+
+  setVolume: (v) => {
+    const clamped = Math.min(Math.max(0, v), 1)
+    const a = audioEl()
+    a.volume = clamped
+    // Read back: on platforms that ignore the assignment this stays 1, and
+    // storing the requested value would desync the UI from what you hear.
+    set({ volume: a.volume })
+  },
   _sync: (patch) => set(patch),
 }))
 

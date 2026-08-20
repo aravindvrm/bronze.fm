@@ -17,7 +17,7 @@ export function Music() {
 
   if (!content) return null
 
-  const primary = content.credits[0]?.name ?? content.ownerSlug
+  const albumPrimary = content.credits[0]?.name ?? content.ownerSlug
 
   return (
     <div className="min-h-full bg-void">
@@ -62,7 +62,12 @@ export function Music() {
                     {item.title}
                   </span>
                   <span className="mt-0.5 block truncate text-[11px] text-parchment/40">
-                    {item.isInterlude ? 'Interlude' : primary}
+                    {(() => {
+                      if (item.isInterlude) return 'Interlude'
+                      const feats = item.credits.filter((c) => c.role === 'featured')
+                      if (feats.length) return `feat. ${feats.map((f) => f.name).join(', ')}`
+                      return item.credits[0]?.name ?? albumPrimary
+                    })()}
                   </span>
                 </span>
 
