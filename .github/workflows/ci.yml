@@ -104,11 +104,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Key names AND which key PostgREST accepts vary across CLI versions:
-          # newer local stacks expose both a legacy ANON_KEY JWT and a newer
-          # PUBLISHABLE_KEY, and the legacy one may be rejected. Probe rather
-          # than guess — an unaccepted key 401s every request, which reads like
-          # a broken RLS policy instead of a broken credential.
           echo "keys exposed: $(supabase status -o env | cut -d= -f1 | tr '\n' ' ')"
           eval "$(supabase status -o env)"
 
@@ -118,46 +113,31 @@ jobs:
             exit 1
           fi
 
-          # A publishable key (sb_publishable_...) is not a JWT: sending it as a
-          # Bearer token makes the server parse it as one and 401. JWTs take
-          # both headers, so probe each key with the form that suits it.
-          # Print the response body, not just the status. A 401 says *why* it
-          # rejected the key, and guessing at that from the status code alone
-          # burned several CI cycles.
-          probe() {
-            key="$1"
-            case "$key" in
-              eyJ*) body="$(curl -s "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
-                      -H "apikey: $key" -H "Authorization: Bearer $key")" ;;
-              *)    body="$(curl -s "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
-                      -H "apikey: $key")" ;;
-            esac
-            case "$key" in
-              eyJ*) code="$(curl -s -o /dev/null -w '%{http_code}' "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
-                      -H "apikey: $key" -H "Authorization: Bearer $key")" ;;
-              *)    code="$(curl -s -o /dev/null -w '%{http_code}' "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" \
-                      -H "apikey: $key")" ;;
-            esac
-            echo "      body: $body" >&2
-            printf '%s' "$code"
-          }
-
+          # Key names and accepted formats vary across CLI versions, so probe
+          # rather than guess. A publishable key is not a JWT: sent as a Bearer
+          # token the server tries to parse it as one and rejects it.
+          #
+          # The body is printed, not just the status. A 401 explains itself —
+          # this is how a missing GRANT was found after several cycles of
+          # guessing at the status code alone.
           pick_key() {
-            for name in PUBLISHABLE_KEY ANON_KEY; do
+            for name in ANON_KEY PUBLISHABLE_KEY; do
               key="$(eval "printf '%s' \"\${$name:-}\"")"
               [ -n "$key" ] || continue
-              code="$(probe "$key")"
-              echo "  $name -> HTTP $code" >&2
+              if [ "${key#eyJ}" != "$key" ]; then
+                set -- -H "apikey: $key" -H "Authorization: Bearer $key"
+              else
+                set -- -H "apikey: $key"
+              fi
+              out="$(curl -s -w '\n%{http_code}' "$SUPABASE_URL/rest/v1/creators?select=id&limit=1" "$@")"
+              code="${out##*$'\n'}"
+              echo "  $name -> HTTP $code  ${out%$'\n'*}" >&2
               if [ "$code" = "200" ]; then printf '%s' "$key"; return 0; fi
             done
             return 1
           }
 
           if ! SUPABASE_ANON_KEY="$(pick_key)"; then
-            echo "--- diagnostics ---"
-            echo "API_URL=$SUPABASE_URL"
-            echo "REST_URL=${REST_URL:-unset}"
-            curl -s -i "$SUPABASE_URL/rest/v1/" | head -20 || true
             echo "::error::No exposed key was accepted by PostgREST"
             exit 1
           fi
