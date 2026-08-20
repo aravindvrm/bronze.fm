@@ -8,20 +8,11 @@ import path from 'node:path'
 import crypto from 'node:crypto'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { cleanTitle } from './lib/titles.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const audioDir = path.join(root, 'Bronze')
 const outFile = path.join(root, 'src/content/fixtures/bronze.generated.ts')
-
-/** Strip the leading track number, restore apostrophes lost to filename escaping. */
-function cleanTitle(filename) {
-  return filename
-    .replace(/\.mp3$/i, '')
-    .replace(/^\d+\s*-\s*/, '')
-    .replace(/_s\b/g, "'s")
-    .replace(/\s+/g, ' ')
-    .trim()
-}
 
 function probe(file) {
   try {
@@ -106,5 +97,13 @@ export const bronze: Content = {
 
 fs.mkdirSync(path.dirname(outFile), { recursive: true })
 fs.writeFileSync(outFile, body)
+
+// Sidecar for tooling that cannot import TypeScript — notably
+// scripts/gen-test-audio.mjs, which synthesises stand-in media in CI where the
+// gitignored masters do not exist.
+fs.writeFileSync(
+  path.join(path.dirname(outFile), 'bronze.manifest.json'),
+  JSON.stringify({ slug: 'bronze', items: items.map(({ id, url, durationMs, channels, sampleRate }) => ({ id, url, durationMs, channels, sampleRate })) }, null, 2),
+)
 console.log(`✓ ${items.length} items → ${path.relative(root, outFile)}`)
 console.log(`  total runtime ${Math.floor(totalMs / 60000)}m ${Math.round((totalMs % 60000) / 1000)}s`)

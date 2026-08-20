@@ -96,10 +96,14 @@ export default defineConfig({
         ],
       },
       // Off by default: a live worker in dev shadows HMR and serves stale
-      // modules. Flip `enabled` to true to exercise the caching path against
-      // the dev media middleware — that is how the 206 reconstruction was
-      // verified end to end.
-      devOptions: { enabled: false, type: 'module', navigateFallback: 'index.html' },
+      // modules. PWA_DEV=true turns it on so the caching path can be exercised
+      // against the dev media middleware — that is how the e2e suite verifies
+      // the 206 reconstruction end to end.
+      devOptions: {
+        enabled: process.env.PWA_DEV === 'true',
+        type: 'module',
+        navigateFallback: 'index.html',
+      },
     }),
   ],
   resolve: {

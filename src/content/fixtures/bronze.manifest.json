@@ -1,0 +1,103 @@
+{
+  "slug": "bronze",
+  "items": [
+    {
+      "id": "itm_01",
+      "url": "/media/audio/01%20-%20Bronze%20Age%20(Skit).mp3",
+      "durationMs": 13009,
+      "channels": 1,
+      "sampleRate": 44100
+    },
+    {
+      "id": "itm_02",
+      "url": "/media/audio/02%20-%20Bronze.mp3",
+      "durationMs": 243912,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_03",
+      "url": "/media/audio/03%20-%20Let_s%20Play%20A%20Game.mp3",
+      "durationMs": 222120,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_04",
+      "url": "/media/audio/04%20-%20Kissy%20Face%20Emoji.mp3",
+      "durationMs": 230688,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_05",
+      "url": "/media/audio/05%20-%20Polished%20Bronze%20(Skit).mp3",
+      "durationMs": 8986,
+      "channels": 1,
+      "sampleRate": 44100
+    },
+    {
+      "id": "itm_06",
+      "url": "/media/audio/06%20-%20Summer%20Flame.mp3",
+      "durationMs": 152904,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_07",
+      "url": "/media/audio/07%20-%20Naked.mp3",
+      "durationMs": 234432,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_08",
+      "url": "/media/audio/08%20-%20Bronze%20Alloy%20(Skit).mp3",
+      "durationMs": 9796,
+      "channels": 1,
+      "sampleRate": 44100
+    },
+    {
+      "id": "itm_09",
+      "url": "/media/audio/09%20-%20No%20Vacancy.mp3",
+      "durationMs": 167280,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_10",
+      "url": "/media/audio/10%20-%207.6%20Say%20It.mp3",
+      "durationMs": 257976,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_11",
+      "url": "/media/audio/11%20-%20Bronze%20Medal%20(Skit).mp3",
+      "durationMs": 10762,
+      "channels": 1,
+      "sampleRate": 44100
+    },
+    {
+      "id": "itm_12",
+      "url": "/media/audio/12%20-%208.10%20Closure.mp3",
+      "durationMs": 235776,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_13",
+      "url": "/media/audio/13%20-%208.3%20The%20Wait%20Is%20Over.mp3",
+      "durationMs": 237768,
+      "channels": 2,
+      "sampleRate": 48000
+    },
+    {
+      "id": "itm_14",
+      "url": "/media/audio/14%20-%208.3%20Forevermore%2C%20I%20Pray.mp3",
+      "durationMs": 247416,
+      "channels": 2,
+      "sampleRate": 48000
+    }
+  ]
+}
