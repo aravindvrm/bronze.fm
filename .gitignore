@@ -1,0 +1,38 @@
+# ── Unreleased master audio — NEVER commit ─────────────────────
+# 66MB of unreleased Bronze masters. Repo is public.
+Bronze/
+*.mp3
+*.wav
+*.aiff
+*.flac
+*.m4a
+
+# macOS AppleDouble resource forks
+._*
+.DS_Store
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Supabase local state + linked project ref
+.supabase/
+supabase/.temp/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Dev-only symlink to gitignored master audio
+public/media/
+
+# TS incremental build artifacts
+*.tsbuildinfo
