@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Typecheck, build, verify output
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npx tsc -b
+
+      # `npm run build` ends with scripts/check-dist.mjs, which fails if any
+      # audio, secret-shaped file, or oversized asset reached dist/. This repo
+      # once shipped 66 MB of unreleased masters into the build output because
+      # public/ is copied wholesale — this is what stops that recurring.
+      - name: Build and verify dist
+        run: npm run build
+
+      - name: Upload build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # The repo is public and the app handles Supabase keys. The anon key is
+      # meant to ship; a service-role key never is.
+      - name: Scan tracked files for secrets
+        run: |
+          set -euo pipefail
+          fail=0
+          # -e is required: a pattern starting with "-----" would otherwise be
+          # parsed as flags by git grep.
+          scan() {
+            if git grep -nIE -e "$1" -- . ':!*.md' ':!.github/workflows/*' > /tmp/hits 2>/dev/null; then
+              echo "::error::$2"
+              cat /tmp/hits
+              fail=1
+            fi
+          }
+          scan 'sb_secret_[A-Za-z0-9_-]{8,}' 'Supabase secret key committed'
+          scan '"role"[[:space:]]*:[[:space:]]*"service_role"' 'Decoded service_role JWT committed'
+          scan 'SUPABASE_SERVICE_ROLE_KEY[[:space:]]*=[[:space:]]*[A-Za-z0-9]' 'service-role key has a value in a tracked file'
+          scan '-----BEGIN [A-Z ]*PRIVATE KEY-----' 'Private key committed'
+          exit $fail
+
+      - name: Ensure no audio is tracked in git
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -Ei '\.(mp3|m4a|aac|ogg|opus|wav|flac|aiff?)$'; then
+            echo "::error::Audio files are tracked in git. Masters must stay gitignored."
+            exit 1
+          fi
+          echo "No audio tracked."
