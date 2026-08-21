@@ -22,38 +22,38 @@ export function Home() {
 
   return (
     <div className="grain relative min-h-full overflow-hidden bg-void">
-      {/*
-        The splash treatment, blurred: same full-bleed cover, same scrim. Home is
-        where you land straight off the splash, so sharing the backdrop makes the
-        transition continuous — blur is the only thing separating them.
-      */}
-      <img
-        src={coverUrl(content, 1000)}
-        alt=""
-        className="pointer-events-none absolute inset-0 size-full object-cover blur-lg"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-void/40 via-transparent via-40% to-void" />
-
       <div
         className="relative px-5"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
         {/*
-          Glass panel: the cover backdrop runs bright behind this text, and the
-          title is the one thing on the screen with no artwork of its own to sit
-          on. Same treatment as the mini player so the app has one glass idiom.
+          A raised surface rather than glass: over a solid background there is
+          nothing behind this to refract, so backdrop-blur would be a compositing
+          layer that costs a paint and changes nothing.
         */}
         <motion.header
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl border border-white/10 bg-ink/50 px-5 py-4 backdrop-blur-xl"
+          className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4"
         >
-          <p className="text-[10px] uppercase tracking-[0.4em] text-gilt/70">{creator.name}</p>
-          <h1 className="mt-2 font-content text-5xl tracking-tight text-parchment">{content.title}</h1>
-          <p className="mt-2 text-xs text-parchment/40">
-            {content.items.length} tracks · {formatTotal(content.totalDurationMs)}
-          </p>
+          {/* min-w-0 lets a long title wrap instead of pushing the cover out of
+              the card. */}
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] uppercase tracking-[0.4em] text-gilt/70">{creator.name}</p>
+            <h1 className="mt-2 font-content text-5xl leading-[1.05] tracking-tight text-parchment">
+              {content.title}
+            </h1>
+            <p className="mt-2 text-xs text-parchment/40">
+              {content.items.length} tracks · {formatTotal(content.totalDurationMs)}
+            </p>
+          </div>
+
+          <img
+            src={coverUrl(content, 400)}
+            alt={`${content.title} cover`}
+            className="size-24 shrink-0 self-center rounded-xl object-cover shadow-lg shadow-black/50"
+          />
         </motion.header>
 
         <div className="mt-10 grid grid-cols-2 gap-3.5">
