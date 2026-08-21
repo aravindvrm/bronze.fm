@@ -4,7 +4,19 @@
     {
       "name": "bronze-fm",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "bronze-fm-tailscale",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev:tailscale"
+      ],
       "port": 5173
     }
   ]

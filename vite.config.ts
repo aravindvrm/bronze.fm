@@ -113,5 +113,12 @@ export default defineConfig({
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },
-  server: { port: 5173 },
+  server: {
+    port: 5173,
+    // Bound to loopback by default, deliberately. The dev middleware serves the
+    // unreleased masters at /media/audio, so `--host` without thought exposes
+    // the album to every device on whatever network this laptop is joined to.
+    // `npm run dev:tailscale` binds the tailnet address only.
+    allowedHosts: ['.ts.net'],
+  },
 })
