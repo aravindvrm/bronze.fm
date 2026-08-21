@@ -29,7 +29,8 @@ function isMediaRequest(url: URL): boolean {
 
 // ── Install: precache the shell ──────────────────────────────────────────
 self.addEventListener('install', (event) => {
-  const urls = (self.__WB_MANIFEST ?? []).map((e) => e.url)
+  // Injected by vite-plugin-pwa at build time; always present.
+  const urls = self.__WB_MANIFEST.map((e) => e.url)
   event.waitUntil(
     (async () => {
       const cache = await caches.open(SHELL_CACHE)

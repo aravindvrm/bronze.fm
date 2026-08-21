@@ -37,3 +37,9 @@ public/media/
 
 # TS incremental build artifacts
 *.tsbuildinfo
+
+# Test output
+test-results/
+playwright-report/
+playwright/.cache/
+coverage/

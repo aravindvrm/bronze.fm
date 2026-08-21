@@ -315,14 +315,32 @@ files. Media is now served in development by a Vite middleware with
 `apply: 'serve'`, which cannot run during a build. `dist/` went from 70 MB to
 3.6 MB with zero audio files, verified.
 
-### Verification caveat
+### Test harness
 
-Animation still cannot be verified in this environment: the automated browser
-pane runs with `document.visibilityState === "hidden"`, so
-`requestAnimationFrame` never fires and Framer Motion freezes every animation
-at its `initial` value. Layout and behaviour were verified through measured
-DOM geometry instead. **Motion timing and the swipe gestures need a human on a
-real device.**
+Three layers, all running in CI:
+
+- **Vitest (77 tests)** over the pure logic: Range parsing and 206
+  construction, tenant resolution including subdomain forward-compatibility,
+  cache planning against a fake Cache API, time formatting, procedural-art
+  determinism, and filename-to-title cleaning.
+- **Playwright (22 tests)** in a real browser. This is what closed the
+  animation blind spot: the development preview runs with
+  `visibilityState: "hidden"`, so rAF never fires and Framer Motion pins every
+  animation at `initial` — two non-existent bugs were chased before that was
+  understood. The suite asserts the player slides fully in rather than
+  partway, unmounts on collapse, and that staggered entrances finish. It also
+  covers playback surviving navigation, seeking, auto-advance, swipe gestures
+  with axis locking, and the worker serving a cached 206.
+- **RLS (14 tests)** against a throwaway `supabase start` instance with every
+  migration applied from scratch, so a migration that stops applying cleanly
+  fails in CI rather than on someone's manual `db push`.
+
+CI has no audio — the masters are gitignored — so `scripts/gen-test-audio.mjs`
+synthesises silent MP3s at each item's real duration, giving the browser tests
+decodable media at the exact fixture paths without shipping the album.
+
+Still unverified by machine: how the motion actually *feels*, and gesture
+behaviour under real touch on iOS. Those need a human on a device.
 
 ## 7. Open items
 
