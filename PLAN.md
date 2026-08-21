@@ -349,6 +349,48 @@ from the browser's HTTP cache with a 206 left over from playback, and only a
 complete 200 is safe to store — so saving would have silently failed on
 exactly the tracks already listened to.
 
+### Phase 3: ingest and a real Supabase adapter — done for this test deploy
+
+`scripts/ingest.mjs` uploads the local masters and writes the rows describing
+them, reading the single source of truth (`bronze.manifest.json`, written
+alongside the `.ts` fixture by `gen-fixtures.mjs`) rather than deriving titles
+or order a second time. Content-addressed by design: re-running is a safe
+no-op for anything already uploaded, since the hash is in the storage path.
+It re-hashes every file itself before upload and refuses on a mismatch, so a
+stale generated file cannot silently ship wrong data.
+
+```bash
+SUPABASE_SERVICE_ROLE_KEY=... node scripts/ingest.mjs            # stays unpublished
+SUPABASE_SERVICE_ROLE_KEY=... node scripts/ingest.mjs --publish  # visible to anon
+```
+
+`src/content/supabaseAdapter.ts` implements the same `ContentAdapter`
+interface as the fixtures, so no screen changes. `VITE_CONTENT_SOURCE=supabase`
+selects it; anything else, including unset, stays on local fixtures — this
+was previously a no-op env var pointing at a fixture-only build with no
+Supabase adapter at all.
+
+**The media bucket is public for this phase, not private-with-signed-URLs as
+originally planned.** A signed URL's token changes every time it is minted,
+which breaks the caching design outright: the service worker and
+`mediaCache.ts` key on a stable, hash-embedded URL, and a rotating query
+string would turn every session into an unrelated set of "new" files.
+Reworking the cache to key on asset hash instead of full URL is the correct
+fix for a real public launch. For a private test deploy, matching what
+already exists cost nothing.
+
+**Important, and easy to assume otherwise: `content.published = false` hides
+a Content from being *listed* through the API. It does not make its files
+unfetchable.** A public bucket serves any object at its exact path regardless
+of RLS — confirmed directly: a track's storage URL returned `200` while its
+Content was still unpublished. RLS gates discovery, not the bytes. Anyone who
+already has a track's exact URL can fetch it either way.
+
+Verified end to end against a production build (`vite build` + `vite
+preview`, not the dev server): real titles and durations from Supabase, a
+Content-Range-correct stream from the public bucket, and the scrub bar
+advancing under genuine playback — not just a `play` event firing.
+
 ### Fixed: masters were being published by the build
 
 `public/media/audio` was a symlink to the master folder, and `vite build`

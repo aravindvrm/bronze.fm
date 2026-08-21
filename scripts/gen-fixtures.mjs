@@ -98,12 +98,25 @@ export const bronze: Content = {
 fs.mkdirSync(path.dirname(outFile), { recursive: true })
 fs.writeFileSync(outFile, body)
 
-// Sidecar for tooling that cannot import TypeScript — notably
-// scripts/gen-test-audio.mjs, which synthesises stand-in media in CI where the
-// gitignored masters do not exist.
+// Sidecar for tooling that cannot import TypeScript — gen-test-audio.mjs
+// (synthesises stand-in media in CI) and ingest.mjs (uploads to Supabase).
+// Full item shape, not a trimmed one, so this stays the single source of
+// truth for the tracklist rather than drifting into a second one.
 fs.writeFileSync(
   path.join(path.dirname(outFile), 'bronze.manifest.json'),
-  JSON.stringify({ slug: 'bronze', items: items.map(({ id, url, durationMs, channels, sampleRate }) => ({ id, url, durationMs, channels, sampleRate })) }, null, 2),
+  JSON.stringify(
+    {
+      creator: { slug: 'dean', name: 'Dean', tier: 'standard' },
+      slug: 'bronze',
+      type: 'music',
+      title: 'Bronze',
+      credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+      totalDurationMs: totalMs,
+      items,
+    },
+    null,
+    2,
+  ),
 )
 console.log(`✓ ${items.length} items → ${path.relative(root, outFile)}`)
 console.log(`  total runtime ${Math.floor(totalMs / 60000)}m ${Math.round((totalMs % 60000) / 1000)}s`)
