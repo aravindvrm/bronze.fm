@@ -75,7 +75,11 @@ export default defineConfig({
       injectRegister: null,
       injectManifest: {
         // Shell only. Media is cached deliberately at runtime, never precached.
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+        // jpg is here for cover art, which is shell rather than media: the
+        // splash is the entry screen, so a cold offline start without it opens
+        // on a broken image. Bundled covers are content-hashed, so a replaced
+        // cover revokes the old precache entry rather than shadowing it.
+        globPatterns: ['**/*.{js,css,html,png,jpg,svg,woff2}'],
         globIgnores: ['**/media/**'],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },

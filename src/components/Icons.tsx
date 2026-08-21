@@ -61,3 +61,33 @@ export const VolumeIcon = ({ className = 'size-5', muted = false }: P & { muted?
     )}
   </svg>
 )
+
+/*
+ * Section icons — Material Symbols (Apache-2.0), inlined like the rest of this
+ * file so they take `currentColor` and tint with the tile they sit on. Their
+ * 0 -960 960 960 viewBox is Material's own coordinate system, not a mistake.
+ */
+
+export const MusicIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 -960 960 960" fill="currentColor" className={className} aria-hidden>
+    <path d="M127-167q-47-47-47-113t47-113q47-47 113-47 23 0 42.5 5.5T320-418v-342l480-80v480q0 66-47 113t-113 47q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T720-498v-165l-320 63v320q0 66-47 113t-113 47q-66 0-113-47Z" />
+  </svg>
+)
+
+export const VideosIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 -960 960 960" fill="currentColor" className={className} aria-hidden>
+    <path d="m460-380 280-180-280-180v360ZM320-240q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z" />
+  </svg>
+)
+
+export const MerchIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 -960 960 960" fill="currentColor" className={className} aria-hidden>
+    <path d="M223.5-103.5Q200-127 200-160t23.5-56.5Q247-240 280-240t56.5 23.5Q360-193 360-160t-23.5 56.5Q313-80 280-80t-56.5-23.5Zm400 0Q600-127 600-160t23.5-56.5Q647-240 680-240t56.5 23.5Q760-193 760-160t-23.5 56.5Q713-80 680-80t-56.5-23.5ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z" />
+  </svg>
+)
+
+export const EventsIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 -960 960 960" fill="currentColor" className={className} aria-hidden>
+    <path d="M80-80q29-74 38.5-152.5T130-390q-39-15-64.5-50T40-520v-80q115-38 234.5-116T480-880q86 86 205.5 164T920-600v80q0 45-25.5 80T830-390q2 79 11.5 157.5T880-80H80Zm156-520h488q-78-44-140.5-90.5T480-772q-41 35-103.5 81.5T236-600Zm344 140q25 0 42.5-17.5T640-520H520q0 25 17.5 42.5T580-460Zm-200 0q25 0 42.5-17.5T440-520H320q0 25 17.5 42.5T380-460Zm-200 0q25 0 42.5-17.5T240-520H120q0 25 17.5 42.5T180-460Zm6 300h107q9-60 14-119t8-119q-9-5-18-10.5T280-422q-15 15-32.5 24.5T210-383q-2 57-7 112.5T186-160Zm188 0h212q-8-55-12.5-110T566-381q-26-2-47.5-12.5T480-421q-17 17-39.5 27.5T394-381q-3 56-7.5 111T374-160Zm293 0h107q-12-55-17-110.5T750-383q-20-5-38-14.5T680-422q-8 8-17 13.5T645-398q3 60 8.5 119T667-160Zm113-300q25 0 42.5-17.5T840-520H720q0 25 17.5 42.5T780-460Z" />
+  </svg>
+)
