@@ -76,7 +76,7 @@ export function CreatorProfile() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-void/40 via-transparent via-40% to-void" />
 
       <div
-        className="relative px-5"
+        className="relative mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
         {/* Avatar overlaps the glass panel below it — the identity block a
@@ -90,7 +90,7 @@ export function CreatorProfile() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 size-24 rounded-full border-2 border-void object-cover shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+          className="relative z-10 size-24 rounded-full border-2 border-void object-cover shadow-[0_4px_20px_rgba(0,0,0,0.5)] sm:size-32"
         />
 
         {/* Glass panel: the cover runs bright behind this, and the Creator's
@@ -103,7 +103,7 @@ export function CreatorProfile() {
         >
           {/* Creator names are identity, not a Content title, so they stay on
               the app face rather than the release's. */}
-          <h1 className="font-display text-4xl tracking-tight text-parchment">{creator.name}</h1>
+          <h1 className="font-display text-4xl tracking-tight text-parchment sm:text-6xl">{creator.name}</h1>
           {creator.bio && (
             <p className="mt-3 text-sm leading-relaxed text-parchment/50">{creator.bio}</p>
           )}
@@ -124,7 +124,7 @@ export function CreatorProfile() {
           </div>
         </motion.header>
 
-        <div className="mt-8 grid grid-cols-2 gap-3.5">
+        <div className="mt-8 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-5">
           {SECTIONS.map((tile, i) => (
             <motion.button
               key={tile.seg}

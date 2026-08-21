@@ -23,7 +23,7 @@ export function Home() {
   return (
     <div className="relative min-h-full overflow-hidden bg-void">
       <div
-        className="relative px-5"
+        className="relative mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
         {/*
@@ -35,13 +35,13 @@ export function Home() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-4 rounded-md border border-white/[0.14] p-4"
+          className="flex items-center gap-4 rounded-md border border-white/[0.14] p-4 sm:gap-8 sm:p-8"
         >
           {/* min-w-0 lets a long title wrap instead of pushing the cover out of
               the card. */}
           <div className="min-w-0 flex-1">
             <p className="text-[10px] uppercase tracking-[0.4em] text-gilt/70">{creator.name}</p>
-            <h1 className="mt-2 font-content text-5xl leading-[1.05] tracking-tight text-parchment">
+            <h1 className="mt-2 font-content text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
               {content.title}
             </h1>
             <p className="mt-2 text-xs text-parchment/40">
@@ -52,11 +52,11 @@ export function Home() {
           <img
             src={coverUrl(content, 400)}
             alt={`${content.title} cover`}
-            className="size-24 shrink-0 self-center rounded object-cover shadow-lg shadow-black/50"
+            className="size-24 shrink-0 self-center rounded object-cover shadow-lg shadow-black/50 sm:size-44"
           />
         </motion.header>
 
-        <div className="mt-10 grid grid-cols-2 gap-3.5">
+        <div className="mt-10 grid grid-cols-2 gap-3.5 sm:grid-cols-4 sm:gap-5">
           {TILES.map((tile, i) => (
             <motion.button
               key={tile.seg}

@@ -28,7 +28,7 @@ export function QueuePanel() {
       className="absolute inset-0 z-10 flex flex-col bg-ink/95 backdrop-blur-2xl"
     >
       <header
-        className="flex items-center gap-3 px-5 pb-3"
+        className="mx-auto flex w-full max-w-3xl items-center gap-3 px-5 pb-3 sm:px-6"
         style={{ paddingTop: 'calc(var(--safe-t) + 0.9rem)' }}
       >
         <button
@@ -47,7 +47,7 @@ export function QueuePanel() {
       </header>
 
       <ul
-        className="flex-1 overflow-y-auto no-scrollbar px-3"
+        className="mx-auto w-full max-w-3xl flex-1 overflow-y-auto no-scrollbar px-3 sm:px-6"
         style={{ paddingBottom: 'calc(var(--safe-b) + 1.5rem)' }}
       >
         {queue.map((item, i) => {

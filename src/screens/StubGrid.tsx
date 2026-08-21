@@ -52,7 +52,7 @@ export function StubGrid({
     <div className="min-h-full bg-void">
       <ScreenHeader title={title} to={backTo} />
 
-      <div className="px-5" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
+      <div className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
         <p className="mb-6 text-xs leading-relaxed text-parchment/40">{blurb}</p>
 
         {items?.length === 0 && (
@@ -73,7 +73,7 @@ export function StubGrid({
           </div>
         )}
 
-        <div className={`grid gap-3.5 ${wide ? 'grid-cols-1' : 'grid-cols-2'}`}>
+        <div className={`grid gap-3.5 sm:gap-5 ${wide ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2 sm:grid-cols-4'}`}>
           {(items ?? []).map((item, i) => (
             <motion.div
               key={item.id}

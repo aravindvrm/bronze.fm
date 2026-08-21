@@ -162,7 +162,7 @@ export default function App() {
         interrupted animation strands the user on the old screen. Screens
         animate themselves on mount, which needs neither.
       */}
-      <div className="mx-auto h-full max-w-[var(--app-w)] overflow-y-auto no-scrollbar sm:border-x sm:border-white/10 sm:shadow-[0_0_80px_rgba(0,0,0,0.6)]">
+      <div className="h-full overflow-y-auto no-scrollbar">
         <Routes location={location}>
           {dedicated ? (
             <Route path="/*" element={<CreatorShell />} />

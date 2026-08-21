@@ -36,12 +36,12 @@ export function ContentIndex() {
     <div className="min-h-full bg-void">
       <ScreenHeader title="Content" />
 
-      <div className="px-5" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
+      <div className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
         {items?.length === 0 && (
           <p className="text-xs text-parchment/40">No content yet.</p>
         )}
 
-        <div className="grid grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4 sm:gap-5 lg:grid-cols-5">
           {(items ?? []).map((item, i) => (
             <motion.button
               key={item.id}

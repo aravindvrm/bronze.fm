@@ -29,13 +29,20 @@ export function Music() {
         title={content.title}
         titleOf="content"
         to={contentPath(creator.slug, content.slug, 'home')}
+        width="narrow"
       />
 
-      <div className="px-5 pb-2">
+      <div className="mx-auto max-w-3xl px-5 pb-2 sm:px-6">
         <OfflineControl content={content} />
       </div>
 
-      <ul className="px-3" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
+      {/* Narrower than the grids above: a track row is title on the left and a
+          duration on the right, so at full width the two ends drift apart with
+          nothing between them. */}
+      <ul
+        className="mx-auto max-w-3xl px-3 sm:px-6"
+        style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
+      >
         {content.items.map((item, i) => {
           const active = isCurrent && i === index
           return (

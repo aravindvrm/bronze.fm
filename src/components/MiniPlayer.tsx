@@ -22,15 +22,20 @@ export function MiniPlayer() {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 80, opacity: 0 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-0 left-1/2 z-40 w-full max-w-[var(--app-w)] -translate-x-1/2"
+      className="fixed inset-x-0 bottom-0 z-40"
       style={{ paddingBottom: 'var(--safe-b)' }}
     >
-      <div className="mx-3 mb-3 overflow-hidden rounded-md border border-white/[0.14] bg-ink/80 shadow-2xl shadow-black/60 backdrop-blur-xl">
-        <div className="px-3 pt-1">
+      {/* A floating card on phones; on desktop it becomes a full-width docked
+          bar, the shape a music app has there. */}
+      <div className="mx-3 mb-3 overflow-hidden rounded-md border border-white/[0.14] bg-ink/80 shadow-2xl shadow-black/60 backdrop-blur-xl sm:mx-0 sm:mb-0 sm:rounded-none sm:border-x-0 sm:border-b-0">
+        <div className="mx-auto max-w-[var(--app-w)] px-3 pt-1 sm:px-8">
           <ScrubBar compact />
         </div>
 
-        <div className="flex items-center gap-3 px-3 pb-3 pt-1">
+        {/* Phone: track info takes the space, transport sits at the end. Desktop:
+            three equal columns so the transport lands in the true centre of the
+            bar rather than stranded against the right edge. */}
+        <div className="mx-auto flex max-w-[var(--app-w)] items-center gap-3 px-3 pb-3 pt-1 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:gap-5 sm:px-8 sm:pb-4">
           <button
             onClick={() => setExpanded(true)}
             aria-label="Open player"
@@ -40,7 +45,7 @@ export function MiniPlayer() {
               layoutId="player-art"
               src={artUrl(item.hash, 'item', 256)}
               alt=""
-              className="size-11 shrink-0 rounded object-cover"
+              className="size-11 shrink-0 rounded object-cover sm:size-14"
             />
             <span className="min-w-0 flex-1">
               <span className="block truncate font-content text-sm font-medium text-parchment">{item.title}</span>
@@ -51,6 +56,9 @@ export function MiniPlayer() {
           </button>
 
           <Transport size="sm" />
+
+          {/* Balances the track-info column so the transport is centred. */}
+          <div className="hidden sm:block" />
         </div>
       </div>
     </motion.div>

@@ -137,10 +137,12 @@
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Every screen here is designed as a phone-width column. On a wide viewport
-     it stays that width, centered, rather than stretching tile grids and
-     type into proportions built for a much narrower frame. */
-  --app-w: 30rem;
+  /* Content width ceiling. Phone viewports sit well under it, so it only
+     engages on desktop, where it stops the grids and track lists from
+     running to the edges of a wide monitor. Not a phone-width cap: the
+     layouts reflow into the extra space (more grid columns, roomier
+     spacing) rather than staying a narrow column with padding either side. */
+  --app-w: 72rem;
 }
 
 @layer base {

@@ -43,8 +43,11 @@ export function InstallBanner() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 24 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="pointer-events-auto fixed left-1/2 z-40 flex w-[calc(100%-2rem)] max-w-[calc(var(--app-w)-2rem)] -translate-x-1/2 items-center gap-3 rounded-md border border-white/[0.14] bg-ink/90 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-        style={{ bottom: 'calc(var(--safe-b) + 1rem)' }}
+        // Full-width above the dock on phones; a corner toast on desktop,
+        // where a viewport-wide bar for a dismissible prompt reads as an
+        // error banner rather than an offer. Sits clear of the docked mini
+        // player, which is taller on desktop.
+        className="pointer-events-auto fixed inset-x-4 bottom-[calc(var(--safe-b)+1rem)] z-40 flex items-center gap-3 rounded-md border border-white/[0.14] bg-ink/90 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:inset-x-auto sm:bottom-[calc(var(--safe-b)+7rem)] sm:right-6 sm:w-80"
       >
         <div className="min-w-0 flex-1">
           <p className="font-display text-sm text-parchment">Install bronze.fm</p>
