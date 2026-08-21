@@ -1,19 +1,18 @@
 import { expect, test } from '@playwright/test'
-import { act, gotoCreator, snapshot, waitPlaying } from './helpers'
+import { act, gotoContent, gotoCreator, playTrack, snapshot, waitPlaying } from './helpers'
 
 test.describe('playback', () => {
   test('survives navigation between Creator sections', async ({ page }) => {
     // The load-bearing architectural invariant: the audio element lives at
     // module scope, outside React, so routing cannot tear it down.
-    await gotoCreator(page, '/music')
-    await act(page, 'playAt', 1)
-    await waitPlaying(page)
+    await gotoContent(page)
+    await playTrack(page, 1)
 
     const before = await snapshot(page)
     expect(before.isPlaying).toBe(true)
 
     await page.getByRole('button', { name: 'Back' }).click()
-    await expect(page).toHaveURL(/\/dean\/home$/)
+    await expect(page).toHaveURL(/\/dean$/)
     await page.getByRole('button', { name: /^Merch/ }).click()
     await expect(page).toHaveURL(/\/dean\/merch$/)
 
@@ -27,9 +26,8 @@ test.describe('playback', () => {
   })
 
   test('reports real duration once metadata loads', async ({ page }) => {
-    await gotoCreator(page, '/music')
-    await act(page, 'playAt', 1)
-    await waitPlaying(page)
+    await gotoContent(page)
+    await playTrack(page, 1)
     await page.waitForFunction(() => {
       const s = (window as never as { __player: { getState: () => { duration: number } } }).__player.getState()
       return s.duration > 0
@@ -41,9 +39,8 @@ test.describe('playback', () => {
   })
 
   test('seeks into the middle of a track', async ({ page }) => {
-    await gotoCreator(page, '/music')
-    await act(page, 'playAt', 1)
-    await waitPlaying(page)
+    await gotoContent(page)
+    await playTrack(page, 1)
     await page.waitForFunction(() => {
       const s = (window as never as { __player: { getState: () => { duration: number } } }).__player.getState()
       return s.duration > 0
@@ -57,10 +54,9 @@ test.describe('playback', () => {
   })
 
   test('advances to the next track when one ends', async ({ page }) => {
-    await gotoCreator(page, '/music')
+    await gotoContent(page)
     // Track 0 is a 13s skit; seek near its end rather than waiting it out.
-    await act(page, 'playAt', 0)
-    await waitPlaying(page)
+    await playTrack(page, 0)
     await page.waitForFunction(() => {
       const s = (window as never as { __player: { getState: () => { duration: number } } }).__player.getState()
       return s.duration > 0

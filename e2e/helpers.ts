@@ -52,10 +52,32 @@ export async function waitPlaying(page: Page) {
   }, undefined, { timeout: 10_000 })
 }
 
+/** Navigates within the Creator namespace and waits for the store handle. */
 export async function gotoCreator(page: Page, path = '') {
   await page.goto(`/dean${path}`)
-  await page.waitForFunction(() => {
-    const w = window as never as { __player?: { getState: () => { queue: unknown[] } } }
-    return !!w.__player && w.__player.getState().queue.length > 0
-  }, undefined, { timeout: 10_000 })
+  await page.waitForFunction(() => !!(window as never as { __player?: unknown }).__player, undefined, {
+    timeout: 10_000,
+  })
+}
+
+/**
+ * Opens a Content page and waits for its track rows.
+ *
+ * Nothing is queued until a Content is played from, so tests that need a queue
+ * must play rather than merely navigate.
+ */
+export async function gotoContent(page: Page, contentSlug = 'bronze') {
+  await gotoCreator(page, `/${contentSlug}`)
+  await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).waitFor({ timeout: 10_000 })
+}
+
+/** Plays a track from the open Content page and waits for real playback. */
+export async function playTrack(page: Page, index: number) {
+  await page.evaluate(async ([i, slug]) => {
+    const mod = await import('/src/content/adapter.ts')
+    const c = await mod.content.getContent('dean', slug as string)
+    const s = (window as never as { __player: { getState: () => { playFrom: (c: unknown, i: number) => void } } }).__player.getState()
+    s.playFrom(c, i as number)
+  }, [index, 'bronze'] as const)
+  await waitPlaying(page)
 }

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { act, gotoCreator, snapshot } from './helpers'
+import { act, gotoContent, playTrack, snapshot } from './helpers'
 
 /** Drags across the artwork, which is the gesture surface. */
 async function dragOverArt(page: Page, dx: number, dy: number, steps = 12) {
@@ -18,8 +18,8 @@ async function dragOverArt(page: Page, dx: number, dy: number, steps = 12) {
 }
 
 async function openPlayer(page: Page, index = 1) {
-  await gotoCreator(page, '/music')
-  await act(page, 'playAt', index)
+  await gotoContent(page)
+  await playTrack(page, index)
   await act(page, 'setExpanded', true)
   await page.locator('img[alt$="artwork"]').waitFor({ state: 'visible' })
   await page.waitForTimeout(600) // let the entrance settle

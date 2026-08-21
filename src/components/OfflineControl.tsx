@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { usePlayer } from '@/audio/playerStore'
+import type { Content } from '@/content/types'
 import { cacheAvailable, clearMedia, manifestFor, planSync, runSync, usage } from '@/lib/mediaCache'
 
 const mb = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(0)} MB`
@@ -13,8 +13,7 @@ const mb = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(0)} MB`
  * cached anyway (see useOpportunisticCache) — this is for taking the whole
  * record somewhere with no signal.
  */
-export function OfflineControl() {
-  const content = usePlayer((s) => s.content)
+export function OfflineControl({ content }: { content: Content }) {
   const [state, setState] = useState<'idle' | 'working' | 'done'>('idle')
   const [progress, setProgress] = useState({ done: 0, total: 0 })
   const [cached, setCached] = useState(0)

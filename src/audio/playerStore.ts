@@ -62,7 +62,13 @@ export interface PlayerState {
 }
 
 interface PlayerActions {
-  loadContent: (content: Content) => void
+  /**
+   * Starts playback from a Content. Viewing a Content must not disturb what is
+   * already playing, so the queue only swaps when a different Content is
+   * played from — browsing to another album while one plays leaves the current
+   * queue intact until you actually press play.
+   */
+  playFrom: (content: Content, index: number) => void
   playAt: (index: number) => void
   toggle: () => void
   next: () => void
@@ -91,10 +97,11 @@ export const usePlayer = create<PlayerState & PlayerActions>((set, get) => ({
   scrubbing: false,
   error: null,
 
-  loadContent: (content) => {
-    // Re-priming on the same Content would restart the queue mid-playback.
-    if (get().content?.id === content.id) return
-    set({ content, queue: content.items, index: 0 })
+  playFrom: (content, index) => {
+    if (get().content?.id !== content.id) {
+      set({ content, queue: content.items, index })
+    }
+    get().playAt(index)
   },
 
   playAt: (index) => {

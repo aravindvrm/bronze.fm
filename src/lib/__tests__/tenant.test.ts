@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { creatorFromHost, creatorFromPath, creatorPath } from '@/lib/tenant'
+import {
+  RESERVED_CONTENT_SLUGS,
+  creatorFromHost,
+  creatorFromPath,
+  creatorPath,
+  isReservedContentSlug,
+} from '@/lib/tenant'
 
 /**
  * Routing is path-based today, but host is checked first so a premium Creator
@@ -68,5 +74,35 @@ describe('creatorPath', () => {
 
   it('ignores empty segments', () => {
     expect(creatorPath('dean', '')).toBe('/dean')
+  })
+})
+
+describe('reserved Content slugs', () => {
+  // Content sits flat under the Creator (/dean/bronze) alongside sections
+  // (/dean/music), so a colliding slug would be permanently unreachable.
+  it.each([...RESERVED_CONTENT_SLUGS])('reserves "%s"', (slug) => {
+    expect(isReservedContentSlug(slug)).toBe(true)
+  })
+
+  it.each(['bronze', 'bronze-age', 'the-wait-is-over'])('allows "%s"', (slug) => {
+    expect(isReservedContentSlug(slug)).toBe(false)
+  })
+
+  it('covers every section route the app actually mounts', () => {
+    // If a section route is added without reserving it, a Content could claim
+    // that path. Keep this list matched to the routes in App.tsx.
+    for (const seg of ['music', 'videos', 'merch', 'events']) {
+      expect(isReservedContentSlug(seg)).toBe(true)
+    }
+  })
+
+  it('matches the database CHECK constraint', () => {
+    // supabase/migrations/20260820040000_content_slug_rules.sql hard-codes the
+    // same list; drift would let a bad slug into the database.
+    const inMigration = [
+      'music', 'videos', 'merch', 'events', 'about',
+      'home', 'assets', 'api', 'settings', 'search',
+    ]
+    expect([...RESERVED_CONTENT_SLUGS].sort()).toEqual(inMigration.sort())
   })
 })

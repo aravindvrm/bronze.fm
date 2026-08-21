@@ -9,36 +9,41 @@ import type { Creator } from '@/content/types'
 import { isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
-import { Splash } from '@/screens/Splash'
-import { Home } from '@/screens/Home'
-import { Music } from '@/screens/Music'
+import { CreatorProfile } from '@/screens/CreatorProfile'
+import { MusicIndex } from '@/screens/MusicIndex'
+import { ContentDetail } from '@/screens/ContentDetail'
 import { StubGrid } from '@/screens/StubGrid'
 
 /**
- * Loads the Creator addressed by the current host or path, primes the player
- * with their primary music Content, then renders their namespace.
+ * Everything under one Creator.
+ *
+ *   /dean               the Creator's profile — the tenant root
+ *   /dean/music         their releases
+ *   /dean/videos|merch|events   Creator-scoped sections
+ *   /dean/bronze        one Content
+ *
+ * Content sits flat alongside the sections, so section names are reserved and
+ * cannot be used as Content slugs — enforced in the router by ordering and in
+ * the database by a CHECK constraint.
  */
 function CreatorShell() {
   const params = useParams()
   const slug = params.creator ?? resolveCreatorSlug()
   const [creator, setCreator] = useState<Creator | null>(null)
   const [missing, setMissing] = useState(false)
-  const loadContent = usePlayer((s) => s.loadContent)
 
   useEffect(() => {
     let cancelled = false
-    void (async () => {
-      const c = await adapter.getCreator(slug)
+    setMissing(false)
+    void adapter.getCreator(slug).then((c) => {
       if (cancelled) return
-      if (!c) return setMissing(true)
-      setCreator(c)
-      const music = await adapter.listContent(slug, 'music')
-      if (!cancelled && music[0]) loadContent(music[0])
-    })()
+      if (!c) setMissing(true)
+      else setCreator(c)
+    })
     return () => {
       cancelled = true
     }
-  }, [slug, loadContent])
+  }, [slug])
 
   if (missing) {
     return (
@@ -54,9 +59,8 @@ function CreatorShell() {
   return (
     <CreatorProvider creator={creator}>
       <Routes>
-        <Route index element={<Splash />} />
-        <Route path="home" element={<Home />} />
-        <Route path="music" element={<Music />} />
+        <Route index element={<CreatorProfile />} />
+        <Route path="music" element={<MusicIndex />} />
         <Route
           path="videos"
           element={<StubGrid kind="video" title="Videos" blurb="Official videos, visualisers and studio footage will land here." />}
@@ -69,6 +73,8 @@ function CreatorShell() {
           path="events"
           element={<StubGrid kind="event" title="Events" blurb="Live dates and ticket links, announced as they are confirmed." />}
         />
+        {/* Last, so the reserved sections above always win the match. */}
+        <Route path=":contentSlug" element={<ContentDetail />} />
         <Route path="*" element={<Navigate to="." replace />} />
       </Routes>
     </CreatorProvider>
@@ -78,39 +84,39 @@ function CreatorShell() {
 export default function App() {
   const location = useLocation()
   const expanded = usePlayer((s) => s.expanded)
+  const hasQueue = usePlayer((s) => s.queue.length > 0)
 
   // On a dedicated host the Creator comes from the hostname, so paths carry no
   // creator segment. On the shared host the first segment is the Creator.
   const dedicated = isDedicatedHost()
-
-  const onSplash = dedicated
-    ? location.pathname === '/'
-    : location.pathname.split('/').filter(Boolean).length <= 1
 
   return (
     <AudioProvider>
       {/*
         No AnimatePresence around the routes. `mode="wait"` couples navigation
         to an exit animation completing — every nav stalls behind it, and an
-        interrupted animation strands the user on the old screen. Without
-        `mode="wait"` the outgoing and incoming screens stack in flow instead.
-        Screens animate themselves on mount, which needs neither.
+        interrupted animation strands the user on the old screen. Screens
+        animate themselves on mount, which needs neither.
       */}
       <div className="h-full overflow-y-auto no-scrollbar">
         <Routes location={location}>
-            {dedicated ? (
-              <Route path="/*" element={<CreatorShell />} />
-            ) : (
-              <>
-                <Route path="/" element={<Navigate to={`/${resolveCreatorSlug()}`} replace />} />
-                <Route path="/:creator/*" element={<CreatorShell />} />
-              </>
-            )}
+          {dedicated ? (
+            <Route path="/*" element={<CreatorShell />} />
+          ) : (
+            <>
+              <Route path="/" element={<Navigate to={`/${resolveCreatorSlug()}`} replace />} />
+              <Route path="/:creator/*" element={<CreatorShell />} />
+            </>
+          )}
         </Routes>
       </div>
 
-      {/* One player, two presentations — both persist across route changes. */}
-      <AnimatePresence>{!onSplash && !expanded && <MiniPlayer key="mini" />}</AnimatePresence>
+      {/*
+        One player, two presentations. The dock appears once something is
+        queued rather than on particular routes — nothing is queued until a
+        Content is actually played from.
+      */}
+      <AnimatePresence>{hasQueue && !expanded && <MiniPlayer key="mini" />}</AnimatePresence>
       <AnimatePresence>{expanded && <PlayerScreen key="full" />}</AnimatePresence>
     </AudioProvider>
   )

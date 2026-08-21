@@ -10,8 +10,30 @@
 /** Hosts that are the app itself, never a Creator subdomain. */
 const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
 
+/**
+ * Second-segment words that are Creator sections, never Content slugs.
+ *
+ * Content sits flat under the Creator (`/dean/bronze`) alongside these
+ * sections (`/dean/music`), so a Content slug that collides with one would be
+ * unreachable — an album called "merch" would resolve to the merch page. The
+ * database enforces the same list with a CHECK constraint, so a colliding slug
+ * cannot be stored in the first place.
+ */
+export const RESERVED_CONTENT_SLUGS = [
+  'music',
+  'videos',
+  'merch',
+  'events',
+  'about',
+  'home',
+  'assets',
+  'api',
+  'settings',
+  'search',
+] as const
+
 /** Path segments that are routes, never a Creator slug. */
-const RESERVED_PATHS = new Set(['home', 'music', 'videos', 'merch', 'events', 'assets'])
+const RESERVED_PATHS = new Set<string>([...RESERVED_CONTENT_SLUGS])
 
 export function creatorFromHost(hostname = window.location.hostname): string | null {
   // Bare host, IP, or localhost — no subdomain to read.
@@ -46,6 +68,10 @@ export function resolveCreatorSlug(): string {
 /** True when the Creator is being served from their own subdomain/domain. */
 export function isDedicatedHost(): boolean {
   return creatorFromHost() !== null
+}
+
+export function isReservedContentSlug(slug: string): boolean {
+  return (RESERVED_CONTENT_SLUGS as readonly string[]).includes(slug)
 }
 
 /**

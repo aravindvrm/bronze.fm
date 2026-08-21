@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { act, gotoCreator } from './helpers'
+import { act, gotoContent, gotoCreator, playTrack } from './helpers'
 
 /**
  * These exist because animation was the one thing that could not be verified
@@ -21,8 +21,8 @@ const playerBox = async (page: import('@playwright/test').Page) =>
 
 test.describe('animation', () => {
   test('the full player slides all the way in, not partway', async ({ page }) => {
-    await gotoCreator(page, '/music')
-    await act(page, 'playAt', 1)
+    await gotoContent(page)
+    await playTrack(page, 1)
     await act(page, 'setExpanded', true)
 
     await expect
@@ -37,8 +37,8 @@ test.describe('animation', () => {
 
   test('the player unmounts after collapsing', async ({ page }) => {
     // A stuck exit animation would leave a stale node covering the app.
-    await gotoCreator(page, '/music')
-    await act(page, 'playAt', 1)
+    await gotoContent(page)
+    await playTrack(page, 1)
     await act(page, 'setExpanded', true)
     await expect.poll(async () => (await playerBox(page))?.y, { timeout: 5000 }).toBe(0)
 
@@ -47,8 +47,8 @@ test.describe('animation', () => {
   })
 
   test('the queue panel settles fully open', async ({ page }) => {
-    await gotoCreator(page, '/music')
-    await act(page, 'playAt', 1)
+    await gotoContent(page)
+    await playTrack(page, 1)
     await act(page, 'setExpanded', true)
     await expect.poll(async () => (await playerBox(page))?.y, { timeout: 5000 }).toBe(0)
 
@@ -63,8 +63,8 @@ test.describe('animation', () => {
     await expect(page.getByRole('button', { name: 'Close track list' })).toBeVisible()
   })
 
-  test('home tiles finish their staggered entrance', async ({ page }) => {
-    await page.goto('/dean/home')
+  test('profile tiles finish their staggered entrance', async ({ page }) => {
+    await page.goto('/dean')
     for (const label of ['Music', 'Videos', 'Merch', 'Events']) {
       const tile = page.getByRole('button', { name: new RegExp(`^${label}`) })
       await expect(tile).toBeVisible()
@@ -77,8 +77,8 @@ test.describe('animation', () => {
     }
   })
 
-  test('splash content reaches full opacity', async ({ page }) => {
-    await gotoCreator(page)
+  test('the release hero reaches full opacity', async ({ page }) => {
+    await gotoContent(page)
     const title = page.getByRole('heading', { name: 'Bronze' })
     await expect
       .poll(async () => Number(await title.evaluate((el) => getComputedStyle(el).opacity)), {
