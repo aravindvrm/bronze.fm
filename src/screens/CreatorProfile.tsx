@@ -41,7 +41,7 @@ export function CreatorProfile() {
   }, [creator.slug])
 
   return (
-    <div className="grain relative min-h-full overflow-hidden bg-void">
+    <div className="relative min-h-full overflow-hidden bg-void">
       {/*
         The Creator has no artwork of its own, so it borrows the latest
         release's — which is also what a visitor sees one tap later.
@@ -63,7 +63,7 @@ export function CreatorProfile() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl border border-white/10 bg-ink/50 px-5 py-4 backdrop-blur-xl"
+          className="rounded-md border border-white/[0.14] bg-ink/50 px-5 py-4 backdrop-blur-xl"
         >
           {/* Creator names are identity, not a Content title, so they stay on
               the app face rather than the release's. */}
@@ -82,7 +82,7 @@ export function CreatorProfile() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.14 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
               whileTap={{ scale: 0.97 }}
-              className="group relative aspect-square overflow-hidden rounded-2xl border border-white/10 text-left"
+              className="group relative aspect-square overflow-hidden rounded-md border border-white/[0.14] text-left"
             >
               <img
                 src={artUrl(tile.seed, 'item', 600)}

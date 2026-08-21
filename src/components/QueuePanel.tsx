@@ -57,14 +57,14 @@ export function QueuePanel() {
             <li key={item.id}>
               <button
                 onClick={() => playAt(i)}
-                className={`flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition ${
+                className={`flex w-full items-center gap-3 rounded px-2 py-2.5 text-left transition ${
                   active ? 'bg-white/[0.08]' : 'hover:bg-white/[0.04]'
                 }`}
               >
                 <span className="relative shrink-0">
-                  <img src={artUrl(item.hash, 'item', 128)} alt="" className="size-11 rounded-lg object-cover" />
+                  <img src={artUrl(item.hash, 'item', 128)} alt="" className="size-11 rounded object-cover" />
                   {active && isPlaying && (
-                    <span className="absolute inset-0 grid place-items-center rounded-lg bg-void/55">
+                    <span className="absolute inset-0 grid place-items-center rounded bg-void/55">
                       <span className="flex items-end gap-[2px]">
                         {[0, 1, 2].map((b) => (
                           <motion.span

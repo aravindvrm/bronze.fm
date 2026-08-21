@@ -25,7 +25,7 @@ export function MiniPlayer() {
       className="fixed inset-x-0 bottom-0 z-40"
       style={{ paddingBottom: 'var(--safe-b)' }}
     >
-      <div className="mx-3 mb-3 overflow-hidden rounded-2xl border border-white/10 bg-ink/80 shadow-2xl shadow-black/60 backdrop-blur-xl">
+      <div className="mx-3 mb-3 overflow-hidden rounded-md border border-white/[0.14] bg-ink/80 shadow-2xl shadow-black/60 backdrop-blur-xl">
         <div className="px-3 pt-1">
           <ScrubBar compact />
         </div>
@@ -40,7 +40,7 @@ export function MiniPlayer() {
               layoutId="player-art"
               src={artUrl(item.hash, 'item', 256)}
               alt=""
-              className="size-11 shrink-0 rounded-lg object-cover"
+              className="size-11 shrink-0 rounded object-cover"
             />
             <span className="min-w-0 flex-1">
               <span className="block truncate font-content text-sm font-medium text-parchment">{item.title}</span>

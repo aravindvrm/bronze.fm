@@ -56,7 +56,7 @@ export function StubGrid({
         <p className="mb-6 text-xs leading-relaxed text-parchment/40">{blurb}</p>
 
         {items?.length === 0 && (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+          <div className="rounded-md border border-white/[0.14] p-5">
             <p className="text-sm text-parchment/60">
               {release
                 ? `Nothing tied to ${release.title} yet.`
@@ -80,7 +80,7 @@ export function StubGrid({
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              className="relative overflow-hidden rounded-2xl border border-white/10"
+              className="relative overflow-hidden rounded-md border border-white/[0.14]"
             >
               <img
                 src={artUrl(item.seed, kind, 800)}

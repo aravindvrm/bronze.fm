@@ -21,7 +21,7 @@ export function Home() {
   const content = useContentItem()
 
   return (
-    <div className="grain relative min-h-full overflow-hidden bg-void">
+    <div className="relative min-h-full overflow-hidden bg-void">
       <div
         className="relative px-5"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
@@ -35,7 +35,7 @@ export function Home() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4"
+          className="flex items-center gap-4 rounded-md border border-white/[0.14] p-4"
         >
           {/* min-w-0 lets a long title wrap instead of pushing the cover out of
               the card. */}
@@ -52,7 +52,7 @@ export function Home() {
           <img
             src={coverUrl(content, 400)}
             alt={`${content.title} cover`}
-            className="size-24 shrink-0 self-center rounded-xl object-cover shadow-lg shadow-black/50"
+            className="size-24 shrink-0 self-center rounded object-cover shadow-lg shadow-black/50"
           />
         </motion.header>
 
@@ -65,7 +65,7 @@ export function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.14 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
               whileTap={{ scale: 0.97 }}
-              className="group relative aspect-square overflow-hidden rounded-2xl border border-white/10 text-left"
+              className="group relative aspect-square overflow-hidden rounded-md border border-white/[0.14] text-left"
             >
               <img
                 src={artUrl(tile.seed, 'item', 600)}

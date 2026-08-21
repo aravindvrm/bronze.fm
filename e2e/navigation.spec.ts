@@ -18,7 +18,7 @@ test.describe('creator and content routing', () => {
 
   test('tapping the splash opens the release home', async ({ page }) => {
     await gotoSplash(page)
-    await page.locator('.grain').first().click()
+    await page.getByText('Tap to enter').click()
     await expect(page).toHaveURL(/\/robotrebel\/bronze\/home$/)
     for (const label of ['Music', 'Videos', 'Merch', 'Events']) {
       await expect(page.getByRole('button', { name: new RegExp(`^${label}`) })).toBeVisible()

@@ -98,21 +98,39 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* Design tokens — bronze patina through polished highlight. */
+/*
+ * Design tokens — "Brushed Editorial" direction: a cooler neutral base with
+ * bronze held back as one disciplined accent, rather than a warm metal wash
+ * over everything. --color-patina/umber/antique/brass are unused by any
+ * component today (only src/lib/art.ts's own, separate hardcoded ramp draws
+ * on the old warm palette for procedural tile art) — left as-is rather than
+ * touched for no visible effect.
+ */
 @theme {
-  --color-void: #0a0705;
-  --color-ink: #120c07;
+  --color-void: #0c0c0d;
+  --color-ink: #131313;
   --color-patina: #1a0f07;
   --color-umber: #3d2614;
   --color-antique: #6b4423;
   --color-bronze: #cd7f32;
   --color-brass: #d9a05b;
-  --color-gilt: #e8c48a;
-  --color-parchment: #f5e3c0;
+  /* One accent, not two: collapsed onto bronze rather than kept as a second,
+     lighter gold. Every existing text-gilt/border-gilt/bg-gilt call site
+     (labels, progress fill, active-row state, badges) inherits this without
+     being touched individually. */
+  --color-gilt: var(--color-bronze);
+  --color-parchment: #f2f0ec;
 
-  --font-display: 'Georgia', 'Times New Roman', serif;
+  /* Archivo via Google Fonts for now — inconsistent with Abhaya Libre's
+     self-hosting below (chosen there specifically to avoid a render-blocking
+     third-party stylesheet and leaking visitor IPs to Google) and worth
+     swapping to self-hosted woff2 files the same way before this direction
+     is final. Linked in index.html. */
+  --font-display: 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   /* Typeface of the Content itself — titles owned by a release, not by the
-     app around it. Chrome stays on --font-display. */
+     app around it. Chrome stays on --font-display. Unchanged across
+     directions: the app-voice/content-voice split is the concept, not tied
+     to any one aesthetic. */
   --font-content: 'Abhaya Libre', 'Georgia', serif;
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
@@ -154,16 +172,6 @@
 }
 
 @layer utilities {
-  .grain::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.4;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
-  }
-
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

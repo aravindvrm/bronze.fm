@@ -21,7 +21,7 @@ export function Splash() {
   return (
     <motion.div
       onClick={() => navigate(contentPath(creator.slug, content.slug, 'home'))}
-      className="grain relative h-full w-full cursor-pointer overflow-hidden bg-void"
+      className="relative h-full w-full cursor-pointer overflow-hidden bg-void"
     >
       <motion.img
         src={cover}

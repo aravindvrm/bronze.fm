@@ -54,7 +54,7 @@ export function OfflineControl({ content }: { content: Content }) {
   const pct = totalBytes > 0 ? Math.round((cached / totalBytes) * 100) : 0
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+    <div className="rounded-md border border-white/[0.14] p-4">
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
           <p className="text-sm text-parchment">Save offline</p>

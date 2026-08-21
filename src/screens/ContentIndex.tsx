@@ -52,7 +52,7 @@ export function ContentIndex() {
               whileTap={{ scale: 0.97 }}
               className="text-left"
             >
-              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10">
+              <div className="relative aspect-square overflow-hidden rounded-md border border-white/[0.14]">
                 <img
                   src={coverUrl(item, 600)}
                   alt={`${item.title} cover`}

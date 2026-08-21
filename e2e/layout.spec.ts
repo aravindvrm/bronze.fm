@@ -14,11 +14,11 @@ test.describe('content home layout', () => {
     )
     expect(blurred).toBe(0)
 
-    const bg = await page
-      .locator('.grain')
-      .first()
-      .evaluate((el) => getComputedStyle(el).backgroundColor)
-    expect(bg).toBe('rgb(10, 7, 5)')
+    // body carries the page-level background (index.css sets it from
+    // --color-void directly), so this holds regardless of which wrapper
+    // element the screen itself uses.
+    const bg = await page.locator('body').evaluate((el) => getComputedStyle(el).backgroundColor)
+    expect(bg).toBe('rgb(12, 12, 13)')
   })
 
   test('shows the cover as a thumbnail on the right of the title card', async ({ page }) => {
