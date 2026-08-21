@@ -6,7 +6,7 @@ test.describe('creator and content routing', () => {
     await page.goto('/')
     await expect(page).toHaveURL(/\/dean$/)
     await expect(page.getByRole('heading', { name: 'Dean' })).toBeVisible()
-    await expect(page.getByText(/Profile coming soon/i)).toBeVisible()
+    await expect(page.getByRole('button', { name: /^Releases/ })).toBeVisible()
   })
 
   test('the release splash is the Content entry screen', async ({ page }) => {
@@ -54,5 +54,57 @@ test.describe('creator and content routing', () => {
   test('shows an honest empty state for an unknown release', async ({ page }) => {
     await page.goto('/dean/no-such-release')
     await expect(page.getByText(/No release called/)).toBeVisible()
+  })
+})
+
+test.describe('two-level sections', () => {
+  test('the Creator page carries Releases, Merch and Events', async ({ page }) => {
+    await page.goto('/dean')
+    for (const label of ['Releases', 'Merch', 'Events']) {
+      await expect(page.getByRole('button', { name: new RegExp(`^${label}`) })).toBeVisible()
+    }
+    // Videos live inside a release, so there is no tile for them here.
+    await expect(page.getByRole('button', { name: /^Videos/ })).toHaveCount(0)
+  })
+
+  test('Creator sections resolve ahead of Content slugs', async ({ page }) => {
+    for (const [seg, heading] of [
+      ['releases', 'Releases'],
+      ['merch', 'Merch'],
+      ['events', 'Events'],
+    ]) {
+      await page.goto(`/dean/${seg}`)
+      await expect(page.getByRole('heading', { name: heading })).toBeVisible()
+      // Must not be read as a release called "merch".
+      await expect(page.getByText(/No release called/)).toHaveCount(0)
+    }
+  })
+
+  test('Releases links through to the release splash', async ({ page }) => {
+    await page.goto('/dean/releases')
+    await page.getByRole('button', { name: /Bronze/ }).first().click()
+    await expect(page).toHaveURL(/\/dean\/bronze$/)
+    await expect(page.getByText('Tap to enter')).toBeVisible()
+  })
+
+  test('a release section is a subset of the Creator section', async ({ page }) => {
+    // Creator-wide merch includes items with no release tag.
+    await page.goto('/dean/merch')
+    await expect(page.getByText('Alloy Hoodie')).toBeVisible()
+    await expect(page.getByText('Bronze Vinyl')).toBeVisible()
+
+    // The release view shows only what is tagged to it.
+    await page.goto('/dean/bronze/merch')
+    await expect(page.getByText('Bronze Vinyl')).toBeVisible()
+    await expect(page.getByText('Alloy Hoodie')).toHaveCount(0)
+  })
+
+  test('the Creator event list includes dates outside the tour', async ({ page }) => {
+    await page.goto('/dean/events')
+    await expect(page.getByText('London, UK')).toBeVisible()
+
+    await page.goto('/dean/bronze/events')
+    await expect(page.getByText('Brooklyn, NY')).toBeVisible()
+    await expect(page.getByText('London, UK')).toHaveCount(0)
   })
 })

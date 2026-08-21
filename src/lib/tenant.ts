@@ -13,15 +13,15 @@ const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
 /**
  * Second-segment words reserved against Content slugs.
  *
- * Content occupies the second segment (`/dean/bronze`), and its own sections
- * live below it (`/dean/bronze/music`). So the collision risk is only with
- * *Creator*-level routes, which share that second segment. None exist beyond
- * the profile index today; these are held back for the ones that plausibly
- * will, because a Content already using the word would have to be renamed —
- * and its URLs broken — to add the route later.
+ * Content occupies the second segment (`/dean/bronze`), so it collides with
+ * *Creator*-level routes, which share it. The Creator page has three sections
+ * of its own — releases, merch, events — plus words held back for routes that
+ * plausibly arrive later, because adding one against an existing Content would
+ * mean renaming it and breaking its URLs.
  *
- * Section names like `music` and `merch` are deliberately NOT reserved: they
- * sit one level deeper and cannot collide, so an album may be called Merch.
+ * `videos` and `music` are deliberately NOT reserved: they exist only inside a
+ * release (`/dean/bronze/videos`), one segment deeper, where nothing can
+ * collide. An album may be called Music.
  *
  * The database enforces the same list with a CHECK constraint.
  */
@@ -30,7 +30,10 @@ export const RESERVED_CONTENT_SLUGS = [
   'admin',
   'api',
   'assets',
+  'events',
   'login',
+  'merch',
+  'releases',
   'search',
   'settings',
 ] as const

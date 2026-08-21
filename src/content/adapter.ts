@@ -16,8 +16,13 @@ const fixtureAdapter: ContentAdapter = {
       allContent.find((c) => c.ownerSlug === creatorSlug && c.slug === contentSlug) ?? null
     )
   },
-  async getStubs(kind: StubKind) {
-    return stubs.filter((s) => s.kind === kind)
+  async getStubs(kind: StubKind, opts?: { creatorSlug?: string; contentSlug?: string }) {
+    const byKind = stubs.filter((s) => s.kind === kind)
+    // Narrowing to a release returns only what is tagged to it. No fallback to
+    // the Creator-wide list: that would make the same set reachable under every
+    // release path.
+    if (!opts?.contentSlug) return byKind
+    return byKind.filter((s) => s.contentSlug === opts.contentSlug)
   },
 }
 

@@ -1,38 +1,80 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { content } from '@/content/adapter'
+import { Link } from 'react-router-dom'
+import { content as adapter } from '@/content/adapter'
 import type { StubItem, StubKind } from '@/content/types'
+import { useCreator } from '@/content/CreatorContext'
+import { useOptionalContentItem } from '@/content/ContentContext'
+import { contentPath, creatorPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { ScreenHeader } from '@/components/ScreenHeader'
-import { useCreator } from '@/content/CreatorContext'
-import { useContentItem } from '@/content/ContentContext'
-import { contentPath } from '@/lib/tenant'
 
 /**
- * Videos, Merch and Events all render through here for now. Real routes and
- * real layout with honest "coming soon" states, rather than dead tiles — when
- * the content adapter starts returning real rows, the screens already work.
+ * Videos, Merch and Events, at either level.
+ *
+ * Inside a release the list is narrowed to items tagged to it; on the Creator
+ * page it is everything. There is deliberately no fallback from the narrow
+ * case to the wide one — serving the Creator's full list under a release path
+ * would make the same set reachable under every release. An empty release
+ * section says so and offers the Creator-wide page instead.
  */
-export function StubGrid({ kind, title, blurb }: { kind: StubKind; title: string; blurb: string }) {
+export function StubGrid({
+  kind,
+  title,
+  blurb,
+}: {
+  kind: StubKind
+  title: string
+  blurb: string
+}) {
   const creator = useCreator()
-  const release = useContentItem()
-  const [items, setItems] = useState<StubItem[]>([])
+  const release = useOptionalContentItem()
+  const [items, setItems] = useState<StubItem[] | null>(null)
 
   useEffect(() => {
-    void content.getStubs(kind).then(setItems)
-  }, [kind])
+    let cancelled = false
+    void adapter
+      .getStubs(kind, { creatorSlug: creator.slug, contentSlug: release?.slug })
+      .then((r) => {
+        if (!cancelled) setItems(r)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [kind, creator.slug, release?.slug])
 
   const wide = kind === 'video' || kind === 'event'
+  const backTo = release
+    ? contentPath(creator.slug, release.slug, 'home')
+    : creatorPath(creator.slug)
 
   return (
     <div className="min-h-full bg-void">
-      <ScreenHeader title={title} to={contentPath(creator.slug, release.slug, 'home')} />
+      <ScreenHeader title={title} to={backTo} />
 
       <div className="px-5" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
         <p className="mb-6 text-xs leading-relaxed text-parchment/40">{blurb}</p>
 
+        {items?.length === 0 && (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+            <p className="text-sm text-parchment/60">
+              {release
+                ? `Nothing tied to ${release.title} yet.`
+                : `${creator.name} has nothing here yet.`}
+            </p>
+            {release && (
+              <Link
+                to={creatorPath(creator.slug, kind === 'merch' ? 'merch' : 'events')}
+                className="mt-2 inline-block text-[11px] uppercase tracking-[0.15em] text-gilt/80 underline-offset-4 hover:underline"
+              >
+                See all {kind === 'merch' ? 'merch' : 'dates'}
+              </Link>
+            )}
+          </div>
+        )}
+
         <div className={`grid gap-3.5 ${wide ? 'grid-cols-1' : 'grid-cols-2'}`}>
-          {items.map((item, i) => (
+          {(items ?? []).map((item, i) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 18 }}

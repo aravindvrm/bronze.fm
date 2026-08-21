@@ -11,6 +11,7 @@ import { isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { CreatorProfile } from '@/screens/CreatorProfile'
+import { Releases } from '@/screens/Releases'
 import { Splash } from '@/screens/Splash'
 import { Home } from '@/screens/Home'
 import { Music } from '@/screens/Music'
@@ -73,11 +74,11 @@ function ContentShell() {
         />
         <Route
           path="merch"
-          element={<StubGrid kind="merch" title="Merch" blurb="Apparel, vinyl and prints. Checkout arrives with the release." />}
+          element={<StubGrid kind="merch" title="Merch" blurb="Apparel, vinyl and prints tied to this release." />}
         />
         <Route
           path="events"
-          element={<StubGrid kind="event" title="Events" blurb="Live dates and ticket links, announced as they are confirmed." />}
+          element={<StubGrid kind="event" title="Events" blurb="Dates on this release's run." />}
         />
         <Route path="*" element={<Navigate to="." replace />} />
       </Routes>
@@ -85,7 +86,18 @@ function ContentShell() {
   )
 }
 
-/** Everything under one Creator: the profile, and their Content below it. */
+/**
+ * Everything under one Creator.
+ *
+ *   /dean            profile — Releases, Merch, Events
+ *   /dean/releases   their records
+ *   /dean/merch      everything they sell
+ *   /dean/events     every date
+ *   /dean/bronze     one Content, with its own sections below it
+ *
+ * The Creator sections come first so they win the match; a Content slug can
+ * never be one of them, enforced by a CHECK constraint.
+ */
 function CreatorShell() {
   const params = useParams()
   const slug = params.creator ?? resolveCreatorSlug()
@@ -112,6 +124,16 @@ function CreatorShell() {
     <CreatorProvider creator={creator}>
       <Routes>
         <Route index element={<CreatorProfile />} />
+        <Route path="releases" element={<Releases />} />
+        <Route
+          path="merch"
+          element={<StubGrid kind="merch" title="Merch" blurb={`Everything ${creator.name} sells. Checkout arrives with the release.`} />}
+        />
+        <Route
+          path="events"
+          element={<StubGrid kind="event" title="Events" blurb={`Every ${creator.name} date, announced as they are confirmed.`} />}
+        />
+        {/* Last, so the Creator sections above always win the match. */}
         <Route path=":contentSlug/*" element={<ContentShell />} />
       </Routes>
     </CreatorProvider>

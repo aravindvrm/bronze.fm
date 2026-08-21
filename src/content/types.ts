@@ -81,6 +81,12 @@ export interface StubItem {
   title: string
   subtitle?: string
   seed: string
+  /**
+   * Optional release association. Merch and Events are Creator-owned, but in
+   * music they usually carry a release dimension too — the Bronze vinyl, the
+   * Bronze tour. Absent means Creator-wide.
+   */
+  contentSlug?: string
 }
 
 export interface ContentAdapter {
@@ -88,5 +94,14 @@ export interface ContentAdapter {
   /** All Content of a type owned by a Creator, in display order. */
   listContent(creatorSlug: string, type: ContentType): Promise<Content[]>
   getContent(creatorSlug: string, contentSlug: string): Promise<Content | null>
-  getStubs(kind: StubKind): Promise<StubItem[]>
+  /**
+   * Stub rows for a Creator. Passing `contentSlug` narrows to items associated
+   * with that release; omitting it returns everything the Creator has.
+   *
+   * Deliberately no fallback from the narrow case to the wide one: a release
+   * with nothing tagged shows an empty state, because silently serving the
+   * Creator's full list would make the same set reachable under every release
+   * path.
+   */
+  getStubs(kind: StubKind, opts?: { creatorSlug?: string; contentSlug?: string }): Promise<StubItem[]>
 }

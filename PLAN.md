@@ -135,8 +135,8 @@ content_items   id, content_id→, creator_id→ (owner, denormalised for RLS),
                 unique (content_id, position)
 content_creators  content_id→, creator_id→, role, sort_order
                   pk (content_id, creator_id, role)       ← attribution
-merch_items     id, creator_id→, title, price_cents, ...  ← stub in v1
-events          id, creator_id→, starts_at, venue, ...    ← stub in v1
+merch_items     id, creator_id→, content_id? →, title, price_cents, ...
+events          id, creator_id→, content_id? →, starts_at, venue, ...
 ```
 
 A **music** Content is an album holding ordered `content_items`; a **video**
@@ -147,6 +147,12 @@ commerce and scheduling records, not publishable media works, and forcing them
 into the Content shape would abstract away the fields that matter (price,
 inventory, venue, ticket links).
 
+They stay **Creator-owned** — a store and a tour belong to an artist — but
+carry a nullable `content_id`, because in music they usually have a release
+dimension too: the Bronze vinyl, the Bronze tour. Untagged means Creator-wide.
+An item tied to an unpublished release is invisible to anon, so release merch
+cannot leak the record's existence before it is announced.
+
 Attribution is Content-level for now, matching the contributors model. Per-item
 credits (per-track features and producers, which music genuinely needs) can be
 added as `content_item_creators` later without reshaping what exists.
@@ -154,31 +160,42 @@ added as `content_item_creators` later without reshaping what exists.
 `content.published` enforces private-until-launch **in the database**, rather
 than relying on an unguessable URL.
 
-### Routing: Creator, then Content, then the Content's sections
+### Routing: two levels, same nouns
 
 ```
-/dean                       Creator profile — the tenant root (stub for now)
+/dean                       Creator profile — Releases · Merch · Events
+/dean/releases              every record
+/dean/merch                 everything they sell
+/dean/events                every date
+
 /dean/bronze                the release splash — cover art, tap to enter
-/dean/bronze/home           the four tiles
+/dean/bronze/home           Music · Videos · Merch · Events
 /dean/bronze/music          track list
-/dean/bronze/videos|merch|events
+/dean/bronze/videos         videos tied to this release
+/dean/bronze/merch          merch tagged to this release
+/dean/bronze/events         dates on this release's run
 ```
 
-**The four tiles belong to the Content, not the Creator.** They are how you
-move around one release, so they hang off it. The splash is the release's
-entry screen and owns the whole viewport — the mini-player dock is suppressed
-there rather than sitting on top of the artwork.
+The Creator page is the superset; a release's sections are the tagged subset.
+Same nouns at both levels, so the structure is learnable.
 
-Content occupies the second path segment, so it can only collide with
-*Creator*-level routes. None exist beyond the profile index today;
-`RESERVED_CONTENT_SLUGS` holds back the words that plausibly will (`about`,
-`admin`, `api`, `assets`, `login`, `search`, `settings`), because adding such
-a route later against an existing Content would mean renaming it and breaking
-its URLs. Section names like `music` and `merch` are deliberately **not**
-reserved — they sit a level deeper and cannot collide, so an album may be
-called Merch. A CHECK constraint enforces the same list, and a unit test
-compares the two so they cannot drift. Slug *format* is constrained too, for
-Creators and Content alike.
+**The rule underneath it: one canonical URL per thing.** A release section
+shows only what is tagged to that release and never falls back to the
+Creator-wide list — a fallback would make the same set reachable under every
+release path, which breaks link sharing, caching and analytics, and gets worse
+with each release. An empty release section says so and links to the
+Creator-wide page instead.
+
+**Videos have no Creator-level tile.** They live inside a release. A
+standalone video with no release would currently have nowhere to sit; worth
+revisiting if one appears.
+
+Content occupies the second path segment, so it collides with *Creator*-level
+routes. `RESERVED_CONTENT_SLUGS` holds `releases`, `merch` and `events` plus
+words for routes that plausibly arrive later. `music` and `videos` are
+deliberately **not** reserved: they exist only inside a release, one segment
+deeper, so an album may be called Music. A CHECK constraint enforces the same
+list and a unit test compares the two so they cannot drift.
 
 The resolver in `src/lib/tenant.ts` checks **host first**, then path, so
 promoting a premium Creator to `dean.bronze.fm` is a DNS record plus setting
@@ -186,15 +203,7 @@ promoting a premium Creator to `dean.bronze.fm` is a DNS record plus setting
 
 **Known gap:** a custom domain (`deansite.com`) cannot be parsed into a slug
 the way a subdomain can. The `custom_domain` column stores the mapping, but
-resolving it needs a lookup — edge config or a boot-time query — that does not
-exist yet.
-
-**Open tension:** `merch_items` and `events` are `creator_id`-scoped in the
-schema, but the UI now presents them inside a release. With stub data that is
-invisible. Once real merch and dates exist, either those tables gain a
-nullable `content_id` (tour merch tied to a record is a real thing), or the
-sections show Creator-level data under a Content URL. Worth deciding before
-seeding either.
+resolving it needs a lookup that does not exist yet.
 
 ### Playback is owned by a Content, not by the app
 

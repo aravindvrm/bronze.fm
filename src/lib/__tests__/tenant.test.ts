@@ -95,18 +95,28 @@ describe('reserved Content slugs', () => {
     expect(isReservedContentSlug(slug)).toBe(false)
   })
 
-  it('does NOT reserve a Content\'s own section names', () => {
-    // These live one level below the Content (/dean/bronze/music), so they
-    // cannot collide with a Content slug — an album may be called Merch.
-    for (const seg of ['music', 'videos', 'merch', 'events', 'home']) {
+  it('reserves the Creator-level section names', () => {
+    // These share the second path segment with Content slugs.
+    for (const seg of ['releases', 'merch', 'events']) {
+      expect(isReservedContentSlug(seg)).toBe(true)
+    }
+  })
+
+  it('does NOT reserve names that exist only inside a release', () => {
+    // /dean/bronze/music and /dean/bronze/videos are a segment deeper, so
+    // nothing can collide — an album may be called Music.
+    for (const seg of ['music', 'videos', 'home']) {
       expect(isReservedContentSlug(seg)).toBe(false)
     }
   })
 
   it('matches the database CHECK constraint', () => {
-    // supabase/migrations/20260820050000_narrow_reserved_slugs.sql hard-codes
+    // supabase/migrations/20260820060000_release_scoped_commerce.sql hard-codes
     // the same list; drift would let a bad slug into the database.
-    const inMigration = ['about', 'admin', 'api', 'assets', 'login', 'search', 'settings']
+    const inMigration = [
+      'about', 'admin', 'api', 'assets', 'events',
+      'login', 'merch', 'releases', 'search', 'settings',
+    ]
     expect([...RESERVED_CONTENT_SLUGS].sort()).toEqual(inMigration.sort())
   })
 })
