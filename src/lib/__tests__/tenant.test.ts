@@ -22,6 +22,13 @@ describe('creatorFromHost', () => {
     ['apex domain', 'bronze.fm'],
     ['localhost', 'localhost'],
     ['IPv4', '127.0.0.1'],
+    ['tailnet IP', '100.76.156.10'],
+    // The bug this guards: host won over path, so /dean was ignored and the
+    // app reported "No creator called m1air".
+    ['Tailscale MagicDNS', 'm1air.tail6d451d.ts.net'],
+    ['Vercel preview', 'bronze-fm-git-main-avrm.vercel.app'],
+    ['tunnel host', 'random-words.ngrok-free.app'],
+    ['unrelated domain', 'dean.example.com'],
   ])('returns null for %s', (_l, host) => {
     expect(creatorFromHost(host)).toBeNull()
   })
@@ -33,8 +40,14 @@ describe('creatorFromHost', () => {
     },
   )
 
-  it('handles deeper subdomains by taking the leftmost label', () => {
-    expect(creatorFromHost('dean.eu.bronze.fm')).toBe('dean')
+  it('requires exactly one label above the app domain', () => {
+    // A deeper subdomain is not a Creator host; fall through to the path
+    // rather than inventing a tenant from an arbitrary label.
+    expect(creatorFromHost('dean.eu.bronze.fm')).toBeNull()
+  })
+
+  it('tolerates a trailing dot and mixed case', () => {
+    expect(creatorFromHost('Dean.Bronze.FM.')).toBe('dean')
   })
 })
 

@@ -41,15 +41,40 @@ export const RESERVED_CONTENT_SLUGS = [
 /** First-segment words that are app routes, never a Creator slug. */
 const RESERVED_PATHS = new Set<string>([...RESERVED_CONTENT_SLUGS])
 
-export function creatorFromHost(hostname = window.location.hostname): string | null {
-  // Bare host, IP, or localhost — no subdomain to read.
-  const parts = hostname.split('.')
-  if (parts.length < 3) return null
-  if (/^\d+$/.test(parts[parts.length - 1])) return null
+/**
+ * The domain Creator subdomains hang off. Anything not under it is not a
+ * tenant host.
+ */
+const APP_DOMAIN = ((import.meta.env.VITE_APP_DOMAIN as string | undefined) ?? 'bronze.fm')
+  .trim()
+  .toLowerCase()
 
-  const sub = parts[0]
-  if (!sub || RESERVED.has(sub)) return null
-  return sub
+/**
+ * Reads a Creator from the hostname — but only when the host is genuinely
+ * under the app's own domain.
+ *
+ * The earlier rule was "any hostname with three or more labels", which is
+ * wrong for every host that is not ours: a Tailscale MagicDNS name
+ * (`m1air.tail6d451d.ts.net`) resolved to a Creator called `m1air`, and since
+ * host wins over path, `/dean` was then ignored. Vercel preview URLs and
+ * tunnel hosts would have failed the same way.
+ *
+ * Exactly one label above APP_DOMAIN counts. `bronze.fm` itself, deeper
+ * subdomains, and reserved names all fall through to the path.
+ */
+export function creatorFromHost(hostname = window.location.hostname): string | null {
+  if (!APP_DOMAIN) return null
+
+  // Trailing dot is legal in a FQDN and would break the suffix match.
+  const host = hostname.toLowerCase().replace(/\.$/, '')
+  const suffix = `.${APP_DOMAIN}`
+  if (!host.endsWith(suffix)) return null
+
+  const label = host.slice(0, -suffix.length)
+  // One label only: `dean.bronze.fm` yes, `dean.eu.bronze.fm` no.
+  if (!label || label.includes('.')) return null
+  if (RESERVED.has(label)) return null
+  return label
 }
 
 export function creatorFromPath(pathname = window.location.pathname): string | null {
