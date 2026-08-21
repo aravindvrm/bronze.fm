@@ -154,20 +154,46 @@ added as `content_item_creators` later without reshaping what exists.
 `content.published` enforces private-until-launch **in the database**, rather
 than relying on an unguessable URL.
 
-### Routing and tenant resolution
+### Routing: Creator and Content are separate paths
 
-Path-based today: `bronze.fm/dean`, `bronze.fm/dean/music`. The resolver in
-`src/lib/tenant.ts` checks **host first**, then path, so promoting a premium
-Creator to `dean.bronze.fm` is a DNS record plus setting `creators.subdomain` —
-no code change, and their existing path URLs keep working.
+```
+/dean                       Creator profile — the tenant root
+/dean/music                 their releases
+/dean/videos|merch|events   Creator-scoped sections
+/dean/bronze                one Content
+```
 
-Verified behaviour: `dean.bronze.fm → dean`, while `www` / `app` / `staging`
-are rejected as reserved, and bare hosts fall through to path.
+Merch and Events are `creator_id`-scoped in the schema, so the sections hang
+off the Creator rather than off any single release.
 
-**Known gap:** a custom domain (`deansite.com`) cannot be parsed into a slug the
-way a subdomain can. The `custom_domain` column stores the mapping, but
+Content sits **flat** alongside those sections, which means a Content slug can
+collide with a section name and become permanently unreachable — an album
+called `merch` would resolve to the merch page. Section names are reserved in
+two places: route ordering in `App.tsx`, and a CHECK constraint on
+`content.slug`. A unit test compares the router's list against the migration's
+so they cannot drift. Slug *format* is constrained too (lowercase, hyphenated,
+no leading or trailing hyphen) for Creators and Content alike.
+
+Verified against the live project: reserved and malformed slugs are rejected
+with `23514`, valid ones accepted.
+
+The resolver in `src/lib/tenant.ts` checks **host first**, then path, so
+promoting a premium Creator to `dean.bronze.fm` is a DNS record plus setting
+`creators.subdomain` — no code change, and their existing path URLs keep
+working. `dean.bronze.fm → dean`, while `www` / `app` / `staging` are rejected
+as reserved.
+
+**Known gap:** a custom domain (`deansite.com`) cannot be parsed into a slug
+the way a subdomain can. The `custom_domain` column stores the mapping, but
 resolving it needs a lookup — edge config or a boot-time query — that does not
 exist yet.
+
+### Playback is owned by a Content, not by the app
+
+`playFrom(content, index)` swaps the queue only when a *different* Content is
+played from. Browsing to another release while one is playing leaves the
+current queue intact until you actually press play, and the mini-player
+appears once something is queued rather than on particular routes.
 
 ### RLS posture (v1, no auth)
 
