@@ -10,6 +10,7 @@ import type { Content, Creator } from '@/content/types'
 import { isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
+import { InstallBanner } from '@/components/InstallBanner'
 import { CreatorProfile } from '@/screens/CreatorProfile'
 import { ContentIndex } from '@/screens/ContentIndex'
 import { Splash } from '@/screens/Splash'
@@ -179,6 +180,9 @@ export default function App() {
         {hasQueue && !expanded && !onSplash && <MiniPlayer key="mini" />}
       </AnimatePresence>
       <AnimatePresence>{expanded && <PlayerScreen key="full" />}</AnimatePresence>
+
+      {/* The splash owns the whole viewport, same as the mini player above. */}
+      {!expanded && !onSplash && <InstallBanner />}
     </AudioProvider>
   )
 }
