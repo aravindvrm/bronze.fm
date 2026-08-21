@@ -25,6 +25,9 @@ jobs:
       - name: Typecheck
         run: npx tsc -b
 
+      - name: Typecheck middleware
+        run: npx tsc -p tsconfig.middleware.json
+
       - name: Unit tests
         run: npm test
 
@@ -175,6 +178,7 @@ jobs:
           scan 'sb_secret_[A-Za-z0-9_-]{8,}' 'Supabase secret key committed'
           scan '"role"[[:space:]]*:[[:space:]]*"service_role"' 'Decoded service_role JWT committed'
           scan 'SUPABASE_SERVICE_ROLE_KEY[[:space:]]*=[[:space:]]*[A-Za-z0-9]' 'service-role key has a value in a tracked file'
+          scan '^SITE_PASSCODE[[:space:]]*=[[:space:]]*[^[:space:]#]' 'site passcode has a value in a tracked file (belongs in Vercel only)'
           scan '-----BEGIN [A-Z ]*PRIVATE KEY-----' 'Private key committed'
           exit $fail
 
