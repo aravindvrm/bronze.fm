@@ -110,7 +110,7 @@ describe('reserved Content slugs', () => {
 
   it('reserves the Creator-level section names', () => {
     // These share the second path segment with Content slugs.
-    for (const seg of ['releases', 'merch', 'events']) {
+    for (const seg of ['content', 'merch', 'events']) {
       expect(isReservedContentSlug(seg)).toBe(true)
     }
   })
@@ -124,11 +124,11 @@ describe('reserved Content slugs', () => {
   })
 
   it('matches the database CHECK constraint', () => {
-    // supabase/migrations/20260820060000_release_scoped_commerce.sql hard-codes
-    // the same list; drift would let a bad slug into the database.
+    // supabase/migrations/20260821010000_rename_releases_to_content.sql
+    // hard-codes the same list; drift would let a bad slug into the database.
     const inMigration = [
-      'about', 'admin', 'api', 'assets', 'events',
-      'login', 'merch', 'releases', 'search', 'settings',
+      'about', 'admin', 'api', 'assets', 'content',
+      'events', 'login', 'merch', 'search', 'settings',
     ]
     expect([...RESERVED_CONTENT_SLUGS].sort()).toEqual(inMigration.sort())
   })

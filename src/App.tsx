@@ -11,7 +11,7 @@ import { isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { CreatorProfile } from '@/screens/CreatorProfile'
-import { Releases } from '@/screens/Releases'
+import { ContentIndex } from '@/screens/ContentIndex'
 import { Splash } from '@/screens/Splash'
 import { Home } from '@/screens/Home'
 import { Music } from '@/screens/Music'
@@ -89,11 +89,11 @@ function ContentShell() {
 /**
  * Everything under one Creator.
  *
- *   /robotrebel            profile — Releases, Merch, Events
- *   /robotrebel/releases   their records
- *   /robotrebel/merch      everything they sell
- *   /robotrebel/events     every date
- *   /robotrebel/bronze     one Content, with its own sections below it
+ *   /robotrebel           profile — Content, Merch, Events
+ *   /robotrebel/content   their Content, matching the schema's table name
+ *   /robotrebel/merch     everything they sell
+ *   /robotrebel/events    every date
+ *   /robotrebel/bronze    one Content, with its own sections below it
  *
  * The Creator sections come first so they win the match; a Content slug can
  * never be one of them, enforced by a CHECK constraint.
@@ -124,7 +124,7 @@ function CreatorShell() {
     <CreatorProvider creator={creator}>
       <Routes>
         <Route index element={<CreatorProfile />} />
-        <Route path="releases" element={<Releases />} />
+        <Route path="content" element={<ContentIndex />} />
         <Route
           path="merch"
           element={<StubGrid kind="merch" title="Merch" blurb={`Everything ${creator.name} sells. Checkout arrives with the release.`} />}

@@ -15,7 +15,7 @@ const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
  *
  * Content occupies the second segment (`/robotrebel/bronze`), so it collides with
  * *Creator*-level routes, which share it. The Creator page has three sections
- * of its own — releases, merch, events — plus words held back for routes that
+ * of its own — content, merch, events — plus words held back for routes that
  * plausibly arrive later, because adding one against an existing Content would
  * mean renaming it and breaking its URLs.
  *
@@ -30,10 +30,10 @@ export const RESERVED_CONTENT_SLUGS = [
   'admin',
   'api',
   'assets',
+  'content',
   'events',
   'login',
   'merch',
-  'releases',
   'search',
   'settings',
 ] as const

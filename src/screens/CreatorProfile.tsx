@@ -12,14 +12,15 @@ import { EventsIcon, MerchIcon, MusicIcon } from '@/components/Icons'
 /**
  * The Creator's profile — the tenant root at `/robotrebel`.
  *
- * Three sections, all Creator-wide. Releases leads to the records; Merch and
- * Events show everything the Creator has, of which a release's own sections
- * are a tagged subset.
+ * Three sections, all Creator-wide. Content leads to the records — the label
+ * matches the schema's `content` table directly. Merch and Events show
+ * everything the Creator has, of which a release's own sections are a tagged
+ * subset.
  *
  * Videos deliberately has no tile here: videos live inside a release.
  */
 const SECTIONS = [
-  { seg: 'releases', label: 'Releases', seed: 'tile-releases', note: '', Icon: MusicIcon },
+  { seg: 'content', label: 'Content', seed: 'tile-content', note: '', Icon: MusicIcon },
   { seg: 'merch', label: 'Merch', seed: 'tile-merch', note: 'Soon', Icon: MerchIcon },
   { seg: 'events', label: 'Events', seed: 'tile-events', note: 'Soon', Icon: EventsIcon },
 ] as const

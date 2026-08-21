@@ -6,7 +6,7 @@ test.describe('creator and content routing', () => {
     await page.goto('/')
     await expect(page).toHaveURL(/\/robotrebel$/)
     await expect(page.getByRole('heading', { name: 'robotrebel' })).toBeVisible()
-    await expect(page.getByRole('button', { name: /^Releases/ })).toBeVisible()
+    await expect(page.getByRole('button', { name: /^Content/ })).toBeVisible()
   })
 
   test('the release splash is the Content entry screen', async ({ page }) => {
@@ -58,9 +58,9 @@ test.describe('creator and content routing', () => {
 })
 
 test.describe('two-level sections', () => {
-  test('the Creator page carries Releases, Merch and Events', async ({ page }) => {
+  test('the Creator page carries Content, Merch and Events', async ({ page }) => {
     await page.goto('/robotrebel')
-    for (const label of ['Releases', 'Merch', 'Events']) {
+    for (const label of ['Content', 'Merch', 'Events']) {
       await expect(page.getByRole('button', { name: new RegExp(`^${label}`) })).toBeVisible()
     }
     // Videos live inside a release, so there is no tile for them here.
@@ -69,7 +69,7 @@ test.describe('two-level sections', () => {
 
   test('Creator sections resolve ahead of Content slugs', async ({ page }) => {
     for (const [seg, heading] of [
-      ['releases', 'Releases'],
+      ['content', 'Content'],
       ['merch', 'Merch'],
       ['events', 'Events'],
     ]) {
@@ -80,8 +80,8 @@ test.describe('two-level sections', () => {
     }
   })
 
-  test('Releases links through to the release splash', async ({ page }) => {
-    await page.goto('/robotrebel/releases')
+  test('Content links through to the release splash', async ({ page }) => {
+    await page.goto('/robotrebel/content')
     await page.getByRole('button', { name: /Bronze/ }).first().click()
     await expect(page).toHaveURL(/\/robotrebel\/bronze$/)
     await expect(page.getByText('Tap to enter')).toBeVisible()

@@ -163,8 +163,8 @@ than relying on an unguessable URL.
 ### Routing: two levels, same nouns
 
 ```
-/robotrebel                       Creator profile — Releases · Merch · Events
-/robotrebel/releases              every record
+/robotrebel                       Creator profile — Content · Merch · Events
+/robotrebel/content               every record — matches the schema's `content` table
 /robotrebel/merch                 everything they sell
 /robotrebel/events                every date
 
@@ -191,7 +191,7 @@ standalone video with no release would currently have nowhere to sit; worth
 revisiting if one appears.
 
 Content occupies the second path segment, so it collides with *Creator*-level
-routes. `RESERVED_CONTENT_SLUGS` holds `releases`, `merch` and `events` plus
+routes. `RESERVED_CONTENT_SLUGS` holds `content`, `merch` and `events` plus
 words for routes that plausibly arrive later. `music` and `videos` are
 deliberately **not** reserved: they exist only inside a release, one segment
 deeper, so an album may be called Music. A CHECK constraint enforces the same
