@@ -1,7 +1,7 @@
 # bronze.fm — Build Plan
 
 An immersive PWA for artists to share music, video, merch, and live events.
-First tenant: **Dean / _Bronze_**.
+First tenant: **robotrebel / _Bronze_**.
 
 ---
 
@@ -15,7 +15,7 @@ First tenant: **Dean / _Bronze_**.
 | Caching | Content-addressed assets + manifest hash diffing, immutable cache headers |
 | Auth | None in v1. Tenant shape exists in schema from day one |
 | Tenancy | tenant = **Creator**; Content has one owner Creator, many attributed |
-| Routing | Path today (`bronze.fm/dean`); host checked first so premium Creators can be promoted to `dean.bronze.fm` |
+| Routing | Path today (`bronze.fm/robotrebel`); host checked first so premium Creators can be promoted to `robotrebel.bronze.fm` |
 
 ### Departures from the original diagram
 
@@ -119,7 +119,7 @@ answer to *whose namespace does this file live under*, and would turn every
 read policy into a join subquery.
 
 ```
-creators        id, slug ('dean'), name, bio,
+creators        id, slug ('robotrebel'), name, bio,
                 subdomain?, custom_domain?, tier          ← tenant root
 assets          id, creator_id→, kind ('audio'|'image'|'video'),
                 storage_path, content_hash, bytes, mime,
@@ -163,17 +163,17 @@ than relying on an unguessable URL.
 ### Routing: two levels, same nouns
 
 ```
-/dean                       Creator profile — Releases · Merch · Events
-/dean/releases              every record
-/dean/merch                 everything they sell
-/dean/events                every date
+/robotrebel                       Creator profile — Releases · Merch · Events
+/robotrebel/releases              every record
+/robotrebel/merch                 everything they sell
+/robotrebel/events                every date
 
-/dean/bronze                the release splash — cover art, tap to enter
-/dean/bronze/home           Music · Videos · Merch · Events
-/dean/bronze/music          track list
-/dean/bronze/videos         videos tied to this release
-/dean/bronze/merch          merch tagged to this release
-/dean/bronze/events         dates on this release's run
+/robotrebel/bronze                the release splash — cover art, tap to enter
+/robotrebel/bronze/home           Music · Videos · Merch · Events
+/robotrebel/bronze/music          track list
+/robotrebel/bronze/videos         videos tied to this release
+/robotrebel/bronze/merch          merch tagged to this release
+/robotrebel/bronze/events         dates on this release's run
 ```
 
 The Creator page is the superset; a release's sections are the tagged subset.
@@ -198,7 +198,7 @@ deeper, so an album may be called Music. A CHECK constraint enforces the same
 list and a unit test compares the two so they cannot drift.
 
 The resolver in `src/lib/tenant.ts` checks **host first**, then path, so
-promoting a premium Creator to `dean.bronze.fm` is a DNS record plus setting
+promoting a premium Creator to `robotrebel.bronze.fm` is a DNS record plus setting
 `creators.subdomain` — no code change, and existing path URLs keep working.
 
 **Known gap:** a custom domain (`deansite.com`) cannot be parsed into a slug
@@ -348,6 +348,28 @@ halfway mark, or when the listener explicitly saves the album.
 from the browser's HTTP cache with a 206 left over from playback, and only a
 complete 200 is safe to store — so saving would have silently failed on
 exactly the tracks already listened to.
+
+### Creator identity corrected: robotrebel, not Dean
+
+The ID3 tags on the masters (`TPE1`, read directly from the raw MP3 frames
+rather than trusted secondhand) say `robotrebel` on every tagged track,
+matching what Apple Music displays as the artist. "Dean" was a placeholder
+identity from the very first scaffold and was never actually the artist's
+public name.
+
+Renamed everywhere, including the URL — `/dean` → `/robotrebel` — since this
+was still a private, unlaunched test deploy with no real traffic to break.
+The live database row was updated **in place** (`UPDATE creators SET
+slug=..., name=...`) rather than inserted as a new row, which mattered:
+`content.owner_creator_id` and every other FK reference the row by UUID, not
+by slug, so preserving the id kept every join intact automatically. Verified
+directly against the live project: the renamed creator resolves, `content`
+still joins to it correctly, and the old `dean` slug returns nothing.
+
+Also removed `VITE_ARTIST_SLUG` / `VITE_RELEASE_SLUG` — dead env vars from
+Phase 0 that were never read anywhere — in favour of `VITE_DEFAULT_CREATOR`,
+which `src/lib/tenant.ts` actually consumes as the root-redirect fallback on
+a shared host.
 
 ### Phase 3: ingest and a real Supabase adapter — done for this test deploy
 

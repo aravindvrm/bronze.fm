@@ -5,9 +5,9 @@
 import type { Content, Creator } from '@/content/types'
 
 export const dean: Creator = {
-  id: 'crt_dean',
-  slug: 'dean',
-  name: 'Dean',
+  id: 'crt_robotrebel',
+  slug: 'robotrebel',
+  name: 'robotrebel',
   tier: 'standard',
   subdomain: null,
   customDomain: null,
@@ -16,12 +16,12 @@ export const dean: Creator = {
 export const bronze: Content = {
   id: 'cnt_bronze',
   type: 'music',
-  ownerSlug: 'dean',
+  ownerSlug: 'robotrebel',
   slug: 'bronze',
   title: 'Bronze',
   published: false,
   totalDurationMs: 2272825,
-  credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+  credits: [{ creatorSlug: 'robotrebel', name: 'robotrebel', role: 'artist' }],
   items: [
     {
       "id": "itm_01",
@@ -44,8 +44,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -64,8 +64,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -84,8 +84,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -118,8 +118,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -138,8 +138,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -172,8 +172,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -192,8 +192,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -226,8 +226,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -246,8 +246,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],
@@ -266,8 +266,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "robotrebel",
+          "name": "robotrebel",
           "role": "artist"
         }
       ],

@@ -54,19 +54,19 @@ export async function waitPlaying(page: Page) {
 
 /** Navigates within the Creator namespace and waits for the store handle. */
 export async function gotoCreator(page: Page, path = '') {
-  await page.goto(`/dean${path}`)
+  await page.goto(`/robotrebel${path}`)
   await page.waitForFunction(() => !!(window as never as { __player?: unknown }).__player, undefined, {
     timeout: 10_000,
   })
 }
 
-/** The Content's splash — the entry screen at /dean/bronze. */
+/** The Content's splash — the entry screen at /robotrebel/bronze. */
 export async function gotoSplash(page: Page, contentSlug = 'bronze') {
   await gotoCreator(page, `/${contentSlug}`)
   await page.getByText('Tap to enter').waitFor({ timeout: 10_000 })
 }
 
-/** The Content's home — the four tiles at /dean/bronze/home. */
+/** The Content's home — the four tiles at /robotrebel/bronze/home. */
 export async function gotoContentHome(page: Page, contentSlug = 'bronze') {
   await gotoCreator(page, `/${contentSlug}/home`)
   await page.getByRole('button', { name: /^Music/ }).waitFor({ timeout: 10_000 })
@@ -87,7 +87,7 @@ export async function gotoContent(page: Page, contentSlug = 'bronze') {
 export async function playTrack(page: Page, index: number) {
   await page.evaluate(async ([i, slug]) => {
     const mod = await import('/src/content/adapter.ts')
-    const c = await mod.content.getContent('dean', slug as string)
+    const c = await mod.content.getContent('robotrebel', slug as string)
     const s = (window as never as { __player: { getState: () => { playFrom: (c: unknown, i: number) => void } } }).__player.getState()
     s.playFrom(c, i as number)
   }, [index, 'bronze'] as const)

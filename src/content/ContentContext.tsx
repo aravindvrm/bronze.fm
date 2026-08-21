@@ -29,7 +29,7 @@ export function useContentItem(): Content {
 /**
  * The Content this view belongs to, or null outside a Content.
  *
- * Sections render at both levels — `/dean/merch` and `/dean/bronze/merch` —
+ * Sections render at both levels — `/robotrebel/merch` and `/robotrebel/bronze/merch` —
  * so they need to ask rather than assume.
  */
 export function useOptionalContentItem(): Content | null {

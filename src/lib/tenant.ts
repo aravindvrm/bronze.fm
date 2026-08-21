@@ -1,8 +1,8 @@
 /**
  * Resolves which Creator the current request is for.
  *
- * Routing is path-based today (bronze.fm/dean). Host is checked *first* so a
- * premium Creator can be promoted to dean.bronze.fm — or a custom domain —
+ * Routing is path-based today (bronze.fm/robotrebel). Host is checked *first* so a
+ * premium Creator can be promoted to robotrebel.bronze.fm — or a custom domain —
  * by pointing DNS and setting `creators.subdomain`, with no code change here
  * and no change to any screen.
  */
@@ -13,14 +13,14 @@ const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
 /**
  * Second-segment words reserved against Content slugs.
  *
- * Content occupies the second segment (`/dean/bronze`), so it collides with
+ * Content occupies the second segment (`/robotrebel/bronze`), so it collides with
  * *Creator*-level routes, which share it. The Creator page has three sections
  * of its own — releases, merch, events — plus words held back for routes that
  * plausibly arrive later, because adding one against an existing Content would
  * mean renaming it and breaking its URLs.
  *
  * `videos` and `music` are deliberately NOT reserved: they exist only inside a
- * release (`/dean/bronze/videos`), one segment deeper, where nothing can
+ * release (`/robotrebel/bronze/videos`), one segment deeper, where nothing can
  * collide. An album may be called Music.
  *
  * The database enforces the same list with a CHECK constraint.
@@ -56,7 +56,7 @@ const APP_DOMAIN = ((import.meta.env.VITE_APP_DOMAIN as string | undefined) ?? '
  * The earlier rule was "any hostname with three or more labels", which is
  * wrong for every host that is not ours: a Tailscale MagicDNS name
  * (`m1air.tail6d451d.ts.net`) resolved to a Creator called `m1air`, and since
- * host wins over path, `/dean` was then ignored. Vercel preview URLs and
+ * host wins over path, `/robotrebel` was then ignored. Vercel preview URLs and
  * tunnel hosts would have failed the same way.
  *
  * Exactly one label above APP_DOMAIN counts. `bronze.fm` itself, deeper
@@ -71,7 +71,7 @@ export function creatorFromHost(hostname = window.location.hostname): string | n
   if (!host.endsWith(suffix)) return null
 
   const label = host.slice(0, -suffix.length)
-  // One label only: `dean.bronze.fm` yes, `dean.eu.bronze.fm` no.
+  // One label only: `robotrebel.bronze.fm` yes, `robotrebel.eu.bronze.fm` no.
   if (!label || label.includes('.')) return null
   if (RESERVED.has(label)) return null
   return label
@@ -92,7 +92,7 @@ export function resolveCreatorSlug(): string {
     creatorFromHost() ??
     creatorFromPath() ??
     (import.meta.env.VITE_DEFAULT_CREATOR as string | undefined) ??
-    'dean'
+    'robotrebel'
   )
 }
 
@@ -106,7 +106,7 @@ export function isReservedContentSlug(slug: string): boolean {
 }
 
 /**
- * Builds a URL inside a Content: `/dean/bronze`, `/dean/bronze/music`.
+ * Builds a URL inside a Content: `/robotrebel/bronze`, `/robotrebel/bronze/music`.
  *
  * The Content's sections hang off the Content, not the Creator — the four
  * tiles belong to a release.

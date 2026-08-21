@@ -32,10 +32,10 @@ function NotFound({ what, name }: { what: string; name: string }) {
 /**
  * One Content and everything inside it.
  *
- *   /dean/bronze          splash — the entry screen for the release
- *   /dean/bronze/home     the four tiles
- *   /dean/bronze/music    track list
- *   /dean/bronze/videos|merch|events
+ *   /robotrebel/bronze          splash — the entry screen for the release
+ *   /robotrebel/bronze/home     the four tiles
+ *   /robotrebel/bronze/music    track list
+ *   /robotrebel/bronze/videos|merch|events
  *
  * The tiles belong to the Content, not the Creator: they are how you move
  * around one release.
@@ -89,11 +89,11 @@ function ContentShell() {
 /**
  * Everything under one Creator.
  *
- *   /dean            profile — Releases, Merch, Events
- *   /dean/releases   their records
- *   /dean/merch      everything they sell
- *   /dean/events     every date
- *   /dean/bronze     one Content, with its own sections below it
+ *   /robotrebel            profile — Releases, Merch, Events
+ *   /robotrebel/releases   their records
+ *   /robotrebel/merch      everything they sell
+ *   /robotrebel/events     every date
+ *   /robotrebel/bronze     one Content, with its own sections below it
  *
  * The Creator sections come first so they win the match; a Content slug can
  * never be one of them, enforced by a CHECK constraint.

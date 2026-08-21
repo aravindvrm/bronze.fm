@@ -6,7 +6,7 @@ import { contentPath } from '@/lib/tenant'
 import { coverUrl } from '@/lib/cover'
 
 /**
- * Cover-art splash for one Content — the entry screen at `/dean/bronze`.
+ * Cover-art splash for one Content — the entry screen at `/robotrebel/bronze`.
  *
  * Entry is tap-gated rather than timed, deliberately: the tap is the user
  * gesture browsers require before audio may play. Auto-advancing would mean

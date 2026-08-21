@@ -10,7 +10,7 @@ import { coverUrl } from '@/lib/cover'
 import { EventsIcon, MerchIcon, MusicIcon } from '@/components/Icons'
 
 /**
- * The Creator's profile — the tenant root at `/dean`.
+ * The Creator's profile — the tenant root at `/robotrebel`.
  *
  * Three sections, all Creator-wide. Releases leads to the records; Merch and
  * Events show everything the Creator has, of which a release's own sections
