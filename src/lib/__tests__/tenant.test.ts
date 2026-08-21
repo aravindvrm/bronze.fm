@@ -49,12 +49,19 @@ describe('creatorFromPath', () => {
     expect(creatorFromPath('')).toBeNull()
   })
 
-  it.each(['home', 'music', 'videos', 'merch', 'events', 'assets'])(
-    'does not mistake the route "%s" for a Creator',
+  it.each([...RESERVED_CONTENT_SLUGS])(
+    'does not mistake the reserved word "%s" for a Creator',
     (seg) => {
       expect(creatorFromPath(`/${seg}`)).toBeNull()
     },
   )
+
+  it('treats a Content section name in first position as a Creator', () => {
+    // On the shared host the first segment is always a Creator, so /music can
+    // only mean a Creator called "music" — which resolves to a not-found
+    // state. Section names live at the third segment and never appear here.
+    expect(creatorFromPath('/music')).toBe('music')
+  })
 
   it('reads a different Creator', () => {
     expect(creatorFromPath('/kaytranada/events')).toBe('kaytranada')
@@ -88,21 +95,18 @@ describe('reserved Content slugs', () => {
     expect(isReservedContentSlug(slug)).toBe(false)
   })
 
-  it('covers every section route the app actually mounts', () => {
-    // If a section route is added without reserving it, a Content could claim
-    // that path. Keep this list matched to the routes in App.tsx.
-    for (const seg of ['music', 'videos', 'merch', 'events']) {
-      expect(isReservedContentSlug(seg)).toBe(true)
+  it('does NOT reserve a Content\'s own section names', () => {
+    // These live one level below the Content (/dean/bronze/music), so they
+    // cannot collide with a Content slug — an album may be called Merch.
+    for (const seg of ['music', 'videos', 'merch', 'events', 'home']) {
+      expect(isReservedContentSlug(seg)).toBe(false)
     }
   })
 
   it('matches the database CHECK constraint', () => {
-    // supabase/migrations/20260820040000_content_slug_rules.sql hard-codes the
-    // same list; drift would let a bad slug into the database.
-    const inMigration = [
-      'music', 'videos', 'merch', 'events', 'about',
-      'home', 'assets', 'api', 'settings', 'search',
-    ]
+    // supabase/migrations/20260820050000_narrow_reserved_slugs.sql hard-codes
+    // the same list; drift would let a bad slug into the database.
+    const inMigration = ['about', 'admin', 'api', 'assets', 'login', 'search', 'settings']
     expect([...RESERVED_CONTENT_SLUGS].sort()).toEqual(inMigration.sort())
   })
 })

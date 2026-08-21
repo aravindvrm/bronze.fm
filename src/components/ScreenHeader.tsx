@@ -4,8 +4,9 @@ import { creatorPath } from '@/lib/tenant'
 import { BackIcon } from '@/components/Icons'
 
 /**
- * Back always returns to the Creator root rather than using history, so the
- * destination is predictable regardless of how the screen was reached.
+ * Back goes to an explicit destination rather than through history, so it is
+ * predictable regardless of how the screen was reached. Sections inside a
+ * Content pass that Content's home; the default is the Creator root.
  *
  * `titleOf` says whose title this is. A Content's own title carries the
  * Content's typeface wherever it appears; a section name is app chrome and
@@ -18,10 +19,12 @@ export function ScreenHeader({
   title,
   titleOf = 'app',
   transparent = false,
+  to,
 }: {
   title: string
   titleOf?: 'app' | 'content'
   transparent?: boolean
+  to?: string
 }) {
   const navigate = useNavigate()
   const creator = useCreator()
@@ -33,7 +36,7 @@ export function ScreenHeader({
       style={{ paddingTop: 'calc(var(--safe-t) + 0.9rem)' }}
     >
       <button
-        onClick={() => navigate(creatorPath(creator.slug))}
+        onClick={() => navigate(to ?? creatorPath(creator.slug))}
         aria-label="Back"
         className="shrink-0 text-parchment/70 transition hover:text-parchment"
       >

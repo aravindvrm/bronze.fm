@@ -60,14 +60,26 @@ export async function gotoCreator(page: Page, path = '') {
   })
 }
 
+/** The Content's splash — the entry screen at /dean/bronze. */
+export async function gotoSplash(page: Page, contentSlug = 'bronze') {
+  await gotoCreator(page, `/${contentSlug}`)
+  await page.getByText('Tap to enter').waitFor({ timeout: 10_000 })
+}
+
+/** The Content's home — the four tiles at /dean/bronze/home. */
+export async function gotoContentHome(page: Page, contentSlug = 'bronze') {
+  await gotoCreator(page, `/${contentSlug}/home`)
+  await page.getByRole('button', { name: /^Music/ }).waitFor({ timeout: 10_000 })
+}
+
 /**
- * Opens a Content page and waits for its track rows.
+ * The Content's track list.
  *
- * Nothing is queued until a Content is played from, so tests that need a queue
+ * Nothing is queued until a Content is played from, so tests needing a queue
  * must play rather than merely navigate.
  */
 export async function gotoContent(page: Page, contentSlug = 'bronze') {
-  await gotoCreator(page, `/${contentSlug}`)
+  await gotoCreator(page, `/${contentSlug}/music`)
   await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).waitFor({ timeout: 10_000 })
 }
 

@@ -4,28 +4,88 @@ import { AnimatePresence } from 'framer-motion'
 import { AudioProvider } from '@/audio/AudioProvider'
 import { usePlayer } from '@/audio/playerStore'
 import { content as adapter } from '@/content/adapter'
-import { CreatorProvider } from '@/content/CreatorContext'
-import type { Creator } from '@/content/types'
+import { CreatorProvider, useCreator } from '@/content/CreatorContext'
+import { ContentProvider } from '@/content/ContentContext'
+import type { Content, Creator } from '@/content/types'
 import { isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { CreatorProfile } from '@/screens/CreatorProfile'
-import { MusicIndex } from '@/screens/MusicIndex'
-import { ContentDetail } from '@/screens/ContentDetail'
+import { Splash } from '@/screens/Splash'
+import { Home } from '@/screens/Home'
+import { Music } from '@/screens/Music'
 import { StubGrid } from '@/screens/StubGrid'
 
+const Blank = () => <div className="h-full bg-void" />
+
+function NotFound({ what, name }: { what: string; name: string }) {
+  return (
+    <div className="grid h-full place-items-center bg-void px-8 text-center">
+      <p className="text-sm text-parchment/50">
+        No {what} called <span className="text-gilt">{name}</span>.
+      </p>
+    </div>
+  )
+}
+
 /**
- * Everything under one Creator.
+ * One Content and everything inside it.
  *
- *   /dean               the Creator's profile — the tenant root
- *   /dean/music         their releases
- *   /dean/videos|merch|events   Creator-scoped sections
- *   /dean/bronze        one Content
+ *   /dean/bronze          splash — the entry screen for the release
+ *   /dean/bronze/home     the four tiles
+ *   /dean/bronze/music    track list
+ *   /dean/bronze/videos|merch|events
  *
- * Content sits flat alongside the sections, so section names are reserved and
- * cannot be used as Content slugs — enforced in the router by ordering and in
- * the database by a CHECK constraint.
+ * The tiles belong to the Content, not the Creator: they are how you move
+ * around one release.
  */
+function ContentShell() {
+  const { contentSlug } = useParams()
+  const creator = useCreator()
+  const [content, setContent] = useState<Content | null>(null)
+  const [missing, setMissing] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    setMissing(false)
+    void adapter.getContent(creator.slug, contentSlug ?? '').then((c) => {
+      if (cancelled) return
+      if (!c) setMissing(true)
+      else setContent(c)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [creator.slug, contentSlug])
+
+  if (missing) return <NotFound what="release" name={contentSlug ?? ''} />
+  if (!content) return <Blank />
+
+  return (
+    <ContentProvider content={content}>
+      <Routes>
+        <Route index element={<Splash />} />
+        <Route path="home" element={<Home />} />
+        <Route path="music" element={<Music />} />
+        <Route
+          path="videos"
+          element={<StubGrid kind="video" title="Videos" blurb="Official videos, visualisers and studio footage will land here." />}
+        />
+        <Route
+          path="merch"
+          element={<StubGrid kind="merch" title="Merch" blurb="Apparel, vinyl and prints. Checkout arrives with the release." />}
+        />
+        <Route
+          path="events"
+          element={<StubGrid kind="event" title="Events" blurb="Live dates and ticket links, announced as they are confirmed." />}
+        />
+        <Route path="*" element={<Navigate to="." replace />} />
+      </Routes>
+    </ContentProvider>
+  )
+}
+
+/** Everything under one Creator: the profile, and their Content below it. */
 function CreatorShell() {
   const params = useParams()
   const slug = params.creator ?? resolveCreatorSlug()
@@ -45,37 +105,14 @@ function CreatorShell() {
     }
   }, [slug])
 
-  if (missing) {
-    return (
-      <div className="grid h-full place-items-center bg-void px-8 text-center">
-        <p className="text-sm text-parchment/50">
-          No creator called <span className="text-gilt">{slug}</span>.
-        </p>
-      </div>
-    )
-  }
-  if (!creator) return <div className="h-full bg-void" />
+  if (missing) return <NotFound what="creator" name={slug} />
+  if (!creator) return <Blank />
 
   return (
     <CreatorProvider creator={creator}>
       <Routes>
         <Route index element={<CreatorProfile />} />
-        <Route path="music" element={<MusicIndex />} />
-        <Route
-          path="videos"
-          element={<StubGrid kind="video" title="Videos" blurb="Official videos, visualisers and studio footage will land here." />}
-        />
-        <Route
-          path="merch"
-          element={<StubGrid kind="merch" title="Merch" blurb="Apparel, vinyl and prints. Checkout arrives with the release." />}
-        />
-        <Route
-          path="events"
-          element={<StubGrid kind="event" title="Events" blurb="Live dates and ticket links, announced as they are confirmed." />}
-        />
-        {/* Last, so the reserved sections above always win the match. */}
-        <Route path=":contentSlug" element={<ContentDetail />} />
-        <Route path="*" element={<Navigate to="." replace />} />
+        <Route path=":contentSlug/*" element={<ContentShell />} />
       </Routes>
     </CreatorProvider>
   )
@@ -89,6 +126,10 @@ export default function App() {
   // On a dedicated host the Creator comes from the hostname, so paths carry no
   // creator segment. On the shared host the first segment is the Creator.
   const dedicated = isDedicatedHost()
+
+  // The splash is the release's cover screen and owns the whole viewport; the
+  // dock would sit on top of the artwork.
+  const onSplash = location.pathname.split('/').filter(Boolean).length === (dedicated ? 1 : 2)
 
   return (
     <AudioProvider>
@@ -111,12 +152,10 @@ export default function App() {
         </Routes>
       </div>
 
-      {/*
-        One player, two presentations. The dock appears once something is
-        queued rather than on particular routes — nothing is queued until a
-        Content is actually played from.
-      */}
-      <AnimatePresence>{hasQueue && !expanded && <MiniPlayer key="mini" />}</AnimatePresence>
+      {/* One player, two presentations — both persist across route changes. */}
+      <AnimatePresence>
+        {hasQueue && !expanded && !onSplash && <MiniPlayer key="mini" />}
+      </AnimatePresence>
       <AnimatePresence>{expanded && <PlayerScreen key="full" />}</AnimatePresence>
     </AudioProvider>
   )

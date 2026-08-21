@@ -11,28 +11,31 @@
 const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
 
 /**
- * Second-segment words that are Creator sections, never Content slugs.
+ * Second-segment words reserved against Content slugs.
  *
- * Content sits flat under the Creator (`/dean/bronze`) alongside these
- * sections (`/dean/music`), so a Content slug that collides with one would be
- * unreachable — an album called "merch" would resolve to the merch page. The
- * database enforces the same list with a CHECK constraint, so a colliding slug
- * cannot be stored in the first place.
+ * Content occupies the second segment (`/dean/bronze`), and its own sections
+ * live below it (`/dean/bronze/music`). So the collision risk is only with
+ * *Creator*-level routes, which share that second segment. None exist beyond
+ * the profile index today; these are held back for the ones that plausibly
+ * will, because a Content already using the word would have to be renamed —
+ * and its URLs broken — to add the route later.
+ *
+ * Section names like `music` and `merch` are deliberately NOT reserved: they
+ * sit one level deeper and cannot collide, so an album may be called Merch.
+ *
+ * The database enforces the same list with a CHECK constraint.
  */
 export const RESERVED_CONTENT_SLUGS = [
-  'music',
-  'videos',
-  'merch',
-  'events',
   'about',
-  'home',
-  'assets',
+  'admin',
   'api',
-  'settings',
+  'assets',
+  'login',
   'search',
+  'settings',
 ] as const
 
-/** Path segments that are routes, never a Creator slug. */
+/** First-segment words that are app routes, never a Creator slug. */
 const RESERVED_PATHS = new Set<string>([...RESERVED_CONTENT_SLUGS])
 
 export function creatorFromHost(hostname = window.location.hostname): string | null {
@@ -72,6 +75,20 @@ export function isDedicatedHost(): boolean {
 
 export function isReservedContentSlug(slug: string): boolean {
   return (RESERVED_CONTENT_SLUGS as readonly string[]).includes(slug)
+}
+
+/**
+ * Builds a URL inside a Content: `/dean/bronze`, `/dean/bronze/music`.
+ *
+ * The Content's sections hang off the Content, not the Creator — the four
+ * tiles belong to a release.
+ */
+export function contentPath(
+  creatorSlug: string,
+  contentSlug: string,
+  ...segments: string[]
+): string {
+  return creatorPath(creatorSlug, contentSlug, ...segments)
 }
 
 /**

@@ -4,6 +4,9 @@ import { content } from '@/content/adapter'
 import type { StubItem, StubKind } from '@/content/types'
 import { artUrl } from '@/lib/art'
 import { ScreenHeader } from '@/components/ScreenHeader'
+import { useCreator } from '@/content/CreatorContext'
+import { useContentItem } from '@/content/ContentContext'
+import { contentPath } from '@/lib/tenant'
 
 /**
  * Videos, Merch and Events all render through here for now. Real routes and
@@ -11,6 +14,8 @@ import { ScreenHeader } from '@/components/ScreenHeader'
  * the content adapter starts returning real rows, the screens already work.
  */
 export function StubGrid({ kind, title, blurb }: { kind: StubKind; title: string; blurb: string }) {
+  const creator = useCreator()
+  const release = useContentItem()
   const [items, setItems] = useState<StubItem[]>([])
 
   useEffect(() => {
@@ -21,7 +26,7 @@ export function StubGrid({ kind, title, blurb }: { kind: StubKind; title: string
 
   return (
     <div className="min-h-full bg-void">
-      <ScreenHeader title={title} />
+      <ScreenHeader title={title} to={contentPath(creator.slug, release.slug, 'home')} />
 
       <div className="px-5" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
         <p className="mb-6 text-xs leading-relaxed text-parchment/40">{blurb}</p>

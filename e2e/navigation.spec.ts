@@ -1,48 +1,49 @@
 import { expect, test } from '@playwright/test'
-import { gotoCreator } from './helpers'
+import { gotoContentHome, gotoCreator, gotoSplash } from './helpers'
 
 test.describe('creator and content routing', () => {
-  test('the root redirects to the default Creator profile', async ({ page }) => {
+  test('the root redirects to the Creator profile', async ({ page }) => {
     await page.goto('/')
     await expect(page).toHaveURL(/\/dean$/)
-    // The tenant root is the Creator, not a release.
     await expect(page.getByRole('heading', { name: 'Dean' })).toBeVisible()
+    await expect(page.getByText(/Profile coming soon/i)).toBeVisible()
   })
 
-  test('Content lives one level below the Creator', async ({ page }) => {
-    await gotoCreator(page)
-    await page.getByRole('button', { name: /Latest release/ }).click()
+  test('the release splash is the Content entry screen', async ({ page }) => {
+    await gotoSplash(page)
     await expect(page).toHaveURL(/\/dean\/bronze$/)
     await expect(page.getByRole('heading', { name: 'Bronze' })).toBeVisible()
+    await expect(page.getByText('Tap to enter')).toBeVisible()
   })
 
-  test('reaches a release through the music index', async ({ page }) => {
-    await gotoCreator(page)
-    await page.getByRole('button', { name: /^Music/ }).click()
-    await expect(page).toHaveURL(/\/dean\/music$/)
-
-    await page.getByRole('button', { name: /Bronze/ }).first().click()
-    await expect(page).toHaveURL(/\/dean\/bronze$/)
-  })
-
-  test('section routes win over Content slugs', async ({ page }) => {
-    // /dean/merch must resolve to the section, never to a Content lookup.
-    for (const [seg, heading] of [
-      ['music', 'Music'],
-      ['videos', 'Videos'],
-      ['merch', 'Merch'],
-      ['events', 'Events'],
-    ]) {
-      await page.goto(`/dean/${seg}`)
-      await expect(page.getByRole('heading', { name: heading })).toBeVisible()
+  test('tapping the splash opens the release home', async ({ page }) => {
+    await gotoSplash(page)
+    await page.locator('.grain').first().click()
+    await expect(page).toHaveURL(/\/dean\/bronze\/home$/)
+    for (const label of ['Music', 'Videos', 'Merch', 'Events']) {
+      await expect(page.getByRole('button', { name: new RegExp(`^${label}`) })).toBeVisible()
     }
   })
 
-  test('back from a release returns to the Creator profile', async ({ page }) => {
-    await gotoCreator(page, '/bronze')
+  test('the tiles belong to the Content, not the Creator', async ({ page }) => {
+    await gotoContentHome(page)
+    for (const [label, seg] of [
+      ['Music', 'music'],
+      ['Videos', 'videos'],
+      ['Merch', 'merch'],
+      ['Events', 'events'],
+    ]) {
+      await gotoContentHome(page)
+      await page.getByRole('button', { name: new RegExp(`^${label}`) }).click()
+      // Every section nests under the release, never under the Creator.
+      await expect(page).toHaveURL(new RegExp(`/dean/bronze/${seg}$`))
+    }
+  })
+
+  test('back from a section returns to the release home', async ({ page }) => {
+    await page.goto('/dean/bronze/merch')
     await page.getByRole('button', { name: 'Back' }).click()
-    await expect(page).toHaveURL(/\/dean$/)
-    await expect(page.getByRole('heading', { name: 'Dean' })).toBeVisible()
+    await expect(page).toHaveURL(/\/dean\/bronze\/home$/)
   })
 
   test('shows an honest empty state for an unknown Creator', async ({ page }) => {
@@ -50,8 +51,8 @@ test.describe('creator and content routing', () => {
     await expect(page.getByText(/No creator called/)).toBeVisible()
   })
 
-  test('shows an honest empty state for unknown Content', async ({ page }) => {
+  test('shows an honest empty state for an unknown release', async ({ page }) => {
     await page.goto('/dean/no-such-release')
-    await expect(page.getByText(/has nothing at/)).toBeVisible()
+    await expect(page.getByText(/No release called/)).toBeVisible()
   })
 })

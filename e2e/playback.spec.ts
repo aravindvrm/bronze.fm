@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { act, gotoContent, gotoCreator, playTrack, snapshot, waitPlaying } from './helpers'
+import { act, gotoContent, playTrack, snapshot } from './helpers'
 
 test.describe('playback', () => {
   test('survives navigation between Creator sections', async ({ page }) => {
@@ -12,9 +12,9 @@ test.describe('playback', () => {
     expect(before.isPlaying).toBe(true)
 
     await page.getByRole('button', { name: 'Back' }).click()
-    await expect(page).toHaveURL(/\/dean$/)
+    await expect(page).toHaveURL(/\/dean\/bronze\/home$/)
     await page.getByRole('button', { name: /^Merch/ }).click()
-    await expect(page).toHaveURL(/\/dean\/merch$/)
+    await expect(page).toHaveURL(/\/dean\/bronze\/merch$/)
 
     await page.waitForTimeout(1500)
     const after = await snapshot(page)

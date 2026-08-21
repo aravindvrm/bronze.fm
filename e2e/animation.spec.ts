@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { act, gotoContent, gotoCreator, playTrack } from './helpers'
+import { act, gotoContent, gotoContentHome, gotoSplash, playTrack } from './helpers'
 
 /**
  * These exist because animation was the one thing that could not be verified
@@ -63,8 +63,8 @@ test.describe('animation', () => {
     await expect(page.getByRole('button', { name: 'Close track list' })).toBeVisible()
   })
 
-  test('profile tiles finish their staggered entrance', async ({ page }) => {
-    await page.goto('/dean')
+  test('release home tiles finish their staggered entrance', async ({ page }) => {
+    await gotoContentHome(page)
     for (const label of ['Music', 'Videos', 'Merch', 'Events']) {
       const tile = page.getByRole('button', { name: new RegExp(`^${label}`) })
       await expect(tile).toBeVisible()
@@ -77,8 +77,8 @@ test.describe('animation', () => {
     }
   })
 
-  test('the release hero reaches full opacity', async ({ page }) => {
-    await gotoContent(page)
+  test('the splash title reaches full opacity', async ({ page }) => {
+    await gotoSplash(page)
     const title = page.getByRole('heading', { name: 'Bronze' })
     await expect
       .poll(async () => Number(await title.evaluate((el) => getComputedStyle(el).opacity)), {

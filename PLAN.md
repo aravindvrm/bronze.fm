@@ -154,39 +154,47 @@ added as `content_item_creators` later without reshaping what exists.
 `content.published` enforces private-until-launch **in the database**, rather
 than relying on an unguessable URL.
 
-### Routing: Creator and Content are separate paths
+### Routing: Creator, then Content, then the Content's sections
 
 ```
-/dean                       Creator profile — the tenant root
-/dean/music                 their releases
-/dean/videos|merch|events   Creator-scoped sections
-/dean/bronze                one Content
+/dean                       Creator profile — the tenant root (stub for now)
+/dean/bronze                the release splash — cover art, tap to enter
+/dean/bronze/home           the four tiles
+/dean/bronze/music          track list
+/dean/bronze/videos|merch|events
 ```
 
-Merch and Events are `creator_id`-scoped in the schema, so the sections hang
-off the Creator rather than off any single release.
+**The four tiles belong to the Content, not the Creator.** They are how you
+move around one release, so they hang off it. The splash is the release's
+entry screen and owns the whole viewport — the mini-player dock is suppressed
+there rather than sitting on top of the artwork.
 
-Content sits **flat** alongside those sections, which means a Content slug can
-collide with a section name and become permanently unreachable — an album
-called `merch` would resolve to the merch page. Section names are reserved in
-two places: route ordering in `App.tsx`, and a CHECK constraint on
-`content.slug`. A unit test compares the router's list against the migration's
-so they cannot drift. Slug *format* is constrained too (lowercase, hyphenated,
-no leading or trailing hyphen) for Creators and Content alike.
-
-Verified against the live project: reserved and malformed slugs are rejected
-with `23514`, valid ones accepted.
+Content occupies the second path segment, so it can only collide with
+*Creator*-level routes. None exist beyond the profile index today;
+`RESERVED_CONTENT_SLUGS` holds back the words that plausibly will (`about`,
+`admin`, `api`, `assets`, `login`, `search`, `settings`), because adding such
+a route later against an existing Content would mean renaming it and breaking
+its URLs. Section names like `music` and `merch` are deliberately **not**
+reserved — they sit a level deeper and cannot collide, so an album may be
+called Merch. A CHECK constraint enforces the same list, and a unit test
+compares the two so they cannot drift. Slug *format* is constrained too, for
+Creators and Content alike.
 
 The resolver in `src/lib/tenant.ts` checks **host first**, then path, so
 promoting a premium Creator to `dean.bronze.fm` is a DNS record plus setting
-`creators.subdomain` — no code change, and their existing path URLs keep
-working. `dean.bronze.fm → dean`, while `www` / `app` / `staging` are rejected
-as reserved.
+`creators.subdomain` — no code change, and existing path URLs keep working.
 
 **Known gap:** a custom domain (`deansite.com`) cannot be parsed into a slug
 the way a subdomain can. The `custom_domain` column stores the mapping, but
 resolving it needs a lookup — edge config or a boot-time query — that does not
 exist yet.
+
+**Open tension:** `merch_items` and `events` are `creator_id`-scoped in the
+schema, but the UI now presents them inside a release. With stub data that is
+invisible. Once real merch and dates exist, either those tables gain a
+nullable `content_id` (tour merch tied to a record is a real thing), or the
+sections show Creator-level data under a Content URL. Worth deciding before
+seeding either.
 
 ### Playback is owned by a Content, not by the app
 
