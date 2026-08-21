@@ -121,12 +121,13 @@
   --color-gilt: var(--color-bronze);
   --color-parchment: #f2f0ec;
 
-  /* Archivo via Google Fonts for now — inconsistent with Abhaya Libre's
-     self-hosting below (chosen there specifically to avoid a render-blocking
-     third-party stylesheet and leaking visitor IPs to Google) and worth
-     swapping to self-hosted woff2 files the same way before this direction
-     is final. Linked in index.html. */
-  --font-display: 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Tried Archivo (a grotesk) for the "Brushed Editorial" pass — reverted.
+     A full sans next to Abhaya Libre's serif below read as a real clash, not
+     a deliberate two-voice system; Georgia paired with it the way the
+     original design intended, two serifs distinguished by identity rather
+     than by family. Also drops the Google Fonts dependency this had picked
+     up — Georgia needs no webfont at all. */
+  --font-display: 'Georgia', 'Times New Roman', serif;
   /* Typeface of the Content itself — titles owned by a release, not by the
      app around it. Chrome stays on --font-display. Unchanged across
      directions: the app-voice/content-voice split is the concept, not tied
