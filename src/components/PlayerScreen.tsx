@@ -39,7 +39,7 @@ export function PlayerScreen() {
       animate={{ y: '0%' }}
       exit={{ y: '100%' }}
       transition={{ type: 'spring', stiffness: 320, damping: 36 }}
-      className="fixed inset-0 z-50 overflow-hidden bg-void"
+      className="fixed inset-y-0 left-1/2 z-50 w-full max-w-[var(--app-w)] -translate-x-1/2 overflow-hidden bg-void"
     >
       <motion.img
         key={item.hash}

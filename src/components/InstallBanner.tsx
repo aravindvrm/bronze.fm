@@ -43,7 +43,7 @@ export function InstallBanner() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 24 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="pointer-events-auto fixed inset-x-4 z-40 flex items-center gap-3 rounded-md border border-white/[0.14] bg-ink/90 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+        className="pointer-events-auto fixed left-1/2 z-40 flex w-[calc(100%-2rem)] max-w-[calc(var(--app-w)-2rem)] -translate-x-1/2 items-center gap-3 rounded-md border border-white/[0.14] bg-ink/90 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl"
         style={{ bottom: 'calc(var(--safe-b) + 1rem)' }}
       >
         <div className="min-w-0 flex-1">

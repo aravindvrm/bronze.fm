@@ -22,7 +22,7 @@ export function MiniPlayer() {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 80, opacity: 0 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-x-0 bottom-0 z-40"
+      className="fixed bottom-0 left-1/2 z-40 w-full max-w-[var(--app-w)] -translate-x-1/2"
       style={{ paddingBottom: 'var(--safe-b)' }}
     >
       <div className="mx-3 mb-3 overflow-hidden rounded-md border border-white/[0.14] bg-ink/80 shadow-2xl shadow-black/60 backdrop-blur-xl">

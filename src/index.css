@@ -136,6 +136,11 @@
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Every screen here is designed as a phone-width column. On a wide viewport
+     it stays that width, centered, rather than stretching tile grids and
+     type into proportions built for a much narrower frame. */
+  --app-w: 30rem;
 }
 
 @layer base {
