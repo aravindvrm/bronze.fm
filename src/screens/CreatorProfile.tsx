@@ -7,7 +7,29 @@ import type { Content } from '@/content/types'
 import { creatorPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
-import { EventsIcon, MerchIcon, MusicIcon } from '@/components/Icons'
+import {
+  EventsIcon,
+  InstagramIcon,
+  MerchIcon,
+  MusicIcon,
+  SpotifyIcon,
+  XIcon,
+  YoutubeIcon,
+} from '@/components/Icons'
+
+/**
+ * No `creators` column backs any of these yet — there is no accounts system
+ * to set them from. Shown dimmed, the same "not yet" register as the SOON
+ * tags on the Merch/Events tiles below, rather than left out (which would
+ * read as an oversight) or linked to guessed handles (which would read as
+ * someone else's account).
+ */
+const SOCIALS = [
+  { label: 'Instagram', Icon: InstagramIcon },
+  { label: 'Spotify', Icon: SpotifyIcon },
+  { label: 'YouTube', Icon: YoutubeIcon },
+  { label: 'X', Icon: XIcon },
+] as const
 
 /**
  * The Creator's profile — the tenant root at `/robotrebel`.
@@ -57,20 +79,49 @@ export function CreatorProfile() {
         className="relative px-5"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
+        {/* Avatar overlaps the glass panel below it — the identity block a
+            profile page needs, distinct from the release art it's cropped
+            from. There is no dedicated Creator photo yet, so the featured
+            release's cover stands in, sharp rather than the blurred wash
+            behind it. */}
+        <motion.img
+          src={featured ? coverUrl(featured, 300) : artUrl(`${creator.slug}-hero`, 'cover', 300)}
+          alt=""
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 size-24 rounded-full border-2 border-void object-cover shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+        />
+
         {/* Glass panel: the cover runs bright behind this, and the Creator's
             name is the one thing here with no artwork of its own to sit on. */}
         <motion.header
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-md border border-white/[0.14] bg-ink/50 px-5 py-4 backdrop-blur-xl"
+          className="-mt-4 rounded-md border border-white/[0.14] bg-ink/50 px-5 pb-4 pt-8 backdrop-blur-xl"
         >
           {/* Creator names are identity, not a Content title, so they stay on
               the app face rather than the release's. */}
-          <h1 className="font-display text-5xl tracking-tight text-parchment">{creator.name}</h1>
+          <h1 className="font-display text-4xl tracking-tight text-parchment">{creator.name}</h1>
           {creator.bio && (
             <p className="mt-3 text-sm leading-relaxed text-parchment/50">{creator.bio}</p>
           )}
+
+          <div className="mt-4 flex items-center gap-2.5 border-t border-white/[0.08] pt-4">
+            {SOCIALS.map(({ label, Icon }) => (
+              <div
+                key={label}
+                title={`${label} — not connected yet`}
+                className="grid size-9 place-items-center rounded-full border border-white/10 text-parchment/25"
+              >
+                <Icon className="size-4" />
+              </div>
+            ))}
+            <span className="ml-auto text-[9px] uppercase tracking-[0.15em] text-parchment/30">
+              Not yet connected
+            </span>
+          </div>
         </motion.header>
 
         <div className="mt-8 grid grid-cols-2 gap-3.5">
