@@ -15,7 +15,8 @@
     "test:e2e": "playwright test",
     "test:all": "npm run test && npm run test:e2e",
     "dev:tailscale": "vite --host $(tailscale ip -4 | head -1)",
-    "dev:lan": "vite --host 0.0.0.0"
+    "dev:lan": "vite --host 0.0.0.0",
+    "dev:usb": "PWA_DEV=true vite --host 127.0.0.1"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

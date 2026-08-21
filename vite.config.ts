@@ -118,7 +118,13 @@ export default defineConfig({
     // Bound to loopback by default, deliberately. The dev middleware serves the
     // unreleased masters at /media/audio, so `--host` without thought exposes
     // the album to every device on whatever network this laptop is joined to.
-    // `npm run dev:tailscale` binds the tailnet address only.
+    //
+    //   npm run dev             loopback only — tests and CI
+    //   npm run dev:tailscale   the tailnet address only, for a phone
+    //   npm run dev:usb         v4 loopback + service worker, for `adb reverse`
+    //
+    // Never expose this through a public tunnel (ngrok, cloudflared): it would
+    // put the unreleased masters on the open internet.
     allowedHosts: ['.ts.net'],
   },
 })
