@@ -79,7 +79,16 @@ export default defineConfig({
         // splash is the entry screen, so a cold offline start without it opens
         // on a broken image. Bundled covers are content-hashed, so a replaced
         // cover revokes the old precache entry rather than shadowing it.
-        globPatterns: ['**/*.{js,css,html,png,jpg,svg,woff2}'],
+        //
+        // Icons handled explicitly rather than by extension: vite-plugin-pwa
+        // already adds every manifest.icons entry below to the precache list
+        // on its own. A bare `png` in globPatterns matches those same files a
+        // second time — the only .png files this build produces are the four
+        // under icons/ — and a duplicate URL makes the SW's Cache.addAll()
+        // throw during install, which silently discards the *whole*
+        // registration, not just the icon entry. apple-touch-icon.png isn't
+        // in manifest.icons, so it's the one icon still worth listing here.
+        globPatterns: ['**/*.{js,css,html,jpg,svg,woff2}', 'icons/apple-touch-icon.png'],
         globIgnores: ['**/media/**'],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },
@@ -91,8 +100,8 @@ export default defineConfig({
         scope: '/',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#0a0705',
-        theme_color: '#0a0705',
+        background_color: '#0c0c0d',
+        theme_color: '#0c0c0d',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },

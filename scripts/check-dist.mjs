@@ -94,6 +94,32 @@ if (total > MAX_TOTAL_BYTES) {
   problems.push(`dist/ is ${(total / 1048576).toFixed(1)} MB, over the ${MAX_TOTAL_BYTES / 1048576} MB budget`)
 }
 
+// A duplicate URL in the service worker's precache manifest makes
+// Cache.addAll() throw InvalidStateError during `install` — which discards
+// the WHOLE registration silently, not just the duplicated entry, and no
+// console error survives a discarded registration. This actually happened:
+// vite-plugin-pwa adds every manifest.icons entry to the precache list on
+// its own, and a bare `png` glob pattern matched those same icon files a
+// second time. Checked here so a future globPatterns edit can't quietly
+// reintroduce it.
+const swPath = path.join(dist, 'sw.js')
+if (fs.existsSync(swPath)) {
+  const swSource = fs.readFileSync(swPath, 'utf8')
+  const manifestMatch = swSource.match(/\[\{"revision"[^;]*?\]\.map\(\w+=>\w+\.url\)/)
+  if (manifestMatch) {
+    const arrayLiteral = manifestMatch[0].split('.map')[0]
+    const urls = JSON.parse(arrayLiteral).map((e) => e.url)
+    const seen = new Set()
+    const duplicates = new Set()
+    for (const u of urls) (seen.has(u) ? duplicates : seen).add(u)
+    if (duplicates.size) {
+      problems.push(
+        `duplicate URL(s) in the precache manifest, which fails Cache.addAll() and silently drops the whole SW registration: ${[...duplicates].join(', ')}`,
+      )
+    }
+  }
+}
+
 const summary = `${count} files, ${(total / 1048576).toFixed(2)} MB`
 
 if (problems.length) {

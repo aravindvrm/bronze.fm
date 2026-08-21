@@ -30,7 +30,16 @@ function isMediaRequest(url: URL): boolean {
 // ── Install: precache the shell ──────────────────────────────────────────
 self.addEventListener('install', (event) => {
   // Injected by vite-plugin-pwa at build time; always present.
-  const urls = self.__WB_MANIFEST.map((e) => e.url)
+  //
+  // Deduplicated defensively: vite-plugin-pwa's manifest-icon injection adds
+  // each icon declared in manifest.icons to this list *in addition to* the
+  // build's own glob match picking up the same files, so entries like
+  // icon-192.png land twice. `Cache.addAll()` throws InvalidStateError on any
+  // duplicate URL — one bad entry failed the whole precache, which failed
+  // `install`, which made the registration disappear silently (no console
+  // error survives a discarded registration). Deduping here holds regardless
+  // of what future config changes feed this list.
+  const urls = [...new Set(self.__WB_MANIFEST.map((e) => e.url))]
   event.waitUntil(
     (async () => {
       const cache = await caches.open(SHELL_CACHE)

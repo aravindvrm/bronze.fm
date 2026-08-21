@@ -8,7 +8,11 @@ import { requestPersistence } from '@/lib/mediaCache'
 
 // `prompt` rather than auto-reload: a silent update mid-playback would tear
 // down the audio element. The page keeps the old shell until it is reloaded.
-registerSW({ immediate: true })
+registerSW({
+  immediate: true,
+  onRegisteredSW: (swUrl, reg) => console.log('[sw] registered', swUrl, reg),
+  onRegisterError: (err) => console.error('[sw] registration failed', err),
+})
 
 // Best-effort exemption from routine eviction. iOS still evicts under storage
 // pressure, so cached audio is never treated as guaranteed.
