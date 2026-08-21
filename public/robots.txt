@@ -1,0 +1,4 @@
+# Not a public release yet. Keep every environment out of search until Dean
+# says otherwise — this covers preview deploys and the production domain alike.
+User-agent: *
+Disallow: /
