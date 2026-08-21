@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { audioEl, usePlayer } from '@/audio/playerStore'
-import { artUrl } from '@/lib/art'
+import { coverArtwork } from '@/lib/cover'
 import { useOpportunisticCache } from '@/audio/useOpportunisticCache'
 
 /**
@@ -74,11 +74,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       // Primary attributed Creator; falls back to the owner.
       artist: content.credits[0]?.name ?? content.ownerSlug,
       album: content.title,
-      artwork: [512, 256, 192].map((size) => ({
-        src: artUrl(`${content.slug}-cover`, 'cover', size),
-        sizes: `${size}x${size}`,
-        type: 'image/svg+xml',
-      })),
+      artwork: coverArtwork(content),
     })
 
     const handlers: [MediaSessionAction, MediaSessionActionHandler][] = [

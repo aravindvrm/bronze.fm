@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { usePlayer } from '@/audio/playerStore'
 import { useCreator } from '@/content/CreatorContext'
 import { creatorPath } from '@/lib/tenant'
-import { artUrl } from '@/lib/art'
+import { coverUrl } from '@/lib/cover'
 
 /**
  * Cover-art splash for the Creator's primary Content.
@@ -16,7 +16,7 @@ export function Splash() {
   const navigate = useNavigate()
   const creator = useCreator()
   const content = usePlayer((s) => s.content)
-  const cover = artUrl(`${content?.slug ?? 'bronze'}-cover`, 'cover', 1400)
+  const cover = coverUrl(content, 1400)
 
   return (
     <motion.div
@@ -31,9 +31,17 @@ export function Splash() {
         transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 size-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-void/20 via-transparent to-void" />
+      {/*
+        Real cover art is lit and busy where generated art was dark and flat, so
+        the scrim carries the type rather than merely vignetting: transparent
+        across the artwork's focal third, ramping to solid under the title.
+      */}
+      <div className="absolute inset-0 bg-gradient-to-b from-void/40 via-transparent via-40% to-void" />
 
-      <div className="relative flex h-full flex-col items-center justify-center px-8 text-center">
+      <div
+        className="relative flex h-full flex-col items-center justify-end px-8 text-center"
+        style={{ paddingBottom: 'calc(var(--safe-b) + 3rem)' }}
+      >
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -47,7 +55,7 @@ export function Splash() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.68, duration: 1 }}
-          className="mt-3 font-display text-6xl tracking-tight text-parchment"
+          className="mt-3 font-content text-6xl tracking-tight text-parchment"
         >
           {content?.title ?? ''}
         </motion.h1>
@@ -56,8 +64,7 @@ export function Splash() {
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 0.75, 0.35, 0.75] }}
           transition={{ delay: 1.5, duration: 3.2, repeat: Infinity, repeatType: 'reverse' }}
-          className="absolute inset-x-0 text-[10px] uppercase tracking-[0.3em] text-parchment/50"
-          style={{ bottom: 'calc(var(--safe-b) + 3.5rem)' }}
+          className="mt-7 text-[10px] uppercase tracking-[0.3em] text-parchment/50"
         >
           Tap to enter
         </motion.span>

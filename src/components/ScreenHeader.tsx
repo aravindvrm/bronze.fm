@@ -3,7 +3,18 @@ import { useCreator } from '@/content/CreatorContext'
 import { creatorPath } from '@/lib/tenant'
 import { BackIcon } from '@/components/Icons'
 
-export function ScreenHeader({ title }: { title: string }) {
+/**
+ * `titleOf` says whose title this is. A Content's own title carries the
+ * Content's typeface wherever it appears; a section name is app chrome and
+ * stays on the app's.
+ */
+export function ScreenHeader({
+  title,
+  titleOf = 'app',
+}: {
+  title: string
+  titleOf?: 'app' | 'content'
+}) {
   const navigate = useNavigate()
   const creator = useCreator()
   return (
@@ -18,7 +29,13 @@ export function ScreenHeader({ title }: { title: string }) {
       >
         <BackIcon />
       </button>
-      <h1 className="truncate font-display text-2xl text-parchment">{title}</h1>
+      <h1
+        className={`truncate text-2xl text-parchment ${
+          titleOf === 'content' ? 'font-content' : 'font-display'
+        }`}
+      >
+        {title}
+      </h1>
     </header>
   )
 }

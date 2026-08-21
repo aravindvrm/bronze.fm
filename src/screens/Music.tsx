@@ -22,7 +22,7 @@ export function Music() {
 
   return (
     <div className="min-h-full bg-void">
-      <ScreenHeader title={content.title} />
+      <ScreenHeader title={content.title} titleOf="content" />
 
       <div className="px-5 pb-2">
         <OfflineControl />
@@ -63,7 +63,7 @@ export function Music() {
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <span className={`block truncate text-sm ${active ? 'text-gilt' : 'text-parchment'}`}>
+                  <span className={`block truncate font-content text-sm ${active ? 'text-gilt' : 'text-parchment'}`}>
                     {item.title}
                   </span>
                   <span className="mt-0.5 block truncate text-[11px] text-parchment/40">
