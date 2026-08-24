@@ -1,5 +1,14 @@
-// Rasterises the procedural cover art into PWA icons.
-// Chrome accepts SVG icons; iOS home-screen icons require PNG.
+// Generates the PWA icon set from the bronze.fm cassette logo.
+//
+// Source is brand/bronzefm-logo-cutout.png — the logo with a real alpha
+// channel. The original brand/bronzefm-logo.jpeg beside it is a flattened
+// export whose "transparency" is a painted checkerboard, so compositing that
+// directly would bake grey squares into every icon. The cutout was isolated by
+// saturation (the checkerboard is neutral grey, the artwork is not), which
+// survived the JPEG noise where colour-keying did not.
+//
+// Chrome accepts SVG icons; iOS home-screen icons require PNG, so everything
+// here is rasterised.
 import fs from 'node:fs'
 import path from 'node:path'
 import sharp from 'sharp'
@@ -7,47 +16,53 @@ import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outDir = path.join(root, 'public', 'icons')
+const source = path.join(root, 'brand', 'bronzefm-logo-cutout.png')
+
+if (!fs.existsSync(source)) {
+  console.error(`✗ missing ${path.relative(root, source)}`)
+  process.exit(1)
+}
+
 fs.mkdirSync(outDir, { recursive: true })
 
-// Mirrors src/lib/art.ts so the icon matches the in-app cover.
-const BRONZE = ['#1a0f07', '#3d2614', '#6b4423', '#9c6b34', '#cd7f32', '#d9a05b', '#e8c48a', '#f5e3c0']
+/** --color-void. The icon sits on the app's own background, not white. */
+const VOID = { r: 0x0c, g: 0x0c, b: 0x0d, alpha: 1 }
 
-function icon(size, { maskable = false } = {}) {
-  // Maskable icons need their content inside a safe circle of 80% diameter.
-  const pad = maskable ? size * 0.1 : 0
-  const inner = size - pad * 2
-  const r = inner * 0.5
-  const cx = size / 2
-  const cy = size / 2
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${BRONZE[1]}"/>
-      <stop offset="55%" stop-color="${BRONZE[4]}"/>
-      <stop offset="100%" stop-color="${BRONZE[6]}"/>
-    </linearGradient>
-    <radialGradient id="s" cx="35%" cy="28%" r="70%">
-      <stop offset="0%" stop-color="${BRONZE[7]}" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="${BRONZE[0]}" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="${size}" height="${size}" fill="${BRONZE[0]}"/>
-  <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#g)"/>
-  <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#s)"/>
-  <circle cx="${cx}" cy="${cy}" r="${r * 0.62}" fill="none" stroke="${BRONZE[0]}" stroke-opacity="0.35" stroke-width="${size * 0.02}"/>
-  <circle cx="${cx}" cy="${cy}" r="${r * 0.1}" fill="${BRONZE[0]}" fill-opacity="0.55"/>
-</svg>`
+const { width: srcW, height: srcH } = await sharp(source).metadata()
+const aspect = srcW / srcH
+
+/**
+ * Widest the logo can be at a given canvas size.
+ *
+ * A maskable icon may be cropped to a circle of 80% diameter, so the logo's
+ * DIAGONAL — not its width — has to fit inside that circle. For a landscape
+ * mark this is a much tighter bound than the usual 80% rule of thumb, and
+ * getting it wrong clips the ends off the cassette on Android.
+ */
+function logoWidth(size, maskable) {
+  if (!maskable) return Math.round(size * 0.82)
+  const safeDiameter = size * 0.8
+  return Math.round(safeDiameter / Math.hypot(1, 1 / aspect))
 }
 
 const targets = [
   { name: 'icon-192.png', size: 192 },
   { name: 'icon-512.png', size: 512 },
   { name: 'icon-maskable-512.png', size: 512, maskable: true },
+  // iOS applies its own corner rounding and never treats this as maskable.
   { name: 'apple-touch-icon.png', size: 180 },
 ]
 
 for (const t of targets) {
-  const svg = Buffer.from(icon(t.size, { maskable: t.maskable }))
-  await sharp(svg).png().toFile(path.join(outDir, t.name))
-  console.log(`✓ ${t.name} (${t.size}px)`)
+  const w = logoWidth(t.size, t.maskable)
+  const logo = await sharp(source).resize({ width: w }).png().toBuffer()
+
+  await sharp({
+    create: { width: t.size, height: t.size, channels: 4, background: VOID },
+  })
+    .composite([{ input: logo, gravity: 'center' }])
+    .png()
+    .toFile(path.join(outDir, t.name))
+
+  console.log(`✓ ${t.name} (${t.size}px, logo ${w}px${t.maskable ? ', maskable safe zone' : ''})`)
 }

@@ -65,6 +65,7 @@ Two secrets deliberately live **outside** this file:
 | `npm run test:e2e` | Browser tests (Playwright) |
 | `npm run test:all` | Both |
 | `npm run fixtures` | Regenerate `bronze.generated.ts` from the local masters |
+| `npm run icons` | Rebuild the PWA icon set from the logo in `brand/` |
 | `npm run cover` | Re-encode cover art |
 | `npm run check:dist` | Run the build-output guard on its own |
 
@@ -194,9 +195,10 @@ secret scan that also fails if any audio file is tracked in git.
   build guard checks `dist/`, and CI checks the tree. This repo once shipped
   66 MB of unreleased masters into build output because `public/` is copied
   wholesale — hence three independent checks.
-- **`npm run icons` overwrites the logo.** That script rasterises the *procedural*
-  cover art; the current icons in `public/icons/` were generated from
-  `brand/bronzefm-logo.jpeg` instead. Running it will replace them.
+- **Icons regenerate from `brand/`, not from the cover art.** `npm run icons`
+  builds the set from `brand/bronzefm-logo-cutout.png`. Use the *cutout*, never
+  `bronzefm-logo.jpeg` beside it — the JPEG's "transparency" is a painted
+  checkerboard that would composite into the icon as grey squares.
 - **The service worker is off in dev** by default, since a live worker shadows
   HMR and serves stale modules. `PWA_DEV=true` turns it on — that's how the e2e
   suite exercises the caching path.
