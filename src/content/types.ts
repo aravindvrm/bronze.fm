@@ -1,14 +1,34 @@
 /**
  * The shape screens consume. Independent of where content came from —
- * fixtures today, Supabase in Phase 3 — so no screen changes when the
- * backend lands.
+ * fixtures or Supabase — so no screen changes when the backend swaps.
  *
- * Tenancy: tenant = Creator. Content has exactly one owner Creator, which
+ * Tenancy: tenant = Creator. A Project has exactly one owner Creator, which
  * drives the URL, the storage prefix and the RLS predicate. Additional
  * Creators are attributed via `credits`.
+ *
+ * The layering is Creator → Project → Content → ContentItem. A Project is a
+ * body of work (an album, a whitepaper); each Content under it is one *typed
+ * interface* onto that work, which is what the last URL segment selects. That
+ * split exists because a Project can carry several — Atonomos is a document
+ * today and may gain audio later — whereas a Content is always exactly one
+ * type. See PLAN.md §8.3.
  */
 
-export type ContentType = 'music' | 'video'
+export type ContentType = 'music' | 'video' | 'ereader'
+
+/** URL segment that selects a Content within its Project. */
+export const CONTENT_TYPE_SEGMENT: Record<ContentType, string> = {
+  music: 'music',
+  video: 'video',
+  // `read` rather than `e-reader`: a verb beats a hyphenated compound noun in
+  // a path segment.
+  ereader: 'read',
+}
+
+export function contentTypeFromSegment(segment: string): ContentType | null {
+  const found = Object.entries(CONTENT_TYPE_SEGMENT).find(([, seg]) => seg === segment)
+  return found ? (found[0] as ContentType) : null
+}
 
 export type CreditRole =
   | 'artist'
@@ -70,12 +90,19 @@ export interface ContentItem {
   url: string
 }
 
-/** One publishable work. Music holds ordered items; video holds one. */
+/**
+ * One typed interface onto a Project. Music holds ordered items; video holds
+ * one; an ereader holds its document sections.
+ *
+ * A Content is identified within its Project by `type`, not by a slug — the
+ * URL is `/@dean/bronze/music`, so two Contents of the same type in one
+ * Project would be unaddressable.
+ */
 export interface Content {
   id: string
   type: ContentType
   ownerSlug: string
-  slug: string
+  projectSlug: string
   title: string
   description?: string
   /** Mirrors content.published in Postgres; gates public read via RLS. */
@@ -83,6 +110,23 @@ export interface Content {
   totalDurationMs: number
   items: ContentItem[]
   credits: Credit[]
+}
+
+/**
+ * A body of work, and the unit a visitor navigates to: `/@dean/bronze`.
+ *
+ * Holds the artwork and the description because those describe the work
+ * itself rather than any one way of consuming it.
+ */
+export interface Project {
+  id: string
+  ownerSlug: string
+  slug: string
+  title: string
+  description?: string
+  published: boolean
+  /** Typed interfaces onto this work, in display order. */
+  contents: Content[]
 }
 
 export type StubKind = 'video' | 'merch' | 'event'
@@ -94,26 +138,25 @@ export interface StubItem {
   subtitle?: string
   seed: string
   /**
-   * Optional release association. Merch and Events are Creator-owned, but in
-   * music they usually carry a release dimension too — the Bronze vinyl, the
+   * Optional project association. Merch and Events are Creator-owned, but in
+   * music they usually carry a project dimension too — the Bronze vinyl, the
    * Bronze tour. Absent means Creator-wide.
    */
-  contentSlug?: string
+  projectSlug?: string
 }
 
 export interface ContentAdapter {
   getCreator(slug: string): Promise<Creator | null>
-  /** All Content of a type owned by a Creator, in display order. */
-  listContent(creatorSlug: string, type: ContentType): Promise<Content[]>
-  getContent(creatorSlug: string, contentSlug: string): Promise<Content | null>
+  /** Every Project a Creator owns, in display order. */
+  listProjects(creatorSlug: string): Promise<Project[]>
+  getProject(creatorSlug: string, projectSlug: string): Promise<Project | null>
+  /** One typed interface within a Project, or null if it has none of that type. */
+  getContent(creatorSlug: string, projectSlug: string, type: ContentType): Promise<Content | null>
   /**
-   * Stub rows for a Creator. Passing `contentSlug` narrows to items associated
-   * with that release; omitting it returns everything the Creator has.
-   *
-   * Deliberately no fallback from the narrow case to the wide one: a release
-   * with nothing tagged shows an empty state, because silently serving the
-   * Creator's full list would make the same set reachable under every release
-   * path.
+   * Stub rows for a Creator. Merch and Events are Creator-level in this
+   * structure (PLAN.md §8.2), so this is not narrowed by project today —
+   * `projectSlug` stays on StubItem because the association is real data and
+   * a project-scoped view may return.
    */
-  getStubs(kind: StubKind, opts?: { creatorSlug?: string; contentSlug?: string }): Promise<StubItem[]>
+  getStubs(kind: StubKind, opts?: { creatorSlug?: string }): Promise<StubItem[]>
 }

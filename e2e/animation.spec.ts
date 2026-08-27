@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { act, gotoContent, gotoContentHome, gotoSplash, playTrack } from './helpers'
+import { act, gotoContent, gotoProject, playTrack } from './helpers'
 
 /**
  * These exist because animation was the one thing that could not be verified
@@ -63,9 +63,12 @@ test.describe('animation', () => {
     await expect(page.getByRole('button', { name: 'Close track list' })).toBeVisible()
   })
 
-  test('release home tiles finish their staggered entrance', async ({ page }) => {
-    await gotoContentHome(page)
-    for (const label of ['Music', 'Videos', 'Merch', 'Events']) {
+  // The hub lists the interfaces the project actually holds, so Bronze shows
+  // one. Merch and Events moved to creator level (PLAN.md §8.2) and Videos
+  // exists only when a project has video content.
+  test('project hub tiles finish their staggered entrance', async ({ page }) => {
+    await gotoProject(page)
+    for (const label of ['Music']) {
       const tile = page.getByRole('button', { name: new RegExp(`^${label}`) })
       await expect(tile).toBeVisible()
       // Frozen mid-stagger they would sit at opacity 0.
@@ -77,9 +80,13 @@ test.describe('animation', () => {
     }
   })
 
-  test('the splash title reaches full opacity', async ({ page }) => {
-    await gotoSplash(page)
-    const title = page.getByRole('heading', { name: 'Bronze' })
+  // The per-release splash is gone (PLAN.md §8.1); the project hub is now the
+  // entry screen for a body of work, so its title is what must land.
+  test('the project title reaches full opacity', async ({ page }) => {
+    await gotoProject(page)
+    // Two headings carry the title now — the sticky nav bar and the title
+    // card. The card's is the one that animates in.
+    const title = page.locator('header').last().getByRole('heading', { name: 'Bronze' })
     await expect
       .poll(async () => Number(await title.evaluate((el) => getComputedStyle(el).opacity)), {
         timeout: 5000,

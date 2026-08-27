@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { content as adapter } from '@/content/adapter'
 import { useCreator } from '@/content/CreatorContext'
-import type { Content } from '@/content/types'
+import type { Project } from '@/content/types'
 import { creatorPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
@@ -12,7 +12,6 @@ import {
   InstagramIcon,
   LinkedInIcon,
   MerchIcon,
-  MusicIcon,
   SpotifyIcon,
   XIcon,
 } from '@/components/Icons'
@@ -33,25 +32,28 @@ const SOCIALS = [
 ] as const
 
 /**
- * The Creator's profile — the tenant root at `/robotrebel`.
+ * The Creator's profile — `/@dean`.
  *
- * Three sections, all Creator-wide. Content leads to the records — the label
- * matches the schema's `content` table directly. Merch and Events show
- * everything the Creator has, of which a release's own sections are a tagged
- * subset.
- *
- * Videos deliberately has no tile here: videos live inside a release.
+ * Projects lead, because they are the work. Merch and Events are Creator-wide
+ * sections and sit below as stubs (PLAN.md §8.2); there is no Content tile,
+ * since Projects replaced that listing entirely.
  */
 const SECTIONS = [
-  { seg: 'content', label: 'Content', seed: 'tile-content', note: '', Icon: MusicIcon },
-  { seg: 'merch', label: 'Merch', seed: 'tile-merch', note: 'Soon', Icon: MerchIcon },
-  { seg: 'events', label: 'Events', seed: 'tile-events', note: 'Soon', Icon: EventsIcon },
+  { seg: 'merch', label: 'Merch', Icon: MerchIcon },
+  { seg: 'events', label: 'Events', Icon: EventsIcon },
 ] as const
+
+/** What each interface is called where a project is summarised by its types. */
+const INTERFACE_LABEL: Record<string, string> = {
+  music: 'Music',
+  video: 'Video',
+  ereader: 'Whitepaper',
+}
 
 export function CreatorProfile() {
   const navigate = useNavigate()
   const creator = useCreator()
-  const [featured, setFeatured] = useState<Content | null>(null)
+  const [projects, setProjects] = useState<Project[] | null>(null)
 
   const bioRef = useRef<HTMLParagraphElement>(null)
   const [bioExpanded, setBioExpanded] = useState(false)
@@ -80,22 +82,24 @@ export function CreatorProfile() {
 
   useEffect(() => {
     let cancelled = false
-    void adapter.listContent(creator.slug, 'music').then((r) => {
-      if (!cancelled) setFeatured(r[0] ?? null)
+    void adapter.listProjects(creator.slug).then((r) => {
+      if (!cancelled) setProjects(r)
     })
     return () => {
       cancelled = true
     }
   }, [creator.slug])
 
+  const hero = projects?.[0] ?? null
+
   return (
     <div className="relative min-h-full overflow-hidden bg-void">
       {/*
-        The Creator has no artwork of its own, so it borrows the latest
-        release's — which is also what a visitor sees one tap later.
+        The Creator has no artwork of its own, so it borrows its first
+        project's — which is also what a visitor sees one tap later.
       */}
       <img
-        src={featured ? coverUrl(featured, 1000) : artUrl(`${creator.slug}-hero`, 'cover', 1000)}
+        src={hero ? coverUrl(hero, 1000) : artUrl(`${creator.slug}-hero`, 'cover', 1000)}
         alt=""
         className="pointer-events-none absolute inset-0 size-full object-cover blur-lg"
       />
@@ -106,12 +110,12 @@ export function CreatorProfile() {
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
         {/* Avatar overlaps the glass panel below it — the identity block a
-            profile page needs, distinct from the release art it's cropped
-            from. There is no dedicated Creator photo yet, so the featured
-            release's cover stands in, sharp rather than the blurred wash
+            profile page needs, distinct from the project art it's cropped
+            from. There is no dedicated Creator photo yet, so the first
+            project's cover stands in, sharp rather than the blurred wash
             behind it. */}
         <motion.img
-          src={featured ? coverUrl(featured, 300) : artUrl(`${creator.slug}-hero`, 'cover', 300)}
+          src={hero ? coverUrl(hero, 300) : artUrl(`${creator.slug}-hero`, 'cover', 300)}
           alt=""
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -182,35 +186,67 @@ export function CreatorProfile() {
           </div>
         </motion.header>
 
-        <div className="mt-8 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-5">
-          {SECTIONS.map((tile, i) => (
-            <motion.button
-              key={tile.seg}
-              onClick={() => navigate(creatorPath(creator.slug, tile.seg))}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.14 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              whileTap={{ scale: 0.97 }}
-              className="group relative aspect-square overflow-hidden rounded-md border border-white/[0.14] text-left"
-            >
-              <img
-                src={artUrl(tile.seed, 'item', 600)}
-                alt=""
-                className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/25 to-transparent" />
-              <tile.Icon className="absolute left-4 top-4 size-7 text-gilt drop-shadow-[0_1px_6px_rgba(10,7,5,0.9)]" />
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
-                <span className="font-display text-xl text-parchment">{tile.label}</span>
-                {tile.note && (
-                  <span className="rounded-full border border-gilt/25 px-2 py-0.5 text-[9px] uppercase tracking-[0.15em] text-gilt/70">
-                    {tile.note}
-                  </span>
-                )}
-              </div>
-            </motion.button>
-          ))}
-        </div>
+        <section className="mt-8">
+          <h2 className="mb-3.5 text-[10px] uppercase tracking-[0.25em] text-parchment/40">Projects</h2>
+          {projects?.length === 0 ? (
+            <p className="text-sm text-parchment/40">No projects yet.</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4 sm:gap-5">
+              {(projects ?? []).map((project, i) => (
+                <motion.button
+                  key={project.id}
+                  onClick={() => navigate(creatorPath(creator.slug, project.slug))}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.14 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                  whileTap={{ scale: 0.97 }}
+                  className="group relative aspect-square overflow-hidden rounded-md border border-white/[0.14] text-left"
+                >
+                  <img
+                    src={coverUrl(project, 600)}
+                    alt=""
+                    className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/30 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <span className="block truncate font-content text-xl text-parchment">
+                      {project.title}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] text-parchment/50">
+                      {project.contents.length
+                        ? project.contents.map((c) => INTERFACE_LABEL[c.type]).join(' · ')
+                        : 'Coming soon'}
+                    </span>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Creator-level, and stubs for now (PLAN.md §8.2). Kept visually
+            quieter than Projects: they are secondary to the work itself. */}
+        <section className="mt-10">
+          <div className="grid grid-cols-2 gap-3.5 sm:gap-5">
+            {SECTIONS.map((tile, i) => (
+              <motion.button
+                key={tile.seg}
+                onClick={() => navigate(creatorPath(creator.slug, tile.seg))}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-3 rounded-md border border-white/[0.14] bg-ink/40 px-4 py-3.5 text-left backdrop-blur-sm"
+              >
+                <tile.Icon className="size-5 shrink-0 text-gilt/80" />
+                <span className="font-display text-base text-parchment">{tile.label}</span>
+                <span className="ml-auto rounded-full border border-gilt/25 px-2 py-0.5 text-[9px] uppercase tracking-[0.15em] text-gilt/70">
+                  Soon
+                </span>
+              </motion.button>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   )

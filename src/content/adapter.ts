@@ -1,29 +1,32 @@
-import type { Content, ContentAdapter, ContentType, StubKind } from '@/content/types'
+import type { Content, ContentAdapter, ContentType, Project, StubKind } from '@/content/types'
 import { bronze, dean } from '@/content/fixtures/bronze.generated'
+import { atonomos } from '@/content/fixtures/atonomos'
 import { stubs } from '@/content/fixtures/stubs'
 import { supabaseAdapter } from '@/content/supabaseAdapter'
 
-const allContent: Content[] = [bronze]
+const allProjects: Project[] = [bronze, atonomos]
 
 const fixtureAdapter: ContentAdapter = {
   async getCreator(slug) {
     return slug === dean.slug ? dean : null
   },
-  async listContent(creatorSlug, type) {
-    return allContent.filter((c) => c.ownerSlug === creatorSlug && c.type === type)
+  async listProjects(creatorSlug) {
+    return allProjects.filter((p) => p.ownerSlug === creatorSlug)
   },
-  async getContent(creatorSlug, contentSlug) {
+  async getProject(creatorSlug, projectSlug) {
     return (
-      allContent.find((c) => c.ownerSlug === creatorSlug && c.slug === contentSlug) ?? null
+      allProjects.find((p) => p.ownerSlug === creatorSlug && p.slug === projectSlug) ?? null
     )
   },
-  async getStubs(kind: StubKind, opts?: { creatorSlug?: string; contentSlug?: string }) {
-    const byKind = stubs.filter((s) => s.kind === kind)
-    // Narrowing to a release returns only what is tagged to it. No fallback to
-    // the Creator-wide list: that would make the same set reachable under
-    // every release path.
-    if (!opts?.contentSlug) return byKind
-    return byKind.filter((s) => s.contentSlug === opts.contentSlug)
+  async getContent(creatorSlug, projectSlug, type): Promise<Content | null> {
+    const project = allProjects.find(
+      (p) => p.ownerSlug === creatorSlug && p.slug === projectSlug,
+    )
+    return project?.contents.find((c) => c.type === type) ?? null
+  },
+  async getStubs(kind: StubKind, opts?: { creatorSlug?: string }) {
+    void opts
+    return stubs.filter((s) => s.kind === kind)
   },
 }
 

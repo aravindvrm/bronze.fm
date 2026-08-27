@@ -5,17 +5,17 @@ import { AudioProvider } from '@/audio/AudioProvider'
 import { usePlayer } from '@/audio/playerStore'
 import { content as adapter } from '@/content/adapter'
 import { CreatorProvider, useCreator } from '@/content/CreatorContext'
-import { ContentProvider } from '@/content/ContentContext'
-import type { Content, Creator } from '@/content/types'
-import { isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
+import { ProjectProvider } from '@/content/ProjectContext'
+import { contentTypeFromSegment, type Creator, type Project } from '@/content/types'
+import { HANDLE_PREFIX, defaultCreatorSlug, isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { InstallBanner } from '@/components/InstallBanner'
 import { CreatorProfile } from '@/screens/CreatorProfile'
-import { ContentIndex } from '@/screens/ContentIndex'
-import { Splash } from '@/screens/Splash'
-import { Home } from '@/screens/Home'
+import { Feed } from '@/screens/Feed'
+import { ProjectHub } from '@/screens/ProjectHub'
 import { Music } from '@/screens/Music'
+import { Reader } from '@/screens/Reader'
 import { StubGrid } from '@/screens/StubGrid'
 
 const Blank = () => <div className="h-full bg-void" />
@@ -31,83 +31,96 @@ function NotFound({ what, name }: { what: string; name: string }) {
 }
 
 /**
- * One Content and everything inside it.
+ * One Project and the typed interfaces onto it.
  *
- *   /robotrebel/bronze          splash — the entry screen for the release
- *   /robotrebel/bronze/home     the four tiles
- *   /robotrebel/bronze/music    track list
- *   /robotrebel/bronze/videos|merch|events
+ *   /@dean/bronze          project hub
+ *   /@dean/bronze/music    the album
+ *   /@dean/atonomos/read   the whitepaper
  *
- * The tiles belong to the Content, not the Creator: they are how you move
- * around one release.
+ * The trailing segment selects a Content by type rather than naming one by
+ * slug — a Project holds at most one Content of each type, so the type is the
+ * address.
  */
-function ContentShell() {
-  const { contentSlug } = useParams()
+function ProjectShell() {
+  const { projectSlug } = useParams()
   const creator = useCreator()
-  const [content, setContent] = useState<Content | null>(null)
+  const [project, setProject] = useState<Project | null>(null)
   const [missing, setMissing] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     setMissing(false)
-    void adapter.getContent(creator.slug, contentSlug ?? '').then((c) => {
+    setProject(null)
+    void adapter.getProject(creator.slug, projectSlug ?? '').then((p) => {
       if (cancelled) return
-      if (!c) setMissing(true)
-      else setContent(c)
+      if (!p) setMissing(true)
+      else setProject(p)
     })
     return () => {
       cancelled = true
     }
-  }, [creator.slug, contentSlug])
+  }, [creator.slug, projectSlug])
 
-  if (missing) return <NotFound what="release" name={contentSlug ?? ''} />
-  if (!content) return <Blank />
+  if (missing) return <NotFound what="project" name={projectSlug ?? ''} />
+  if (!project) return <Blank />
 
   return (
-    <ContentProvider content={content}>
+    <ProjectProvider project={project}>
       <Routes>
-        <Route index element={<Splash />} />
-        <Route path="home" element={<Home />} />
-        <Route path="music" element={<Music />} />
-        <Route
-          path="videos"
-          element={<StubGrid kind="video" title="Videos" blurb="Official videos, visualisers and studio footage will land here." />}
-        />
-        <Route
-          path="merch"
-          element={<StubGrid kind="merch" title="Merch" blurb="Apparel, vinyl and prints tied to this release." />}
-        />
-        <Route
-          path="events"
-          element={<StubGrid kind="event" title="Events" blurb="Dates on this release's run." />}
-        />
+        <Route index element={<ProjectHub />} />
+        <Route path=":typeSegment" element={<ContentShell />} />
         <Route path="*" element={<Navigate to="." replace />} />
       </Routes>
-    </ContentProvider>
+    </ProjectProvider>
   )
+}
+
+/** Resolves the type segment to the Content it names, or an honest 404. */
+function ContentShell() {
+  const { typeSegment } = useParams()
+  const type = contentTypeFromSegment(typeSegment ?? '')
+  if (!type) return <NotFound what="section" name={typeSegment ?? ''} />
+  if (type === 'music') return <Music />
+  if (type === 'ereader') return <Reader />
+  return <NotFound what="section" name={typeSegment ?? ''} />
 }
 
 /**
  * Everything under one Creator.
  *
- *   /robotrebel           profile — Content, Merch, Events
- *   /robotrebel/content   their Content, matching the schema's table name
- *   /robotrebel/merch     everything they sell
- *   /robotrebel/events    every date
- *   /robotrebel/bronze    one Content, with its own sections below it
+ *   /@dean            profile
+ *   /@dean/merch      creator-level section
+ *   /@dean/events     creator-level section
+ *   /@dean/bronze     a Project, with its interfaces below it
  *
- * The Creator sections come first so they win the match; a Content slug can
- * never be one of them, enforced by a CHECK constraint.
+ * Creator sections are matched before Project slugs, so a Project can never be
+ * called `merch`. RESERVED_PROJECT_SLUGS and a CHECK constraint enforce that
+ * from both ends.
  */
 function CreatorShell() {
   const params = useParams()
-  const slug = params.creator ?? resolveCreatorSlug()
+  const handle = params.handle ?? ''
+
+  /*
+   * On the shared host the route pattern is `/:handle/*`, which matches any
+   * first segment — so the `@` has to be enforced here rather than assumed.
+   * Without this check `/anything` would be treated as a creator handle,
+   * which is exactly the top-level collision the prefix exists to prevent.
+   * On a dedicated host there is no handle segment at all and the hostname
+   * supplies the Creator.
+   */
+  const dedicated = isDedicatedHost()
+  const valid = dedicated || handle.startsWith(HANDLE_PREFIX)
+  const slug = dedicated ? (resolveCreatorSlug() ?? defaultCreatorSlug()) : handle.slice(HANDLE_PREFIX.length)
+
   const [creator, setCreator] = useState<Creator | null>(null)
   const [missing, setMissing] = useState(false)
 
   useEffect(() => {
+    if (!valid || !slug) return
     let cancelled = false
     setMissing(false)
+    setCreator(null)
     void adapter.getCreator(slug).then((c) => {
       if (cancelled) return
       if (!c) setMissing(true)
@@ -116,8 +129,9 @@ function CreatorShell() {
     return () => {
       cancelled = true
     }
-  }, [slug])
+  }, [slug, valid])
 
+  if (!valid || !slug) return <NotFound what="page" name={`/${handle}`} />
   if (missing) return <NotFound what="creator" name={slug} />
   if (!creator) return <Blank />
 
@@ -125,17 +139,16 @@ function CreatorShell() {
     <CreatorProvider creator={creator}>
       <Routes>
         <Route index element={<CreatorProfile />} />
-        <Route path="content" element={<ContentIndex />} />
         <Route
           path="merch"
-          element={<StubGrid kind="merch" title="Merch" blurb={`Everything ${creator.name} sells. Checkout arrives with the release.`} />}
+          element={<StubGrid kind="merch" title="Merch" blurb={`Everything ${creator.name} sells.`} />}
         />
         <Route
           path="events"
           element={<StubGrid kind="event" title="Events" blurb={`Every ${creator.name} date, announced as they are confirmed.`} />}
         />
         {/* Last, so the Creator sections above always win the match. */}
-        <Route path=":contentSlug/*" element={<ContentShell />} />
+        <Route path=":projectSlug/*" element={<ProjectShell />} />
       </Routes>
     </CreatorProvider>
   )
@@ -147,12 +160,8 @@ export default function App() {
   const hasQueue = usePlayer((s) => s.queue.length > 0)
 
   // On a dedicated host the Creator comes from the hostname, so paths carry no
-  // creator segment. On the shared host the first segment is the Creator.
+  // handle segment and the root is that Creator's profile rather than the feed.
   const dedicated = isDedicatedHost()
-
-  // The splash is the release's cover screen and owns the whole viewport; the
-  // dock would sit on top of the artwork.
-  const onSplash = location.pathname.split('/').filter(Boolean).length === (dedicated ? 1 : 2)
 
   return (
     <AudioProvider>
@@ -168,21 +177,23 @@ export default function App() {
             <Route path="/*" element={<CreatorShell />} />
           ) : (
             <>
-              <Route path="/" element={<Navigate to={`/${resolveCreatorSlug()}`} replace />} />
-              <Route path="/:creator/*" element={<CreatorShell />} />
+              <Route path="/" element={<Feed />} />
+              {/*
+                The `@` is part of the segment, not a separator: it is what
+                makes a handle unambiguous against every current and future
+                top-level route, so no reserved-word list is needed here.
+              */}
+              <Route path="/:handle/*" element={<CreatorShell />} />
             </>
           )}
         </Routes>
       </div>
 
       {/* One player, two presentations — both persist across route changes. */}
-      <AnimatePresence>
-        {hasQueue && !expanded && !onSplash && <MiniPlayer key="mini" />}
-      </AnimatePresence>
+      <AnimatePresence>{hasQueue && !expanded && <MiniPlayer key="mini" />}</AnimatePresence>
       <AnimatePresence>{expanded && <PlayerScreen key="full" />}</AnimatePresence>
 
-      {/* The splash owns the whole viewport, same as the mini player above. */}
-      {!expanded && !onSplash && <InstallBanner />}
+      {!expanded && <InstallBanner />}
     </AudioProvider>
   )
 }

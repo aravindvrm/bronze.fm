@@ -2,12 +2,12 @@
 // Source: ./Bronze (gitignored, unmastered rough mixes).
 // Regenerate: npm run fixtures
 
-import type { Content, Creator } from '@/content/types'
+import type { Content, Creator, Project } from '@/content/types'
 
 export const dean: Creator = {
-  id: 'crt_robotrebel',
-  slug: 'robotrebel',
-  name: 'robotrebel',
+  id: 'crt_dean',
+  slug: 'dean',
+  name: 'Dean',
   bio: 'Technology executive, venture investor, and strategic advisor with 15+ years leading enterprise transformation, AI innovation, and technology-enabled value creation across Fortune 500 enterprises, venture-backed and growth-staged businesses. Combines executive leadership, investment perspective, and deep technical expertise to accelerate business transformation and performance.',
   // Mirrors the seed in 20260821020000_creator_profile.sql so fixtures and
   // Supabase render the same profile.
@@ -17,15 +17,15 @@ export const dean: Creator = {
   customDomain: null,
 }
 
-export const bronze: Content = {
-  id: 'cnt_bronze',
+export const bronzeMusic: Content = {
+  id: 'cnt_bronze_music',
   type: 'music',
-  ownerSlug: 'robotrebel',
-  slug: 'bronze',
+  ownerSlug: 'dean',
+  projectSlug: 'bronze',
   title: 'Bronze',
   published: false,
   totalDurationMs: 2272825,
-  credits: [{ creatorSlug: 'robotrebel', name: 'robotrebel', role: 'artist' }],
+  credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
   items: [
     {
       "id": "itm_01",
@@ -48,8 +48,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -68,8 +68,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -88,8 +88,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -122,8 +122,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -142,8 +142,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -176,8 +176,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -196,8 +196,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -230,8 +230,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -250,8 +250,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -270,8 +270,8 @@ export const bronze: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "robotrebel",
-          "name": "robotrebel",
+          "creatorSlug": "dean",
+          "name": "Dean",
           "role": "artist"
         }
       ],
@@ -284,4 +284,13 @@ export const bronze: Content = {
       "url": "/media/audio/14%20-%208.3%20Forevermore%2C%20I%20Pray.mp3"
     }
   ],
+}
+
+export const bronze: Project = {
+  id: 'prj_bronze',
+  ownerSlug: 'dean',
+  slug: 'bronze',
+  title: 'Bronze',
+  published: false,
+  contents: [bronzeMusic],
 }

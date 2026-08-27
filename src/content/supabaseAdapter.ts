@@ -1,5 +1,5 @@
 import { getSupabase } from '@/lib/supabaseClient'
-import type { Content, ContentAdapter, ContentType, Creator, Credit, StubKind, StubItem } from '@/content/types'
+import type { Content, ContentAdapter, ContentType, Creator, Credit, Project, StubKind, StubItem } from '@/content/types'
 
 /**
  * Reads Content through Supabase instead of local fixtures.
@@ -44,12 +44,10 @@ function toCreator(row: CreatorRow): Creator {
 
 interface ContentRow {
   id: string
-  slug: string
   title: string
   description: string | null
   type: ContentType
   published: boolean
-  creators: { slug: string } | null // owner, via the FK join below
   content_creators: { role: Credit['role']; creators: { slug: string; name: string } }[]
   content_items: {
     id: string
@@ -60,22 +58,47 @@ interface ContentRow {
   }[]
 }
 
+interface ProjectRow {
+  id: string
+  slug: string
+  title: string
+  description: string | null
+  published: boolean
+  creators: { slug: string } | null
+  content: ContentRow[]
+}
+
 // !inner turns the join into a filter on the PARENT row: without it,
 // .eq('creators.slug', …) only shapes which nested rows are embedded and does
-// not restrict which `content` rows come back at all — a documented
-// PostgREST/supabase-js gotcha. The JS-side filter below is kept as a
+// not restrict which `projects` rows come back at all — a documented
+// PostgREST/supabase-js gotcha. The JS-side filter in each caller is kept as a
 // defensive backstop, not as the primary mechanism.
-const CONTENT_SELECT = `
-  id, slug, title, description, type, published,
+const PROJECT_SELECT = `
+  id, slug, title, description, published,
   creators:owner_creator_id!inner ( slug ),
-  content_creators ( role, creators ( slug, name ) ),
-  content_items (
-    id, position, title, is_interlude,
-    assets:media_asset_id ( storage_path, content_hash, bytes, duration_ms )
+  content (
+    id, title, description, type, published,
+    content_creators ( role, creators ( slug, name ) ),
+    content_items (
+      id, position, title, is_interlude,
+      assets:media_asset_id ( storage_path, content_hash, bytes, duration_ms )
+    )
   )
 `
 
-function toContent(row: ContentRow, ownerSlug: string): Content {
+function toProject(row: ProjectRow, ownerSlug: string): Project {
+  return {
+    id: row.id,
+    ownerSlug,
+    slug: row.slug,
+    title: row.title,
+    description: row.description ?? undefined,
+    published: row.published,
+    contents: (row.content ?? []).map((c) => toContent(c, ownerSlug, row.slug)),
+  }
+}
+
+function toContent(row: ContentRow, ownerSlug: string, projectSlug: string): Content {
   const items = [...row.content_items]
     .sort((a, b) => a.position - b.position)
     .map((i) => {
@@ -109,7 +132,7 @@ function toContent(row: ContentRow, ownerSlug: string): Content {
     id: row.id,
     type: row.type,
     ownerSlug,
-    slug: row.slug,
+    projectSlug,
     title: row.title,
     description: row.description ?? undefined,
     published: row.published,
@@ -126,30 +149,37 @@ export const supabaseAdapter: ContentAdapter = {
     return data ? toCreator(data as CreatorRow) : null
   },
 
-  async listContent(creatorSlug, type) {
+  async listProjects(creatorSlug) {
     const { data, error } = await getSupabase()
-      .from('content')
-      .select(CONTENT_SELECT)
-      .eq('type', type)
+      .from('projects')
+      .select(PROJECT_SELECT)
       .eq('creators.slug', creatorSlug)
       .order('sort_order', { ascending: true })
     if (error) throw error
-    return ((data ?? []) as unknown as ContentRow[])
+    return ((data ?? []) as unknown as ProjectRow[])
       .filter((row) => row.creators?.slug === creatorSlug)
-      .map((row) => toContent(row, creatorSlug))
+      .map((row) => toProject(row, creatorSlug))
   },
 
-  async getContent(creatorSlug, contentSlug) {
+  async getProject(creatorSlug, projectSlug) {
     const { data, error } = await getSupabase()
-      .from('content')
-      .select(CONTENT_SELECT)
-      .eq('slug', contentSlug)
+      .from('projects')
+      .select(PROJECT_SELECT)
+      .eq('slug', projectSlug)
       .eq('creators.slug', creatorSlug)
       .maybeSingle()
     if (error) throw error
-    const row = data as unknown as ContentRow | null
+    const row = data as unknown as ProjectRow | null
     if (!row || row.creators?.slug !== creatorSlug) return null
-    return toContent(row, creatorSlug)
+    return toProject(row, creatorSlug)
+  },
+
+  async getContent(creatorSlug, projectSlug, type) {
+    // Read through the project rather than querying `content` directly: the
+    // project is what the URL names, and its row carries the ownership join
+    // that scopes the lookup.
+    const project = await this.getProject(creatorSlug, projectSlug)
+    return project?.contents.find((c) => c.type === type) ?? null
   },
 
   async getStubs(_kind: StubKind, _opts): Promise<StubItem[]> {

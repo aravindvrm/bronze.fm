@@ -1,4 +1,4 @@
-import type { Content } from '@/content/types'
+import type { Project } from '@/content/types'
 import { artUrl } from '@/lib/art'
 // bronze.jpg is the web encode; bronze-original.jpg beside it is the untouched
 // master it came from, kept for re-encoding and never imported, so the build
@@ -14,25 +14,25 @@ interface Cover {
 }
 
 /**
- * Real cover art, keyed by Content slug.
+ * Real cover art, keyed by Project slug.
  *
- * Anything absent falls back to the procedural art in lib/art.ts, so a Content
+ * Anything absent falls back to the procedural art in lib/art.ts, so a Project
  * gains its real cover by adding one line here and looks deliberate until it
  * does. This is the seam the `cover` column replaces once artwork is uploaded
- * per Content rather than bundled with the app.
+ * per Project rather than bundled with the app.
  */
 const COVERS: Record<string, Cover> = {
   bronze: { src: bronzeCover, size: 1024, type: 'image/jpeg' },
 }
 
 /**
- * Cover for a Content. `size` only affects the generated fallback — real
+ * Cover for a Project. `size` only affects the generated fallback — real
  * artwork ships at its own resolution.
  */
-export function coverUrl(content: Content | null | undefined, size = 1400): string {
-  const real = content && COVERS[content.slug]
+export function coverUrl(project: Project | null | undefined, size = 1400): string {
+  const real = project && COVERS[project.slug]
   if (real) return real.src
-  return artUrl(`${content?.slug ?? 'bronze'}-cover`, 'cover', size)
+  return artUrl(`${project?.slug ?? 'bronze'}-cover`, 'cover', size)
 }
 
 /**
@@ -43,12 +43,12 @@ export function coverUrl(content: Content | null | undefined, size = 1400): stri
  * one file it actually is. Declaring a JPEG as SVG here costs the artwork on
  * the platforms that filter by MIME.
  */
-export function coverArtwork(content: Content): MediaImage[] {
-  const real = COVERS[content.slug]
+export function coverArtwork(projectSlug: string): MediaImage[] {
+  const real = COVERS[projectSlug]
   if (real) return [{ src: real.src, sizes: `${real.size}x${real.size}`, type: real.type }]
 
   return [512, 256, 192].map((size) => ({
-    src: artUrl(`${content.slug}-cover`, 'cover', size),
+    src: artUrl(`${projectSlug}-cover`, 'cover', size),
     sizes: `${size}x${size}`,
     type: 'image/svg+xml',
   }))

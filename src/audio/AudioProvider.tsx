@@ -74,7 +74,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       // Primary attributed Creator; falls back to the owner.
       artist: content.credits[0]?.name ?? content.ownerSlug,
       album: content.title,
-      artwork: coverArtwork(content),
+      artwork: coverArtwork(content.projectSlug),
     })
 
     const handlers: [MediaSessionAction, MediaSessionActionHandler][] = [

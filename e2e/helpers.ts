@@ -54,40 +54,42 @@ export async function waitPlaying(page: Page) {
 
 /** Navigates within the Creator namespace and waits for the store handle. */
 export async function gotoCreator(page: Page, path = '') {
-  await page.goto(`/robotrebel${path}`)
+  await page.goto(`/@dean${path}`)
   await page.waitForFunction(() => !!(window as never as { __player?: unknown }).__player, undefined, {
     timeout: 10_000,
   })
 }
 
-/** The Content's splash — the entry screen at /robotrebel/bronze. */
-export async function gotoSplash(page: Page, contentSlug = 'bronze') {
-  await gotoCreator(page, `/${contentSlug}`)
-  await page.getByText('Tap to enter').waitFor({ timeout: 10_000 })
+/** The feed at the app root. */
+export async function gotoFeed(page: Page) {
+  await page.goto('/')
+  await page.waitForFunction(() => !!(window as never as { __player?: unknown }).__player, undefined, {
+    timeout: 10_000,
+  })
 }
 
-/** The Content's home — the four tiles at /robotrebel/bronze/home. */
-export async function gotoContentHome(page: Page, contentSlug = 'bronze') {
-  await gotoCreator(page, `/${contentSlug}/home`)
+/** A Project hub — the interfaces onto one body of work, at /@dean/bronze. */
+export async function gotoProject(page: Page, projectSlug = 'bronze') {
+  await gotoCreator(page, `/${projectSlug}`)
   await page.getByRole('button', { name: /^Music/ }).waitFor({ timeout: 10_000 })
 }
 
 /**
- * The Content's track list.
+ * A Project's music interface.
  *
  * Nothing is queued until a Content is played from, so tests needing a queue
  * must play rather than merely navigate.
  */
-export async function gotoContent(page: Page, contentSlug = 'bronze') {
-  await gotoCreator(page, `/${contentSlug}/music`)
+export async function gotoContent(page: Page, projectSlug = 'bronze') {
+  await gotoCreator(page, `/${projectSlug}/music`)
   await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).waitFor({ timeout: 10_000 })
 }
 
-/** Plays a track from the open Content page and waits for real playback. */
+/** Plays a track from the open music page and waits for real playback. */
 export async function playTrack(page: Page, index: number) {
   await page.evaluate(async ([i, slug]) => {
     const mod = await import('/src/content/adapter.ts')
-    const c = await mod.content.getContent('robotrebel', slug as string)
+    const c = await mod.content.getContent('dean', slug as string, 'music')
     const s = (window as never as { __player: { getState: () => { playFrom: (c: unknown, i: number) => void } } }).__player.getState()
     s.playFrom(c, i as number)
   }, [index, 'bronze'] as const)

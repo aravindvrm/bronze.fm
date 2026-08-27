@@ -1,45 +1,53 @@
 /**
- * Resolves which Creator the current request is for.
+ * Resolves which Creator a URL refers to, and builds in-app URLs.
  *
- * Routing is path-based today (bronze.fm/robotrebel). Host is checked *first* so a
- * premium Creator can be promoted to robotrebel.bronze.fm — or a custom domain —
- * by pointing DNS and setting `creators.subdomain`, with no code change here
- * and no change to any screen.
+ * Structure (PLAN.md §8.2):
+ *
+ *   /                        the feed
+ *   /@dean                   creator
+ *   /@dean/merch             creator-level section
+ *   /@dean/bronze            project
+ *   /@dean/bronze/music      typed interface onto that project
+ *
+ * Host is still checked before path, so promoting a Creator to
+ * `dean.bronze.fm` remains a DNS record plus a column, with no code change.
  */
+
+/** Marks a path segment as a creator handle. */
+export const HANDLE_PREFIX = '@'
 
 /** Hosts that are the app itself, never a Creator subdomain. */
 const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
 
 /**
- * Second-segment words reserved against Content slugs.
+ * Second-segment words reserved against Project slugs.
  *
- * Content occupies the second segment (`/robotrebel/bronze`), so it collides with
- * *Creator*-level routes, which share it. The Creator page has three sections
- * of its own — content, merch, events — plus words held back for routes that
- * plausibly arrive later, because adding one against an existing Content would
- * mean renaming it and breaking its URLs.
+ * Projects sit directly under the creator (`/@dean/bronze`), sharing that
+ * segment with the Creator's own sections — so a project may not be called
+ * `merch` or `events`.
  *
- * `videos` and `music` are deliberately NOT reserved: they exist only inside a
- * release (`/robotrebel/bronze/videos`), one segment deeper, where nothing can
- * collide. An album may be called Music.
+ * This list grew back after migration 20260820050000 narrowed it: that
+ * migration removed `merch`/`events` precisely because sections then lived
+ * one level deeper than project slugs and could not collide. Under the
+ * structure above they collide again. Anything that becomes a creator-level
+ * route belongs here.
  *
- * The database enforces the same list with a CHECK constraint.
+ * Type segments (`music`, `read`) are deliberately absent: they sit one level
+ * deeper still, inside a project, so a project may legitimately be called
+ * Music. The database enforces the same list with a CHECK constraint, and a
+ * unit test compares the two so they cannot drift.
  */
-export const RESERVED_CONTENT_SLUGS = [
+export const RESERVED_PROJECT_SLUGS = [
   'about',
   'admin',
   'api',
   'assets',
-  'content',
   'events',
   'login',
   'merch',
   'search',
   'settings',
 ] as const
-
-/** First-segment words that are app routes, never a Creator slug. */
-const RESERVED_PATHS = new Set<string>([...RESERVED_CONTENT_SLUGS])
 
 /**
  * The domain Creator subdomains hang off. Anything not under it is not a
@@ -56,7 +64,7 @@ const APP_DOMAIN = ((import.meta.env.VITE_APP_DOMAIN as string | undefined) ?? '
  * The earlier rule was "any hostname with three or more labels", which is
  * wrong for every host that is not ours: a Tailscale MagicDNS name
  * (`m1air.tail6d451d.ts.net`) resolved to a Creator called `m1air`, and since
- * host wins over path, `/robotrebel` was then ignored. Vercel preview URLs and
+ * host wins over path, the path was then ignored. Vercel preview URLs and
  * tunnel hosts would have failed the same way.
  *
  * Exactly one label above APP_DOMAIN counts. `bronze.fm` itself, deeper
@@ -71,29 +79,41 @@ export function creatorFromHost(hostname = window.location.hostname): string | n
   if (!host.endsWith(suffix)) return null
 
   const label = host.slice(0, -suffix.length)
-  // One label only: `robotrebel.bronze.fm` yes, `robotrebel.eu.bronze.fm` no.
+  // One label only: `dean.bronze.fm` yes, `dean.eu.bronze.fm` no.
   if (!label || label.includes('.')) return null
   if (RESERVED.has(label)) return null
   return label
 }
 
+/**
+ * Reads a Creator from the first path segment, which must carry the `@`.
+ *
+ * The prefix is what makes this unambiguous: no app route begins with `@`, so
+ * handles can never collide with `/search`, `/settings` or anything added
+ * later, and no reserved-word list is needed at the top level.
+ */
 export function creatorFromPath(pathname = window.location.pathname): string | null {
   const seg = pathname.split('/').filter(Boolean)[0]
-  if (!seg || RESERVED_PATHS.has(seg)) return null
-  return seg
+  if (!seg || !seg.startsWith(HANDLE_PREFIX)) return null
+  const slug = seg.slice(HANDLE_PREFIX.length)
+  return slug || null
 }
 
 /**
  * Host wins over path, so promoting a Creator to a subdomain takes effect
  * immediately without breaking their existing path URLs.
+ *
+ * Returns null on the feed, which belongs to no Creator — the caller decides
+ * what that means rather than being handed a default that silently pretends
+ * some Creator was requested.
  */
-export function resolveCreatorSlug(): string {
-  return (
-    creatorFromHost() ??
-    creatorFromPath() ??
-    (import.meta.env.VITE_DEFAULT_CREATOR as string | undefined) ??
-    'robotrebel'
-  )
+export function resolveCreatorSlug(): string | null {
+  return creatorFromHost() ?? creatorFromPath()
+}
+
+/** The Creator shown where a URL names none — the feed's own listing. */
+export function defaultCreatorSlug(): string {
+  return (import.meta.env.VITE_DEFAULT_CREATOR as string | undefined) ?? 'dean'
 }
 
 /** True when the Creator is being served from their own subdomain/domain. */
@@ -101,30 +121,27 @@ export function isDedicatedHost(): boolean {
   return creatorFromHost() !== null
 }
 
-export function isReservedContentSlug(slug: string): boolean {
-  return (RESERVED_CONTENT_SLUGS as readonly string[]).includes(slug)
+export function isReservedProjectSlug(slug: string): boolean {
+  return (RESERVED_PROJECT_SLUGS as readonly string[]).includes(slug)
 }
 
 /**
- * Builds a URL inside a Content: `/robotrebel/bronze`, `/robotrebel/bronze/music`.
+ * Builds an in-app URL under a Creator: `/@dean`, `/@dean/bronze/music`.
  *
- * The Content's sections hang off the Content, not the Creator — the four
- * tiles belong to a release.
- */
-export function contentPath(
-  creatorSlug: string,
-  contentSlug: string,
-  ...segments: string[]
-): string {
-  return creatorPath(creatorSlug, contentSlug, ...segments)
-}
-
-/**
- * Builds an in-app URL. On a dedicated host the Creator is implied by the
- * hostname and must be omitted from the path; on the shared host it leads.
+ * On a dedicated host the Creator is implied by the hostname and must be
+ * omitted from the path; on the shared host the handle leads.
  */
 export function creatorPath(creatorSlug: string, ...segments: string[]): string {
   const tail = segments.filter(Boolean).join('/')
   if (isDedicatedHost()) return `/${tail}`
-  return `/${creatorSlug}${tail ? `/${tail}` : ''}`
+  return `/${HANDLE_PREFIX}${creatorSlug}${tail ? `/${tail}` : ''}`
+}
+
+/** Builds a URL inside a Project: `/@dean/bronze`, `/@dean/bronze/music`. */
+export function projectPath(
+  creatorSlug: string,
+  projectSlug: string,
+  ...segments: string[]
+): string {
+  return creatorPath(creatorSlug, projectSlug, ...segments)
 }

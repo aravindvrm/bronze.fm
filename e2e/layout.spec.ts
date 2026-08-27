@@ -1,18 +1,27 @@
 import { expect, test } from '@playwright/test'
-import { gotoContentHome } from './helpers'
+import { gotoProject } from './helpers'
 
-test.describe('content home layout', () => {
+test.describe('project hub layout', () => {
   test('has a plain background, with no blurred cover behind it', async ({ page }) => {
-    await gotoContentHome(page)
+    await gotoProject(page)
 
-    const blurred = await page.evaluate(
+    /*
+     * The creator profile deliberately runs a blurred cover wash behind its
+     * content; the project hub deliberately does not, because it sits on a
+     * solid background where a blur would cost a paint and change nothing.
+     *
+     * Only `filter: blur` counts here. The sticky header uses backdrop-blur so
+     * content scrolling under it stays legible, which is chrome rather than a
+     * background wash — including it would make this assert the opposite of
+     * what it means.
+     */
+    const washes = await page.evaluate(
       () =>
-        [...document.querySelectorAll('*')].filter((el) => {
-          const s = getComputedStyle(el)
-          return s.filter.includes('blur') || s.backdropFilter !== 'none'
-        }).length,
+        [...document.querySelectorAll('*')].filter((el) =>
+          getComputedStyle(el).filter.includes('blur'),
+        ).length,
     )
-    expect(blurred).toBe(0)
+    expect(washes).toBe(0)
 
     // body carries the page-level background (index.css sets it from
     // --color-void directly), so this holds regardless of which wrapper
@@ -22,12 +31,14 @@ test.describe('content home layout', () => {
   })
 
   test('shows the cover as a thumbnail on the right of the title card', async ({ page }) => {
-    await gotoContentHome(page)
+    await gotoProject(page)
 
-    const header = page.locator('header')
-    const thumb = header.locator('img')
+    // Scoped by the alt text rather than by `header`: the screen now has two,
+    // the sticky nav bar and this title card.
+    const thumb = page.getByAltText(/Bronze cover/i)
+    const card = page.locator('header').filter({ has: thumb })
+
     await expect(thumb).toBeVisible()
-    await expect(thumb).toHaveAttribute('alt', /Bronze cover/i)
 
     // Real artwork, not a broken or empty image.
     expect(await thumb.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0)
@@ -37,9 +48,9 @@ test.describe('content home layout', () => {
     expect(Math.round(box.height)).toBe(96)
 
     // To the right of the title, and inside the card.
-    const title = (await page.getByRole('heading', { name: 'Bronze' }).boundingBox())!
-    const card = (await header.boundingBox())!
+    const title = (await card.getByRole('heading', { name: 'Bronze' }).boundingBox())!
+    const cardBox = (await card.boundingBox())!
     expect(box.x).toBeGreaterThan(title.x + title.width - 1)
-    expect(box.x + box.width).toBeLessThanOrEqual(card.x + card.width + 1)
+    expect(box.x + box.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 1)
   })
 })

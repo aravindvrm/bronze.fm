@@ -1,22 +1,17 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { content as adapter } from '@/content/adapter'
 import type { StubItem, StubKind } from '@/content/types'
 import { useCreator } from '@/content/CreatorContext'
-import { useOptionalContentItem } from '@/content/ContentContext'
-import { contentPath, creatorPath } from '@/lib/tenant'
+import { creatorPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { ScreenHeader } from '@/components/ScreenHeader'
 
 /**
- * Videos, Merch and Events, at either level.
+ * Merch and Events — Creator-level sections (PLAN.md §8.2).
  *
- * Inside a release the list is narrowed to items tagged to it; on the Creator
- * page it is everything. There is deliberately no fallback from the narrow
- * case to the wide one — serving the Creator's full list under a release path
- * would make the same set reachable under every release. An empty release
- * section says so and offers the Creator-wide page instead.
+ * Both are stubs: the rows exist so the routes and layout are real, but
+ * nothing is purchasable or ticketed yet, and every card says so.
  */
 export function StubGrid({
   kind,
@@ -28,25 +23,20 @@ export function StubGrid({
   blurb: string
 }) {
   const creator = useCreator()
-  const release = useOptionalContentItem()
   const [items, setItems] = useState<StubItem[] | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    void adapter
-      .getStubs(kind, { creatorSlug: creator.slug, contentSlug: release?.slug })
-      .then((r) => {
-        if (!cancelled) setItems(r)
-      })
+    void adapter.getStubs(kind, { creatorSlug: creator.slug }).then((r) => {
+      if (!cancelled) setItems(r)
+    })
     return () => {
       cancelled = true
     }
-  }, [kind, creator.slug, release?.slug])
+  }, [kind, creator.slug])
 
   const wide = kind === 'video' || kind === 'event'
-  const backTo = release
-    ? contentPath(creator.slug, release.slug, 'home')
-    : creatorPath(creator.slug)
+  const backTo = creatorPath(creator.slug)
 
   return (
     <div className="min-h-full bg-void">
@@ -57,19 +47,7 @@ export function StubGrid({
 
         {items?.length === 0 && (
           <div className="rounded-md border border-white/[0.14] p-5">
-            <p className="text-sm text-parchment/60">
-              {release
-                ? `Nothing tied to ${release.title} yet.`
-                : `${creator.name} has nothing here yet.`}
-            </p>
-            {release && (
-              <Link
-                to={creatorPath(creator.slug, kind === 'merch' ? 'merch' : 'events')}
-                className="mt-2 inline-block text-[11px] uppercase tracking-[0.15em] text-gilt/80 underline-offset-4 hover:underline"
-              >
-                See all {kind === 'merch' ? 'merch' : 'dates'}
-              </Link>
-            )}
+            <p className="text-sm text-parchment/60">{creator.name} has nothing here yet.</p>
           </div>
         )}
 

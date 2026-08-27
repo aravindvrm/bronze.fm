@@ -1,17 +1,20 @@
 import { motion } from 'framer-motion'
 import { usePlayer } from '@/audio/playerStore'
-import { useContentItem } from '@/content/ContentContext'
+import { useProject } from '@/content/ProjectContext'
 import { artUrl } from '@/lib/art'
 import { formatTime } from '@/lib/format'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { OfflineControl } from '@/components/OfflineControl'
 import { useCreator } from '@/content/CreatorContext'
-import { contentPath } from '@/lib/tenant'
+import { projectPath } from '@/lib/tenant'
 
-/** Track list for one Content, at `/{creator}/{content}/music`. */
+/** Track list for a Project's music interface, at `/@dean/bronze/music`. */
 export function Music() {
   const creator = useCreator()
-  const content = useContentItem()
+  const project = useProject()
+  // The route resolved to this screen because the Project holds a music
+  // Content, so it is present by construction.
+  const content = project.contents.find((c) => c.type === 'music')!
   const playingContentId = usePlayer((s) => s.content?.id ?? null)
   const index = usePlayer((s) => s.index)
   const isPlaying = usePlayer((s) => s.isPlaying)
@@ -28,7 +31,7 @@ export function Music() {
       <ScreenHeader
         title={content.title}
         titleOf="content"
-        to={contentPath(creator.slug, content.slug, 'home')}
+        to={projectPath(creator.slug, project.slug)}
         width="narrow"
       />
 

@@ -11,10 +11,15 @@ test.describe('playback', () => {
     const before = await snapshot(page)
     expect(before.isPlaying).toBe(true)
 
+    // In-app navigation throughout: a page.goto here would reload the
+    // document and tear down the audio element, which is the very thing this
+    // test exists to prove does not happen.
     await page.getByRole('button', { name: 'Back' }).click()
-    await expect(page).toHaveURL(/\/robotrebel\/bronze\/home$/)
+    await expect(page).toHaveURL(/\/@dean\/bronze$/)
+    await page.getByRole('button', { name: 'Back' }).click()
+    await expect(page).toHaveURL(/\/@dean$/)
     await page.getByRole('button', { name: /^Merch/ }).click()
-    await expect(page).toHaveURL(/\/robotrebel\/bronze\/merch$/)
+    await expect(page).toHaveURL(/\/@dean\/merch$/)
 
     await page.waitForTimeout(1500)
     const after = await snapshot(page)
