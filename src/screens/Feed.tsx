@@ -125,27 +125,32 @@ export function Feed() {
         {shownCreators.length > 0 && (
           <section className="mt-8">
             <h2 className="mb-3.5 text-[10px] uppercase tracking-[0.25em] text-parchment/40">Creators</h2>
-            <div className="flex flex-col gap-2.5">
-              {shownCreators.map((creator) => (
-                <button
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4 sm:gap-5">
+              {shownCreators.map((creator, i) => (
+                <motion.button
                   key={creator.id}
                   onClick={() => navigate(creatorPath(creator.slug))}
-                  className="flex items-center gap-3 rounded-md border border-white/[0.14] bg-ink/40 p-3 text-left transition hover:border-white/25"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.06 * i, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  whileTap={{ scale: 0.97 }}
+                  className="group relative aspect-square overflow-hidden rounded-md border border-white/[0.14] text-left"
                 >
                   <img
-                    src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 200)}
+                    src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 600)}
                     alt=""
-                    className="size-12 shrink-0 rounded-full object-cover"
+                    className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <span className="min-w-0">
-                    <span className="block truncate font-display text-lg text-parchment">
+                  <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/30 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <span className="block truncate font-display text-xl text-parchment">
                       {creator.name}
                     </span>
-                    <span className="block truncate text-[11px] text-parchment/40">
+                    <span className="mt-0.5 block text-[11px] text-parchment/50">
                       {projects.filter((p) => p.ownerSlug === creator.slug).length} projects
                     </span>
-                  </span>
-                </button>
+                  </div>
+                </motion.button>
               ))}
             </div>
           </section>

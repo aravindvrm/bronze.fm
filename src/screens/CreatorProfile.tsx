@@ -270,10 +270,12 @@ export function CreatorProfile() {
           )}
         </section>
 
-        {/* Creator-level, and stubs for now (PLAN.md §8.2). Kept visually
-            quieter than Projects: they are secondary to the work itself. */}
+        {/* Creator-level, and stubs for now (PLAN.md §8.2). Same square-tile
+            shape as Projects above, for one consistent grid language on this
+            page — icon and Soon badge stand in for the cover art and content
+            summary a real Project tile carries. */}
         <section className="mt-10">
-          <div className="grid grid-cols-2 gap-3.5 sm:gap-5">
+          <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4 sm:gap-5">
             {SECTIONS.map((tile, i) => (
               <motion.button
                 key={tile.seg}
@@ -282,13 +284,21 @@ export function CreatorProfile() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                 whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-3 rounded-md border border-white/[0.14] bg-ink/40 px-4 py-3.5 text-left backdrop-blur-sm"
+                className="group relative aspect-square overflow-hidden rounded-md border border-white/[0.14] text-left"
               >
-                <tile.Icon className="size-5 shrink-0 text-gilt/80" />
-                <span className="font-display text-base text-parchment">{tile.label}</span>
-                <span className="ml-auto rounded-full border border-gilt/25 px-2 py-0.5 text-[9px] uppercase tracking-[0.15em] text-gilt/70">
-                  Soon
-                </span>
+                <img
+                  src={artUrl(`${creator.slug}-${tile.seg}`, 'item', 600)}
+                  alt=""
+                  className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/30 to-transparent" />
+                <tile.Icon className="absolute left-4 top-4 size-6 text-gilt drop-shadow-[0_1px_6px_rgba(10,7,5,0.9)]" />
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
+                  <span className="font-display text-xl text-parchment">{tile.label}</span>
+                  <span className="rounded-full border border-gilt/25 px-2 py-0.5 text-[9px] uppercase tracking-[0.15em] text-gilt/70">
+                    Soon
+                  </span>
+                </div>
               </motion.button>
             ))}
           </div>
