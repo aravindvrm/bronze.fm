@@ -11,6 +11,7 @@ import { HANDLE_PREFIX, defaultCreatorSlug, isDedicatedHost, resolveCreatorSlug 
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { InstallBanner } from '@/components/InstallBanner'
+import { Splash } from '@/components/Splash'
 import { CreatorProfile } from '@/screens/CreatorProfile'
 import { Feed } from '@/screens/Feed'
 import { ProjectHub } from '@/screens/ProjectHub'
@@ -194,6 +195,9 @@ export default function App() {
       <AnimatePresence>{expanded && <PlayerScreen key="full" />}</AnimatePresence>
 
       {!expanded && <InstallBanner />}
+
+      {/* Above everything, including the player: it covers the app on open. */}
+      <Splash />
     </AudioProvider>
   )
 }

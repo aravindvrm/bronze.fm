@@ -1,5 +1,5 @@
 import { getSupabase } from '@/lib/supabaseClient'
-import type { Content, ContentAdapter, ContentType, Creator, Credit, Project, StubKind, StubItem } from '@/content/types'
+import type { Content, ContentAdapter, ContentType, Creator, Credit, Pin, Project, StubKind, StubItem } from '@/content/types'
 
 /**
  * Reads Content through Supabase instead of local fixtures.
@@ -83,6 +83,37 @@ const PROJECT_SELECT = `
       id, position, title, is_interlude,
       assets:media_asset_id ( storage_path, content_hash, bytes, duration_ms )
     )
+  )
+`
+
+/** A pinned work, or a pinned track that carries its work with it. */
+interface PinnedContent {
+  title: string
+  type: ContentType
+  projects: { slug: string; title: string } | null
+}
+
+interface PinRow {
+  id: string
+  sort_order: number
+  content: PinnedContent | null
+  content_items: {
+    id: string
+    title: string
+    position: number
+    assets: { content_hash: string } | null
+    content: PinnedContent | null
+  } | null
+}
+
+const PIN_SELECT = `
+  id, sort_order,
+  creators!inner ( slug ),
+  content ( title, type, projects ( slug, title ) ),
+  content_items (
+    id, title, position,
+    assets:media_asset_id ( content_hash ),
+    content ( title, type, projects ( slug, title ) )
   )
 `
 
@@ -186,5 +217,43 @@ export const supabaseAdapter: ContentAdapter = {
     // merch_items / events are stub-only in v1 regardless of adapter; no
     // Supabase-backed rows exist for them yet.
     return []
+  },
+
+  async listPins(creatorSlug) {
+    const { data, error } = await getSupabase()
+      .from('creator_pins')
+      .select(PIN_SELECT)
+      .eq('creators.slug', creatorSlug)
+      .order('sort_order', { ascending: true })
+    if (error) throw error
+
+    return ((data ?? []) as unknown as PinRow[]).flatMap((row) => {
+      // A pinned track carries its own content through the item; a pinned
+      // work carries it directly. The CHECK constraint guarantees exactly one
+      // of the two, so anything else here is a row that should not exist.
+      const content = row.content_items?.content ?? row.content
+      const project = content?.projects
+      if (!content || !project) return []
+
+      const item = row.content_items
+      return [
+        {
+          id: row.id,
+          title: item?.title ?? content.title,
+          subtitle: item ? content.title : project.title,
+          projectSlug: project.slug,
+          contentType: content.type,
+          ...(item
+            ? {
+                itemId: item.id,
+                // Positions are 1-based in the schema; the player takes a
+                // zero-based queue index.
+                itemIndex: item.position - 1,
+                hash: item.assets?.content_hash ?? undefined,
+              }
+            : {}),
+        } satisfies Pin,
+      ]
+    })
   },
 }

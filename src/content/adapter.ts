@@ -1,4 +1,4 @@
-import type { Content, ContentAdapter, ContentType, Project, StubKind } from '@/content/types'
+import type { Content, ContentAdapter, ContentType, Pin, Project, StubKind } from '@/content/types'
 import { bronze, dean } from '@/content/fixtures/bronze.generated'
 import { atonomos } from '@/content/fixtures/atonomos'
 import { stubs } from '@/content/fixtures/stubs'
@@ -27,6 +27,41 @@ const fixtureAdapter: ContentAdapter = {
   async getStubs(kind: StubKind, opts?: { creatorSlug?: string }) {
     void opts
     return stubs.filter((s) => s.kind === kind)
+  },
+  async listPins(creatorSlug): Promise<Pin[]> {
+    // Mirrors the seed in 20260821040000_creator_pins.sql: tracks 2 and 6 of
+    // Bronze, then the Atonomos paper. Positions rather than titles, so a
+    // retitled track does not silently drop out of the pins.
+    if (creatorSlug !== dean.slug) return []
+    const music = bronze.contents.find((c) => c.type === 'music')
+    const paper = atonomos.contents.find((c) => c.type === 'ereader')
+
+    const pins: Pin[] = []
+    for (const position of [2, 6]) {
+      const index = music?.items.findIndex((i) => i.position === position) ?? -1
+      const item = index >= 0 ? music!.items[index] : undefined
+      if (!item) continue
+      pins.push({
+        id: `pin_${item.id}`,
+        title: item.title,
+        subtitle: music!.title,
+        projectSlug: bronze.slug,
+        contentType: 'music',
+        itemId: item.id,
+        itemIndex: index,
+        hash: item.hash,
+      })
+    }
+    if (paper) {
+      pins.push({
+        id: `pin_${paper.id}`,
+        title: paper.title,
+        subtitle: atonomos.title,
+        projectSlug: atonomos.slug,
+        contentType: 'ereader',
+      })
+    }
+    return pins
   },
 }
 

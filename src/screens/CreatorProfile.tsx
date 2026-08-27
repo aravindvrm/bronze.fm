@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { content as adapter } from '@/content/adapter'
+import { usePlayer } from '@/audio/playerStore'
 import { useCreator } from '@/content/CreatorContext'
-import type { Project } from '@/content/types'
-import { creatorPath } from '@/lib/tenant'
+import { CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
+import { creatorPath, projectPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
 import {
@@ -12,6 +13,8 @@ import {
   InstagramIcon,
   LinkedInIcon,
   MerchIcon,
+  PlayIcon,
+  ReadIcon,
   SpotifyIcon,
   XIcon,
 } from '@/components/Icons'
@@ -53,7 +56,9 @@ const INTERFACE_LABEL: Record<string, string> = {
 export function CreatorProfile() {
   const navigate = useNavigate()
   const creator = useCreator()
+  const playFrom = usePlayer((s) => s.playFrom)
   const [projects, setProjects] = useState<Project[] | null>(null)
+  const [pins, setPins] = useState<Pin[]>([])
 
   const bioRef = useRef<HTMLParagraphElement>(null)
   const [bioExpanded, setBioExpanded] = useState(false)
@@ -85,10 +90,27 @@ export function CreatorProfile() {
     void adapter.listProjects(creator.slug).then((r) => {
       if (!cancelled) setProjects(r)
     })
+    void adapter.listPins(creator.slug).then((r) => {
+      if (!cancelled) setPins(r)
+    })
     return () => {
       cancelled = true
     }
   }, [creator.slug])
+
+  /*
+   * A pinned track plays; a pinned work opens. Playing needs the whole
+   * Content, because the queue is the album — starting a track without its
+   * siblings would leave nothing to advance to.
+   */
+  async function openPin(pin: Pin) {
+    if (pin.itemIndex === undefined) {
+      navigate(projectPath(creator.slug, pin.projectSlug, CONTENT_TYPE_SEGMENT[pin.contentType]))
+      return
+    }
+    const content = await adapter.getContent(creator.slug, pin.projectSlug, pin.contentType)
+    if (content) playFrom(content, pin.itemIndex)
+  }
 
   const hero = projects?.[0] ?? null
 
@@ -185,6 +207,52 @@ export function CreatorProfile() {
             })}
           </div>
         </motion.header>
+
+        {/* Curation before catalogue: pins are what the Creator chose to put
+            first, so they lead rather than sitting under the full project
+            list. Hidden entirely when empty — an empty "Pinned" heading would
+            advertise a feature rather than show work. */}
+        {pins.length > 0 && (
+          <section className="mt-8">
+            <h2 className="mb-3.5 text-[10px] uppercase tracking-[0.25em] text-parchment/40">Pinned</h2>
+            <div className="flex flex-col gap-2.5">
+              {pins.map((pin, i) => (
+                <motion.button
+                  key={pin.id}
+                  onClick={() => void openPin(pin)}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.07, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  whileTap={{ scale: 0.99 }}
+                  className="flex items-center gap-3 rounded-md border border-white/[0.14] bg-ink/40 p-2.5 text-left backdrop-blur-sm transition hover:border-white/25"
+                >
+                  <img
+                    src={pin.hash ? artUrl(pin.hash, 'item', 128) : artUrl(`${pin.projectSlug}-cover`, 'cover', 128)}
+                    alt=""
+                    className="size-12 shrink-0 rounded object-cover"
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-content text-sm text-parchment">
+                      {pin.title}
+                    </span>
+                    {pin.subtitle && (
+                      <span className="block truncate text-[11px] text-parchment/40">
+                        {pin.subtitle}
+                      </span>
+                    )}
+                  </span>
+                  <span className="shrink-0 pr-1 text-gilt/70">
+                    {pin.itemIndex === undefined ? (
+                      <ReadIcon className="size-5" />
+                    ) : (
+                      <PlayIcon className="size-5" />
+                    )}
+                  </span>
+                </motion.button>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mt-8">
           <h2 className="mb-3.5 text-[10px] uppercase tracking-[0.25em] text-parchment/40">Projects</h2>

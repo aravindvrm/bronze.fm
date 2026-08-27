@@ -129,6 +129,28 @@ export interface Project {
   contents: Content[]
 }
 
+/**
+ * A Creator's curated highlight, shown on their profile.
+ *
+ * Heterogeneous on purpose: a pin is either a single track or a whole work,
+ * which is why `itemId` is optional rather than there being two pin types.
+ * Everything needed to render and open the pin is resolved by the adapter, so
+ * the profile never has to fetch the thing a pin points at.
+ */
+export interface Pin {
+  id: string
+  title: string
+  subtitle?: string
+  projectSlug: string
+  contentType: ContentType
+  /** Set when the pin is one track — tapping plays it rather than navigating. */
+  itemId?: string
+  /** Position of that track within its Content, for handing to the player. */
+  itemIndex?: number
+  /** Content-hash of the track, for its artwork. Absent for whole works. */
+  hash?: string
+}
+
 export type StubKind = 'video' | 'merch' | 'event'
 
 export interface StubItem {
@@ -159,4 +181,6 @@ export interface ContentAdapter {
    * a project-scoped view may return.
    */
   getStubs(kind: StubKind, opts?: { creatorSlug?: string }): Promise<StubItem[]>
+  /** The Creator's pinned highlights, in curation order. */
+  listPins(creatorSlug: string): Promise<Pin[]>
 }
