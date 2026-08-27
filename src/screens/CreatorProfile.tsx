@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { content as adapter } from '@/content/adapter'
@@ -53,6 +53,31 @@ export function CreatorProfile() {
   const creator = useCreator()
   const [featured, setFeatured] = useState<Content | null>(null)
 
+  const bioRef = useRef<HTMLParagraphElement>(null)
+  const [bioExpanded, setBioExpanded] = useState(false)
+  const [bioOverflows, setBioOverflows] = useState(false)
+
+  /*
+   * Only offer the toggle when the bio is actually clipped — a short one
+   * would otherwise get a "More" that reveals nothing.
+   *
+   * Measured only while collapsed: an expanded element's scrollHeight equals
+   * its clientHeight, so measuring then would report "fits", hide the
+   * control, and strand the reader with no way back. `bioOverflows` is
+   * therefore never cleared by the expanded state, only recomputed when
+   * collapsed — including on resize, since the clamp is by line count and a
+   * width change alters where it lands.
+   */
+  useEffect(() => {
+    const el = bioRef.current
+    if (!el || bioExpanded) return
+    const measure = () => setBioOverflows(el.scrollHeight > el.clientHeight + 1)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [creator.bio, bioExpanded])
+
   useEffect(() => {
     let cancelled = false
     void adapter.listContent(creator.slug, 'music').then((r) => {
@@ -106,7 +131,25 @@ export function CreatorProfile() {
               the app face rather than the release's. */}
           <h1 className="font-display text-4xl tracking-tight text-parchment sm:text-6xl">{creator.name}</h1>
           {creator.bio && (
-            <p className="mt-3 text-sm leading-relaxed text-parchment/50">{creator.bio}</p>
+            <div className="mt-3">
+              <p
+                ref={bioRef}
+                className={`text-sm leading-relaxed text-parchment/50 ${
+                  bioExpanded ? '' : 'line-clamp-3'
+                }`}
+              >
+                {creator.bio}
+              </p>
+              {bioOverflows && (
+                <button
+                  onClick={() => setBioExpanded((open) => !open)}
+                  aria-expanded={bioExpanded}
+                  className="mt-2 text-[10px] uppercase tracking-[0.15em] text-gilt/80 transition hover:text-gilt"
+                >
+                  {bioExpanded ? 'Less' : 'More'}
+                </button>
+              )}
+            </div>
           )}
 
           <div className="mt-4 flex items-center gap-2.5 border-t border-white/[0.08] pt-4">
