@@ -77,6 +77,10 @@ export const dean: Creator = {
   id: 'crt_robotrebel',
   slug: 'robotrebel',
   name: 'robotrebel',
+  bio: 'Technology executive, venture investor, and strategic advisor with 15+ years leading enterprise transformation, AI innovation, and technology-enabled value creation across Fortune 500 enterprises, venture-backed and growth-staged businesses. Combines executive leadership, investment perspective, and deep technical expertise to accelerate business transformation and performance.',
+  // Mirrors the seed in 20260821020000_creator_profile.sql so fixtures and
+  // Supabase render the same profile.
+  socials: { linkedin: 'https://www.linkedin.com/in/odeanmaye/' },
   tier: 'standard',
   subdomain: null,
   customDomain: null,

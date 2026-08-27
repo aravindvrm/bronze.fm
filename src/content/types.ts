@@ -18,11 +18,23 @@ export type CreditRole =
   | 'writer'
   | 'director'
 
+/**
+ * Platforms the profile can link to. The list is closed because each entry
+ * needs a bundled icon — an unknown platform would have nothing to render.
+ */
+export type SocialPlatform = 'linkedin' | 'x' | 'instagram' | 'spotify'
+
 export interface Creator {
   id: string
   slug: string
   name: string
   bio?: string
+  /**
+   * Platform → profile URL. A missing entry is meaningful: the profile shows
+   * a dimmed stub for it rather than hiding the platform, so the row reads as
+   * "not connected yet" rather than as an oversight.
+   */
+  socials?: Partial<Record<SocialPlatform, string>>
   /** Set only for Creators promoted to their own subdomain. */
   subdomain?: string | null
   customDomain?: string | null

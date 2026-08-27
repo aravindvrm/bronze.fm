@@ -10,25 +10,26 @@ import { coverUrl } from '@/lib/cover'
 import {
   EventsIcon,
   InstagramIcon,
+  LinkedInIcon,
   MerchIcon,
   MusicIcon,
   SpotifyIcon,
   XIcon,
-  YoutubeIcon,
 } from '@/components/Icons'
 
 /**
- * No `creators` column backs any of these yet — there is no accounts system
- * to set them from. Shown dimmed, the same "not yet" register as the SOON
- * tags on the Merch/Events tiles below, rather than left out (which would
- * read as an oversight) or linked to guessed handles (which would read as
- * someone else's account).
+ * Fixed order, so the row does not reshuffle as platforms are connected.
+ *
+ * A platform with no URL in `creator.socials` renders dimmed rather than
+ * being dropped — the same "not yet" register as the SOON tags on the tiles
+ * below. Hiding it would read as an oversight; linking a guessed handle would
+ * point at someone else's account.
  */
 const SOCIALS = [
-  { label: 'Instagram', Icon: InstagramIcon },
-  { label: 'Spotify', Icon: SpotifyIcon },
-  { label: 'YouTube', Icon: YoutubeIcon },
-  { label: 'X', Icon: XIcon },
+  { key: 'linkedin', label: 'LinkedIn', Icon: LinkedInIcon },
+  { key: 'x', label: 'X', Icon: XIcon },
+  { key: 'instagram', label: 'Instagram', Icon: InstagramIcon },
+  { key: 'spotify', label: 'Spotify', Icon: SpotifyIcon },
 ] as const
 
 /**
@@ -109,18 +110,32 @@ export function CreatorProfile() {
           )}
 
           <div className="mt-4 flex items-center gap-2.5 border-t border-white/[0.08] pt-4">
-            {SOCIALS.map(({ label, Icon }) => (
-              <div
-                key={label}
-                title={`${label} — not connected yet`}
-                className="grid size-9 place-items-center rounded-full border border-white/10 text-parchment/25"
-              >
-                <Icon className="size-4" />
-              </div>
-            ))}
-            <span className="ml-auto text-[9px] uppercase tracking-[0.15em] text-parchment/30">
-              Not yet connected
-            </span>
+            {SOCIALS.map(({ key, label, Icon }) => {
+              const href = creator.socials?.[key]
+              return href ? (
+                <a
+                  key={key}
+                  href={href}
+                  target="_blank"
+                  // noreferrer as well as noopener: the target should not
+                  // learn which profile the visitor came from.
+                  rel="noopener noreferrer"
+                  title={label}
+                  aria-label={`${creator.name} on ${label}`}
+                  className="grid size-9 place-items-center rounded-full border border-gilt/40 text-gilt transition hover:border-gilt hover:bg-gilt/10"
+                >
+                  <Icon className="size-4" />
+                </a>
+              ) : (
+                <span
+                  key={key}
+                  title={`${label} — not connected yet`}
+                  className="grid size-9 place-items-center rounded-full border border-white/10 text-parchment/25"
+                >
+                  <Icon className="size-4" />
+                </span>
+              )
+            })}
           </div>
         </motion.header>
 

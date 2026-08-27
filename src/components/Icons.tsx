@@ -123,6 +123,15 @@ export const YoutubeIcon = ({ className = 'size-5' }: P) => (
   </svg>
 )
 
+export const LinkedInIcon = ({ className = 'size-5' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className={className} aria-hidden>
+    <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
+    <path d="M8 10.5v6" />
+    <circle cx="8" cy="7.6" r="0.9" fill="currentColor" stroke="none" />
+    <path d="M12 16.5v-3.4a2.4 2.4 0 0 1 4.8 0v3.4" />
+  </svg>
+)
+
 export const XIcon = ({ className = 'size-5' }: P) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className={className} aria-hidden>
     <path d="M5 5l14 14M19 5 5 19" />
