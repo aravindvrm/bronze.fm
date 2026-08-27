@@ -97,10 +97,24 @@ export const usePlayer = create<PlayerState & PlayerActions>((set, get) => ({
   scrubbing: false,
   error: null,
 
+  /*
+   * Starting a work opens the full player.
+   *
+   * Deliberately here and not in playAt: playAt is shared with next/prev and
+   * with auto-advance at the end of a track, so putting it there would drag
+   * the player back open every time a track changed — including after the
+   * listener had collapsed it on purpose. playFrom is only ever a deliberate
+   * "play this, from here".
+   *
+   * The full player is an overlay, not a route, so this does not touch the
+   * URL: whatever screen the listener started from is still behind it when
+   * they collapse.
+   */
   playFrom: (content, index) => {
     if (get().content?.id !== content.id) {
       set({ content, queue: content.items, index })
     }
+    set({ expanded: true })
     get().playAt(index)
   },
 

@@ -1,4 +1,6 @@
-# Not a public release yet. Keep every environment out of search until Dean
-# says otherwise — this covers preview deploys and the production domain alike.
+# The catalogue is published openly and dissemination is the point, so
+# crawling is allowed. This replaced a blanket Disallow from the pre-launch
+# phase, which — together with a noindex meta tag — kept every environment out
+# of search.
 User-agent: *
-Disallow: /
+Allow: /

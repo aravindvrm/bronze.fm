@@ -11,6 +11,12 @@ test.describe('playback', () => {
     const before = await snapshot(page)
     expect(before.isPlaying).toBe(true)
 
+    // Starting a work opens the full player over the screen, so collapse it
+    // before navigating — which is what a listener does too.
+    expect(before.expanded).toBe(true)
+    await page.getByRole('button', { name: 'Close player' }).click()
+    await expect(page.getByRole('button', { name: 'Close player' })).toBeHidden()
+
     // In-app navigation throughout: a page.goto here would reload the
     // document and tear down the audio element, which is the very thing this
     // test exists to prove does not happen.
@@ -74,5 +80,52 @@ test.describe('playback', () => {
     }, undefined, { timeout: 15_000 })
 
     expect((await snapshot(page)).index).toBe(1)
+  })
+})
+
+test.describe('entering playback', () => {
+  /*
+   * Selecting a track opens the full player rather than only docking the mini
+   * bar: playback is the foreground activity, and the full screen is where
+   * the gestures, the track list and the artwork live — which matters more
+   * once a project can carry video or images.
+   */
+  test('starting a track opens the full player', async ({ page }) => {
+    await gotoContent(page)
+    await expect(page.getByRole('button', { name: 'Close player' })).toHaveCount(0)
+
+    await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).click()
+
+    await expect(page.getByRole('button', { name: 'Close player' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Show track list' })).toBeVisible()
+    expect((await snapshot(page)).expanded).toBe(true)
+  })
+
+  test('collapsing leaves the listener where they started, still playing', async ({ page }) => {
+    await gotoContent(page)
+    await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).click()
+    await page.getByRole('button', { name: 'Close player' }).click()
+
+    // The player is an overlay, not a route: the URL never moved.
+    await expect(page).toHaveURL(/\/@dean\/bronze\/music$/)
+    await expect(page.getByRole('button', { name: 'Open player' })).toBeVisible()
+  })
+
+  /*
+   * Advancing must NOT reopen the player. playAt is shared with next/prev and
+   * end-of-track auto-advance, so a listener who collapsed the player would
+   * have it thrown back in their face on every track change.
+   */
+  test('advancing a track does not reopen a collapsed player', async ({ page }) => {
+    await gotoContent(page)
+    await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).click()
+    await page.getByRole('button', { name: 'Close player' }).click()
+    await expect(page.getByRole('button', { name: 'Open player' })).toBeVisible()
+
+    await act(page, 'next')
+    await page.waitForTimeout(500)
+
+    expect((await snapshot(page)).expanded).toBe(false)
+    await expect(page.getByRole('button', { name: 'Close player' })).toHaveCount(0)
   })
 })
