@@ -1,0 +1,3 @@
+# The seeded canvas is a ~2 MB generated artifact; the working files beside it
+# are the source of truth and reseed it in one command.
+bronze-fm-monochrome-directions.html

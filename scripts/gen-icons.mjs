@@ -26,7 +26,7 @@ if (!fs.existsSync(source)) {
 fs.mkdirSync(outDir, { recursive: true })
 
 /** --color-void. The icon sits on the app's own background, not white. */
-const VOID = { r: 0x0c, g: 0x0c, b: 0x0d, alpha: 1 }
+const VOID = { r: 0x0b, g: 0x0b, b: 0x0b, alpha: 1 }
 
 const { width: srcW, height: srcH } = await sharp(source).metadata()
 const aspect = srcW / srcH

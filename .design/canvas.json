@@ -1,0 +1,55 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1752,
+      "h": 1120,
+      "title": "A \u2014 Strict Mono"
+    },
+    {
+      "file": "CoolAsh.dc.html",
+      "x": 1840,
+      "y": 0,
+      "w": 1752,
+      "h": 1120,
+      "title": "B \u2014 Cool Ash"
+    },
+    {
+      "file": "MonoBronze.dc.html",
+      "x": 0,
+      "y": 1220,
+      "w": 1752,
+      "h": 1120,
+      "title": "C \u2014 Mono + Bronze"
+    },
+    {
+      "file": "BoneGraphite.dc.html",
+      "x": 1840,
+      "y": 1220,
+      "w": 1752,
+      "h": 1120,
+      "title": "D \u2014 Bone & Graphite"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "axis",
+      "x": 0,
+      "y": -210,
+      "w": 760,
+      "text": "One question, four answers: how much colour survives.\n\nSame screens, same values lifted from the shipped app \u2014 only palette, starfield tint and accent stance change. Type stays Georgia + Abhaya Libre in all four so the comparison is about colour, not typefaces.\n\nThe starfields are CSS-drawable (positioned dots + two broad glows), not the holding page's stock video."
+    },
+    {
+      "id": "bg-note",
+      "x": 820,
+      "y": -210,
+      "w": 620,
+      "text": "The domain's holding page is a GoDaddy builder template and its background is GoDaddy stock video \u2014 not reusable here. These starfields are ours: a few KB, animate in canvas/CSS, work offline, tint to any palette."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

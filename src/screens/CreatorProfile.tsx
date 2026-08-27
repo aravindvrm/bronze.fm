@@ -119,11 +119,17 @@ export function CreatorProfile() {
       {/*
         The Creator has no artwork of its own, so it borrows its first
         project's — which is also what a visitor sees one tap later.
+
+        Desaturated on purpose. Real cover art keeps its colour everywhere it
+        is the subject, but blown up as an ambient wash it tints the entire
+        screen, which is the one thing the monochrome palette cannot survive:
+        bronze reads as deliberate only while it marks state, never as
+        atmosphere. Grayscale keeps the composition and drops the flood.
       */}
       <img
         src={hero ? coverUrl(hero, 1000) : artUrl(`${creator.slug}-hero`, 'cover', 1000)}
         alt=""
-        className="pointer-events-none absolute inset-0 size-full object-cover blur-lg"
+        className="pointer-events-none absolute inset-0 size-full object-cover opacity-45 blur-lg grayscale"
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-void/40 via-transparent via-40% to-void" />
 

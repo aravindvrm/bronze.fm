@@ -23,14 +23,21 @@ function rng(seed: string) {
   }
 }
 
-/** Bronze range: deep patina through polished highlight. */
-const BRONZE = ['#1a0f07', '#3d2614', '#6b4423', '#9c6b34', '#cd7f32', '#d9a05b', '#e8c48a', '#f5e3c0']
+/**
+ * Neutral range: near-black through a bright graphite highlight.
+ *
+ * Deliberately colourless. Artwork is the largest surface in the app, so
+ * tinting it is what decides whether the whole interface reads as monochrome
+ * or as a bronze wash — the accent is reserved for state, not for the art
+ * behind it.
+ */
+const NEUTRAL = ['#0c0c0c', '#1c1c1c', '#2b2b2b', '#3a3a3a', '#4c4c4c', '#636363', '#8a8a8a', '#b4b4b4']
 
 export type ArtVariant = 'cover' | 'item' | 'video' | 'merch' | 'event'
 
 export function artSvg(seed: string, variant: ArtVariant = 'item', size = 800): string {
   const r = rng(seed + variant)
-  const pick = (lo: number, hi: number) => BRONZE[Math.floor(r() * (hi - lo + 1)) + lo]
+  const pick = (lo: number, hi: number) => NEUTRAL[Math.floor(r() * (hi - lo + 1)) + lo]
 
   const uid = Math.floor(r() * 1e6).toString(36)
   const angle = Math.floor(r() * 360)
@@ -51,7 +58,7 @@ export function artSvg(seed: string, variant: ArtVariant = 'item', size = 800): 
     bands += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(1)}" fill="none" stroke="${stroke}" stroke-width="${w.toFixed(1)}" opacity="${op.toFixed(2)}"/>`
   }
 
-  // Off-centre light source, so the metal reads as lit rather than flat.
+  // Off-centre light source, so the surface reads as lit rather than flat.
   const gx = (25 + r() * 50).toFixed(0)
   const gy = (20 + r() * 45).toFixed(0)
 
@@ -91,5 +98,5 @@ export function artUrl(seed: string, variant: ArtVariant = 'item', size = 800): 
 /** Representative colour for a seed — drives per-track ambient tinting. */
 export function artTint(seed: string): string {
   const r = rng(seed + 'tint')
-  return BRONZE[3 + Math.floor(r() * 3)]
+  return NEUTRAL[3 + Math.floor(r() * 3)]
 }
