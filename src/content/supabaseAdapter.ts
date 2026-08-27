@@ -1,5 +1,5 @@
 import { getSupabase } from '@/lib/supabaseClient'
-import type { Content, ContentAdapter, ContentType, Creator, Credit, Pin, Project, StubKind, StubItem } from '@/content/types'
+import type { Content, ContentAdapter, ContentType, Creator, Credit, DocBlock, Pin, Project, StubKind, StubItem } from '@/content/types'
 
 /**
  * Reads Content through Supabase instead of local fixtures.
@@ -48,6 +48,7 @@ interface ContentRow {
   description: string | null
   type: ContentType
   published: boolean
+  document: DocBlock[] | null
   content_creators: { role: Credit['role']; creators: { slug: string; name: string } }[]
   content_items: {
     id: string
@@ -77,7 +78,7 @@ const PROJECT_SELECT = `
   id, slug, title, description, published,
   creators:owner_creator_id!inner ( slug ),
   content (
-    id, title, description, type, published,
+    id, title, description, type, published, document,
     content_creators ( role, creators ( slug, name ) ),
     content_items (
       id, position, title, is_interlude,
@@ -170,6 +171,7 @@ function toContent(row: ContentRow, ownerSlug: string, projectSlug: string): Con
     totalDurationMs,
     items,
     credits,
+    document: row.document ?? undefined,
   }
 }
 

@@ -23,11 +23,20 @@ const INTERFACE = {
   ereader: { label: 'Read', Icon: ReadIcon, blurb: 'Read the paper' },
 } as const
 
+/** What a Content is worth saying about itself on its tile. */
 function subtitle(content: Content): string {
   if (content.type === 'music') {
     return content.items.length
       ? `${content.items.length} tracks · ${formatTotal(content.totalDurationMs)}`
       : 'Coming soon'
+  }
+  if (content.type === 'ereader') {
+    const words = (content.document ?? []).reduce(
+      (n, b) => n + (b.kind === 'ul' ? b.items.join(' ') : b.text).split(/\s+/).length,
+      0,
+    )
+    // ~230wpm is the usual silent-reading estimate for prose of this register.
+    return words ? `${Math.max(1, Math.round(words / 230))} min read` : 'Coming soon'
   }
   return content.items.length ? '' : 'Coming soon'
 }

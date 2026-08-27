@@ -57,3 +57,22 @@ test.describe('splash', () => {
     await expect(page.locator('.z-\\[60\\]')).toHaveCount(0)
   })
 })
+
+test.describe('reader', () => {
+  test('renders the paper as semantic blocks, not a blob', async ({ page }) => {
+    await page.goto('/@dean/atonomos/read')
+    const article = page.locator('article')
+    await expect(article.getByRole('heading', { name: 'Introduction' })).toBeVisible()
+
+    // Structure survived the docx conversion: headings at more than one
+    // level, real paragraphs, and lists kept as lists rather than flattened.
+    expect(await article.locator('h2, h3, h4').count()).toBeGreaterThan(5)
+    expect(await article.locator('p').count()).toBeGreaterThan(50)
+    expect(await article.locator('ul').count()).toBeGreaterThan(0)
+  })
+
+  test('the hub advertises a read time once the paper has text', async ({ page }) => {
+    await page.goto('/@dean/atonomos')
+    await expect(page.getByRole('button', { name: /^Read/ })).toContainText(/min read/)
+  })
+})

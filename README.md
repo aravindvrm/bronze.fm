@@ -1,14 +1,17 @@
 # bronze.fm
 
-A mobile-first PWA for musicians to publish a release and everything around it —
-music, videos, merch, live dates — under their own name and URL.
+A mobile-first PWA where creators publish their work — music, writing, video,
+merch, live dates — under their own handle, with a feed across all of it.
 
-Multi-tenant from the schema up: a **Creator** owns **Content**, and the Creator
-is the tenant. First tenant is **robotrebel**, with the debut release *Bronze*.
+Multi-tenant from the schema up: a **Creator** owns **Projects**, and each
+Project carries one or more typed **interfaces** onto it (an album's tracklist,
+a paper's reader). The Creator is the tenant. First creator is **Dean**, with
+the album *Bronze* and the whitepaper *Atonomos*.
 
-> **Status:** pre-launch. There is no auth yet, and the deployment is gated
-> behind a shared passcode (see [Deployment](#deployment)). The unreleased
-> masters are deliberately **not** in this repo.
+> **Status:** prototype, no auth yet. Anyone can read everything — the
+> passcode gate that used to front the deployment was removed deliberately
+> (see [Deployment](#deployment)). The album masters are still kept out of
+> this repo, but only because binaries do not belong in git.
 
 ---
 
@@ -21,7 +24,7 @@ npm run dev
 ```
 
 That runs against local fixtures — no Supabase account, no network, no audio
-required. The app comes up at `http://localhost:5173/robotrebel`.
+required. The app comes up at `http://localhost:5173/`.
 
 Playback needs audio files that aren't in the repo. Either drop the masters into
 `Bronze/` (gitignored) and run `npm run fixtures`, or synthesise silent
@@ -46,13 +49,10 @@ Copy `.env.example` to `.env`. The variables that matter locally:
 | `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Only needed when the source is `supabase` |
 | `VITE_APP_DOMAIN` | Domain that Creator subdomains hang off |
 
-Two secrets deliberately live **outside** this file:
+One secret deliberately lives **outside** this file:
 
 - `SUPABASE_SERVICE_ROLE_KEY` — `.env` only, for `scripts/ingest.mjs`. Never
   `VITE_`-prefixed; that prefix means "inline into the public bundle".
-- `SITE_PASSCODE` — set in the Vercel dashboard only. `npm run dev` never
-  executes the middleware, so it has no effect locally.
-
 ---
 
 ## Scripts
@@ -66,6 +66,7 @@ Two secrets deliberately live **outside** this file:
 | `npm run test:all` | Both |
 | `npm run fixtures` | Regenerate `bronze.generated.ts` from the local masters |
 | `npm run icons` | Rebuild the PWA icon set from the logo in `brand/` |
+| `npm run whitepaper` | Regenerate the Atonomos document from `sources/` |
 | `npm run cover` | Re-encode cover art |
 | `npm run check:dist` | Run the build-output guard on its own |
 
@@ -118,28 +119,34 @@ the release offline.
 ### Routing and tenancy
 
 ```
-/robotrebel                    Creator profile — Content, Merch, Events
-/robotrebel/content            their releases
-/robotrebel/merch              everything they sell
-/robotrebel/events             every date
-/robotrebel/bronze             one release: splash (entry screen)
-/robotrebel/bronze/home        the four tiles
-/robotrebel/bronze/music       track list
-/robotrebel/bronze/videos|merch|events
+/                       the feed — everything published, with search
+/@dean                  creator profile — bio, links, pinned, projects
+/@dean/merch            creator-level section
+/@dean/events           creator-level section
+/@dean/bronze           project hub — the ways into one body of work
+/@dean/bronze/music     the album's tracklist
+/@dean/atonomos/read    the whitepaper's reader
 ```
 
-Creator-level sections are matched **before** Content slugs, so a release can
-never be called `merch`. That list is enforced twice: `RESERVED_CONTENT_SLUGS` in
-`src/lib/tenant.ts`, and a `CHECK` constraint in the database.
+**Handles carry an `@`.** Once `/` is a feed, a bare `/dean` would put every
+creator handle in the same namespace as every future top-level route, making
+each new route a potential breaking rename for whoever holds that word. No
+route begins with `@`, so that collision class is closed and no top-level
+reserved list is needed. The router enforces the prefix rather than assuming
+it — `/:handle/*` matches any first segment.
 
-Merch and Events exist at both levels. A release-scoped section shows only items
-tagged to that release, and deliberately **does not** fall back to the
-Creator-wide list — silently serving everything under a release path would make
-the same set reachable under every release.
+**Project slugs are scoped to the creator**, so two creators can each have a
+`bronze`. Creator-level sections are matched **before** project slugs, so a
+project can never be called `merch`; that list is enforced twice, in
+`RESERVED_PROJECT_SLUGS` and a `CHECK` constraint, with a unit test comparing
+them.
+
+**A Content is addressed by type, not by slug** — `/@dean/bronze/music` — so a
+project holds at most one interface of each type, enforced by a unique
+constraint.
 
 Host is resolved before path, so a Creator can be promoted to
-`robotrebel.bronze.fm` or a custom domain by setting a column, with no code
-change.
+`dean.bronze.fm` or a custom domain by setting a column, with no code change.
 
 ### Data
 
@@ -161,24 +168,20 @@ file can never be shadowed by a stale cache entry.
 
 ## Deployment
 
-Vercel, static build plus one Edge Middleware.
+Vercel, static build. No server, no middleware.
 
-`middleware.ts` gates the **entire origin** behind a shared passcode. That's not
-belt-and-braces: the media bucket's public flag turned out to bypass RLS for
-*listing*, meaning anyone holding the anon key from devtools could enumerate and
-download the whole catalog directly from Supabase, forever, independent of this
-site. RLS can't retroactively protect a leaked key, so the gate has to sit in
-front of the JS bundle that contains it.
-
-It fails closed: with `SITE_PASSCODE` unset, everyone is locked out — including
-whoever forgot to set it.
+A shared-passcode Edge Middleware used to gate the whole origin, because the
+media bucket's public flag bypasses RLS for *listing* — anyone with the anon
+key from devtools can enumerate the bucket. That gate was removed
+deliberately: the catalogue is published openly, so enumeration is no longer
+a leak. Anything that should not be world-readable must therefore not go in
+this bucket, since there is nothing else in front of it.
 
 ---
 
 ## Testing
 
-- **Unit** (Vitest) — pure logic: Range reconstruction, tenant resolution, the
-  middleware's cookie/HMAC helpers.
+- **Unit** (Vitest) — pure logic: Range reconstruction and tenant resolution.
 - **Browser** (Playwright, `mobile-chrome`) — navigation, playback across
   navigation, seeking, gestures, and the service worker's 206 handling against
   real media.
@@ -191,6 +194,9 @@ secret scan that also fails if any audio file is tracked in git.
 
 ## Gotchas
 
+- **The splash is not a route.** It is a `sessionStorage`-gated overlay shown
+  once per cold open, at the root only. As a URL it would be deep-linkable,
+  sit in history, and be a dead end on refresh.
 - **Never commit audio.** `Bronze/` and every audio extension are gitignored, the
   build guard checks `dist/`, and CI checks the tree. This repo once shipped
   66 MB of unreleased masters into build output because `public/` is copied

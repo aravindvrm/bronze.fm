@@ -91,6 +91,19 @@ export interface ContentItem {
 }
 
 /**
+ * A block of a document, in reading order.
+ *
+ * Deliberately a small closed set rather than stored HTML: the source is a
+ * Word export, and mapping it to semantic blocks lets the reader inherit the
+ * app's own typography instead of carrying Word's. It also means nothing
+ * arrives as markup that would have to be sanitised before rendering.
+ */
+export type DocBlock =
+  | { kind: 'h'; level: 1 | 2 | 3; text: string }
+  | { kind: 'p'; text: string }
+  | { kind: 'ul'; items: string[] }
+
+/**
  * One typed interface onto a Project. Music holds ordered items; video holds
  * one; an ereader holds its document sections.
  *
@@ -110,6 +123,8 @@ export interface Content {
   totalDurationMs: number
   items: ContentItem[]
   credits: Credit[]
+  /** Set on `ereader` content: the document itself, in reading order. */
+  document?: DocBlock[]
 }
 
 /**
