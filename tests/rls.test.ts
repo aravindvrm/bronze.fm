@@ -39,7 +39,17 @@ describe.skipIf(!enabled)('RLS', () => {
     console.log(`RLS tests against ${URL_}`)
   })
 
-  const readable = ['creators', 'content', 'content_items', 'content_creators', 'merch_items', 'events', 'assets']
+  const readable = [
+    'creators',
+    'projects',
+    'content',
+    'content_items',
+    'content_creators',
+    'creator_pins',
+    'merch_items',
+    'events',
+    'assets',
+  ]
 
   it.each(readable)('anon may SELECT from %s', async (table) => {
     const res = await fetch(rest(`${table}?select=*&limit=1`), { headers: headers() })
@@ -49,11 +59,22 @@ describe.skipIf(!enabled)('RLS', () => {
   it.each([
     ['creators', { slug: 'rls-probe', name: 'Probe' }],
     [
+      'projects',
+      {
+        owner_creator_id: '00000000-0000-0000-0000-000000000001',
+        slug: 'rls-probe',
+        title: 'Probe',
+        published: true,
+      },
+    ],
+    [
       'content',
       {
         owner_creator_id: '00000000-0000-0000-0000-000000000001',
+        // content is addressed by (project, type) since PLAN.md §8.3 — it
+        // has no slug of its own, and project_id is NOT NULL.
+        project_id: '00000000-0000-0000-0000-000000000001',
         type: 'music',
-        slug: 'probe',
         title: 'Probe',
         published: true,
       },
@@ -72,6 +93,13 @@ describe.skipIf(!enabled)('RLS', () => {
         content_item_id: '00000000-0000-0000-0000-000000000001',
         creator_id: '00000000-0000-0000-0000-000000000001',
         role: 'featured',
+      },
+    ],
+    [
+      'creator_pins',
+      {
+        creator_id: '00000000-0000-0000-0000-000000000001',
+        content_id: '00000000-0000-0000-0000-000000000001',
       },
     ],
     ['events', { creator_id: '00000000-0000-0000-0000-000000000001', starts_at: '2030-01-01T00:00:00Z' }],
