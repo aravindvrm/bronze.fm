@@ -15,7 +15,7 @@ First tenant: **robotrebel / _Bronze_**.
 | Caching | Content-addressed assets + manifest hash diffing, immutable cache headers |
 | Auth | None in v1. Tenant shape exists in schema from day one |
 | Tenancy | tenant = **Creator**; Content has one owner Creator, many attributed |
-| Routing | Path today (`bronze.fm/robotrebel`); host checked first so premium Creators can be promoted to `robotrebel.bronze.fm` |
+| Routing | ~~Path today (`bronze.fm/robotrebel`); host checked first so premium Creators can be promoted to `robotrebel.bronze.fm`~~ — **superseded by §8.2**: feed at `/`, creators at `/@handle`. Host-first resolution is retained, so subdomain promotion still holds. |
 
 ### Departures from the original diagram
 
@@ -161,6 +161,11 @@ added as `content_item_creators` later without reshaping what exists.
 than relying on an unguessable URL.
 
 ### Routing: two levels, same nouns
+
+> **Superseded by §8.2.** The structure below shipped and is described as
+> built; the platform-prototype direction replaces it. Kept because the
+> reasoning about canonical URLs and reserved slugs still applies — §8.4
+> depends on it directly.
 
 ```
 /robotrebel                       Creator profile — Content · Merch · Events
@@ -461,3 +466,135 @@ behaviour under real touch on iOS. Those need a human on a device.
 4. **Egress.** 66 MB per full album stream against a 5 GB free-tier monthly
    allowance is ~75 complete listens. The Phase 4 client cache is what keeps
    repeat listeners free.
+
+---
+
+## 8. Direction change — platform prototype (supersedes §3 routing)
+
+After a meeting with Dean, the scope narrows and the shape changes. His
+projects are no longer the product; they are the **showcase for the bronze.fm
+platform prototype**. That inverts the framing: the app is a platform with a
+feed that happens to contain one creator, not a tenant site that happens to
+have an owner.
+
+**Everything in §3's "Routing: two levels" section is superseded by this
+one.** The data model in §3 survives with one layer inserted.
+
+### 8.1 What changed in the brief
+
+| Was | Now |
+|---|---|
+| Creator is the URL root (tenant) | Creator is a page you visit; feed is the root |
+| Content = one publishable work, one type | **Project** contains many typed interfaces |
+| Per-release splash, tap-gated | One **global** splash on cold open |
+| Merch/Events at both levels | Creator level only, stubs for now |
+| One release (Bronze) | Two projects: **Bronze**, **Atonomos** |
+| `robotrebel` | `Dean` |
+
+### 8.2 Routes
+
+```
+/                        splash overlay on cold open, then the feed
+/@dean                   creator — bio, socials, pinned, projects, merch, events
+/@dean/merch             creator-level, stub
+/@dean/events            creator-level, stub
+/@dean/bronze            project hub
+/@dean/bronze/music      content-type interface
+/@dean/atonomos          project hub
+/@dean/atonomos/read     content-type interface (deferred)
+```
+
+**The splash is not a route.** It is a transient app-open state, not a
+location: as a URL it would be deep-linkable, would sit in history so Back
+returns to it, and would be a dead end on refresh. It renders as an overlay
+gated on `sessionStorage`, which is also exactly what "once per cold open"
+means. A deep link into content therefore skips it, which is correct — the
+splash belongs to opening the app, not to arriving at a page.
+
+**Creators are `@`-prefixed.** Once `/` is a feed, a bare `/dean` would put
+every creator handle in the same namespace as every future top-level route
+(`/search`, `/settings`, `/about`), making each new route a potential breaking
+rename for a creator who happens to hold that word — a class of problem GitHub
+and Twitter both live with permanently. No route will ever begin with `@`, so
+the collision class is closed for good, with no top-level reserved list to
+maintain. It is also shorter than the `/creator/dean/...` alternative it
+replaces (three segments, not four), reads as a person at a glance, follows an
+established convention, and is a legal path character needing no encoding.
+
+**Project slugs stay scoped to the creator**, so two creators may each hold a
+`bronze` without one becoming `bronze-2`. A flat `/project/{id}` would have
+forced global uniqueness. This also keeps subdomain promotion a trivial
+derivation (`dean.bronze.fm/bronze`) rather than a redesign.
+
+**The project hub earns its place even when it looks redundant.** For Bronze,
+`/@dean/bronze` and `/@dean/bronze/music` are nearly the same screen. For
+Atonomos they are not: the hub carries the project's description and credits
+and leads into *several* interfaces. Keeping it uniform means Atonomos needs
+no special case later. A single-interface project can lead straight in.
+
+`/read` rather than `/e-reader`: a hyphenated compound noun in a path segment
+where a verb reads better.
+
+### 8.3 Data model — one layer inserted
+
+```
+creators → projects → content (type: music | ereader | …) → content_items
+```
+
+Today `content.type` means **a Content *is* one type**. The new brief needs a
+Project that **has many** typed interfaces — Bronze is music; Atonomos is a
+whitepaper plus related pieces. So `projects` is inserted above `content`, and
+the interface segment maps to `content.type` (`music` → `/music`, `ereader` →
+`/read`).
+
+The cheaper alternative — project *is* the content, types are tabs over it —
+breaks the moment Atonomos holds more than one piece, which is its stated
+shape. Not worth the saved hour.
+
+The e-reader is **deferred**: Phase 1 widens the `type` constraint and leaves
+the seam, with no reader UI and no document-format decision yet (PDF vs EPUB
+vs paginated HTML is a real fork, and it should be made when the whitepaper
+exists rather than in the abstract).
+
+### 8.4 Migration consequence: reserved slugs return
+
+Migration `20260820050000_narrow_reserved_slugs.sql` *un*-reserved `merch` and
+`events` on the explicit grounds that those sections sat one segment deeper
+than Content slugs and so could not collide. Under §8.2 they are creator-level
+routes sharing a segment with project slugs, so **that reasoning no longer
+holds and both must be reserved again**, along with anything else that becomes
+a creator-level route. That migration's comment is now actively wrong and must
+be superseded by a new migration rather than edited in place.
+
+### 8.5 What survives the restructure
+
+The route tree is a few hours' work; it lives almost entirely in `App.tsx` and
+`src/lib/tenant.ts`. A rebuild-from-scratch was considered and rejected —
+nearly everything expensive here is route-agnostic:
+
+- the audio engine, which is mounted *above* the router by design
+- the service worker and its 206 Range reconstruction
+- offline caching and `OfflineControl`
+- the Supabase adapter, ingest pipeline and RLS policies
+- design tokens, player UI, the desktop reflow
+- passcode middleware, CI, build guards
+
+Rebuilding would discard the Range handling, the caching rules and the RLS
+work — the parts that were genuinely fiddly — to save a day of routing.
+
+### 8.6 Phases
+
+**Phase 5 — Rename and restructure.** `robotrebel` → `Dean` everywhere
+including the database. New route tree, `projects` table, reserved slugs
+re-added, per-release splash deleted. Rewrite the e2e navigation specs *first*:
+they are the safety net for the rest of the refactor.
+
+**Phase 6 — Shell surfaces.** Global splash overlay, feed at `/` with search.
+With one creator and two projects the feed is a handful of items, so search is
+client-side; no backend search is needed at this size.
+
+**Phase 7 — Creator page.** Pinned content (a new schema concept), real social
+links, merch/events stubs.
+
+**Phase 8 — Atonomos and the e-reader.** Blocked on the whitepaper and on the
+document-format decision above.
