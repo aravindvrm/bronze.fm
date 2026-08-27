@@ -6,6 +6,7 @@ import {
   CONTENT_TYPE_LABEL,
   CONTENT_TYPE_SEGMENT,
   type Content,
+  type ContentType,
   type Creator,
   type Project,
 } from '@/content/types'
@@ -41,6 +42,7 @@ export function Feed() {
   const [creators, setCreators] = useState<Creator[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [query, setQuery] = useState('')
+  const [typeFilter, setTypeFilter] = useState<ContentType | 'all'>('all')
 
   useEffect(() => {
     let cancelled = false
@@ -77,6 +79,19 @@ export function Feed() {
     return items.sort((a, b) => (b.content.createdAt ?? '').localeCompare(a.content.createdAt ?? ''))
   }, [projects])
 
+  /*
+   * Only types actually present get a chip — a "Video" filter that always
+   * returns nothing yet would be an affordance for a feature that doesn't
+   * exist, the same reasoning behind not showing a search "clear" toggle
+   * with nothing typed. Order follows CONTENT_TYPE_LABEL's own key order
+   * rather than first-appearance, so the row doesn't reshuffle as new
+   * content publishes.
+   */
+  const availableTypes = useMemo(() => {
+    const present = new Set(feedItems.map((i) => i.content.type))
+    return (Object.keys(CONTENT_TYPE_LABEL) as ContentType[]).filter((t) => present.has(t))
+  }, [feedItems])
+
   const q = query.trim().toLowerCase()
   const shownCreators = useMemo(
     () => (q ? creators.filter((c) => c.name.toLowerCase().includes(q)) : creators),
@@ -84,15 +99,16 @@ export function Feed() {
   )
   const shownFeed = useMemo(
     () =>
-      q
-        ? feedItems.filter(
-            ({ content, project }) =>
-              content.title.toLowerCase().includes(q) ||
-              project.title.toLowerCase().includes(q) ||
-              (project.description ?? '').toLowerCase().includes(q),
-          )
-        : feedItems,
-    [feedItems, q],
+      feedItems.filter(({ content, project }) => {
+        if (typeFilter !== 'all' && content.type !== typeFilter) return false
+        if (!q) return true
+        return (
+          content.title.toLowerCase().includes(q) ||
+          project.title.toLowerCase().includes(q) ||
+          (project.description ?? '').toLowerCase().includes(q)
+        )
+      }),
+    [feedItems, q, typeFilter],
   )
 
   const nothing = q && shownCreators.length === 0 && shownFeed.length === 0
@@ -156,10 +172,43 @@ export function Feed() {
           </section>
         )}
 
-        {shownFeed.length > 0 && (
+        {feedItems.length > 0 && (
           <section className="mt-10">
-            <h2 className="mb-3.5 text-[10px] uppercase tracking-[0.25em] text-parchment/40">Feed</h2>
-            <div className="flex flex-col gap-2.5">
+            <div className="mb-3.5 flex items-center justify-between gap-3">
+              <h2 className="text-[10px] uppercase tracking-[0.25em] text-parchment/40">Feed</h2>
+
+              {/* A single type has nothing to filter, so the row only earns
+                  its place once there is a real choice to make. */}
+              {availableTypes.length > 1 && (
+                <div className="flex gap-1.5">
+                  {(['all', ...availableTypes] as const).map((t) => {
+                    const active = typeFilter === t
+                    return (
+                      <button
+                        key={t}
+                        onClick={() => setTypeFilter(t)}
+                        aria-pressed={active}
+                        className={`rounded-full border px-2.5 py-1 text-[9px] uppercase tracking-[0.15em] transition ${
+                          active
+                            ? 'border-gilt/60 bg-gilt/15 text-gilt'
+                            : 'border-white/10 text-parchment/40 hover:border-white/25 hover:text-parchment/70'
+                        }`}
+                      >
+                        {t === 'all' ? 'All' : CONTENT_TYPE_LABEL[t]}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Search already explains an empty result up top — this is only
+                for the case a type filter alone empties the list. */}
+            {!q && shownFeed.length === 0 && (
+              <p className="text-sm text-parchment/40">Nothing matches the filter.</p>
+            )}
+
+            <div className="flex flex-col gap-2.5" data-testid="feed-rows">
               {shownFeed.map(({ content, project }, i) => {
                 const Icon = TYPE_ICON[content.type]
                 return (
