@@ -5,6 +5,7 @@ import { content as adapter } from '@/content/adapter'
 import type { Creator, Project } from '@/content/types'
 import { creatorPath, defaultCreatorSlug } from '@/lib/tenant'
 import { coverUrl } from '@/lib/cover'
+import { Wordmark } from '@/components/Wordmark'
 
 /**
  * The app root — everything published, and a way to search it.
@@ -71,9 +72,8 @@ export function Feed() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display text-3xl tracking-tight text-parchment sm:text-4xl"
         >
-          bronze<span className="text-gilt">.fm</span>
+          <Wordmark className="text-xl sm:text-2xl" />
         </motion.h1>
 
         <input

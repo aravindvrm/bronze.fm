@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { Wordmark } from '@/components/Wordmark'
 
 const SEEN_KEY = 'bronze:splash-seen'
 const HOLD_MS = 2200
@@ -161,9 +162,7 @@ export function Splash() {
             className="absolute inset-x-0 grid place-items-center"
             style={{ bottom: 'calc(var(--safe-b) + 4.5rem)' }}
           >
-            <p className="font-display text-2xl uppercase tracking-[0.42em] text-parchment [padding-left:0.42em]">
-              bronze<span className="text-gilt">.fm</span>
-            </p>
+            <Wordmark centered className="text-2xl" />
           </motion.div>
         </motion.div>
       )}
