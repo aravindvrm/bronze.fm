@@ -47,7 +47,7 @@ export function ProjectHub() {
   const project = useProject()
 
   return (
-    <div className="min-h-full bg-void">
+    <div className="min-h-full">
       <ScreenHeader title={project.title} titleOf="content" to={creatorPath(creator.slug)} />
 
       <div

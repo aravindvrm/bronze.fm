@@ -8,7 +8,6 @@ import { CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
 import { creatorPath, projectPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
-import { AmbientGrid } from '@/components/AmbientGrid'
 import {
   EventsIcon,
   InstagramIcon,
@@ -114,9 +113,7 @@ export function CreatorProfile() {
   }
 
   return (
-    <div className="relative min-h-full overflow-hidden bg-void">
-      <AmbientGrid />
-
+    <div className="relative min-h-full overflow-hidden">
       <div
         className="relative mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}

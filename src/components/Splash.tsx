@@ -54,10 +54,16 @@ function Disc({ still, nearSide = false }: { still: boolean; nearSide?: boolean 
       }}
     >
       <div
-        className={`size-full rounded-full ${still ? '' : 'animate-[spin_18s_linear_infinite]'}`}
+        className={`size-full rounded-full ${still ? '' : 'animate-[spin_6s_linear_infinite]'}`}
         style={{
+          // Brighter and more of the ring lit than the first pass: at 18s a
+          // rotation barely moved during the splash's ~2s hold, so slowing
+          // was never the problem — too little of the ring glowed at once
+          // to read as motion even once it sped up. More arc lit plus a
+          // hotter peak makes the spin itself the thing you see, not an
+          // inference from a sliver sweeping past.
           background:
-            'conic-gradient(from 0deg, rgba(205,127,50,0) 0deg, #cd7f32 40deg, #f0d3a8 78deg, #cd7f32 120deg, rgba(205,127,50,0.25) 190deg, rgba(205,127,50,0) 300deg, rgba(205,127,50,0) 360deg)',
+            'conic-gradient(from 0deg, rgba(205,127,50,0) 0deg, #cd7f32 20deg, #fff1d6 60deg, #f0d3a8 100deg, #cd7f32 150deg, rgba(205,127,50,0.35) 210deg, rgba(205,127,50,0.08) 280deg, rgba(205,127,50,0) 340deg, rgba(205,127,50,0) 360deg)',
           mask: ring,
           WebkitMask: ring,
         }}
@@ -66,23 +72,44 @@ function Disc({ still, nearSide = false }: { still: boolean; nearSide?: boolean 
   )
 }
 
+/**
+ * The starfield twinkles rather than sitting static — each star breathes
+ * opacity on its own cycle, offset so the sky never pulses in unison. Driven
+ * by Framer rather than a CSS @keyframes block, matching how the rest of
+ * this screen is animated; 70-odd opacity tweens is cheap next to the disc's
+ * own gradient repaints.
+ */
+function Starfield({ still }: { still: boolean }) {
+  return (
+    <svg className="absolute inset-0 size-full" aria-hidden>
+      {STARS.map(([x, y, r, o, dur, delay], i) => (
+        <motion.circle
+          key={i}
+          cx={`${x}%`}
+          cy={`${y}%`}
+          r={r}
+          fill="#fff"
+          initial={{ opacity: o }}
+          animate={still ? { opacity: o } : { opacity: [o, o * 0.15, o] }}
+          transition={{ duration: dur, delay, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      ))}
+    </svg>
+  )
+}
+
 function AccretionDisc({ still }: { still: boolean }) {
   return (
     <div className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden">
-      {/* Starfield: fixed positions so it reads as a sky rather than noise. */}
-      <svg className="absolute inset-0 size-full opacity-70" aria-hidden>
-        {STARS.map(([x, y, r, o], i) => (
-          <circle key={i} cx={`${x}%`} cy={`${y}%`} r={r} fill="#fff" opacity={o} />
-        ))}
-      </svg>
+      <Starfield still={still} />
 
       {/* Warm haze the disc sits in, so the black centre has something to
           eat into rather than meeting a flat background. */}
       <div
-        className="absolute size-[140%] opacity-60"
+        className="absolute size-[140%] opacity-70"
         style={{
           background:
-            'radial-gradient(ellipse 42% 26% at 50% 50%, rgba(205,127,50,0.30) 0%, rgba(205,127,50,0.07) 45%, rgba(0,0,0,0) 70%)',
+            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(205,127,50,0.38) 0%, rgba(205,127,50,0.10) 45%, rgba(0,0,0,0) 70%)',
         }}
       />
 
@@ -103,7 +130,7 @@ function AccretionDisc({ still }: { still: boolean }) {
         className="absolute size-[min(30vw,10rem)] rounded-full"
         style={{
           boxShadow:
-            '0 0 1px 1px rgba(240,211,168,0.9), 0 0 26px 7px rgba(205,127,50,0.4), inset 0 0 18px 3px rgba(0,0,0,1)',
+            '0 0 2px 2px rgba(250,225,190,1), 0 0 40px 12px rgba(205,127,50,0.55), inset 0 0 18px 3px rgba(0,0,0,1)',
           background: '#000',
         }}
       />
@@ -113,19 +140,29 @@ function AccretionDisc({ still }: { still: boolean }) {
   )
 }
 
-/** Deterministic, so the sky is identical on every open. */
-const STARS: [number, number, number, number][] = Array.from({ length: 60 }, (_, i) => {
-  const a = Math.sin(i * 12.9898) * 43758.5453
-  const b = Math.sin(i * 78.233) * 12345.6789
-  const c = Math.sin(i * 3.1415) * 9876.5432
-  const frac = (n: number) => n - Math.floor(n)
-  return [
-    Math.round(frac(a) * 1000) / 10,
-    Math.round(frac(b) * 1000) / 10,
-    Math.round((0.5 + frac(c) * 1.1) * 10) / 10,
-    Math.round((0.25 + frac(a + b) * 0.7) * 100) / 100,
-  ]
-})
+/**
+ * Deterministic, so the sky is identical on every open — position, size and
+ * opacity as before, plus a per-star twinkle duration and phase offset drawn
+ * from the same PRNG so the cycle is stable too, not re-rolled on rerender.
+ */
+const STARS: [number, number, number, number, number, number][] = Array.from(
+  { length: 70 },
+  (_, i) => {
+    const a = Math.sin(i * 12.9898) * 43758.5453
+    const b = Math.sin(i * 78.233) * 12345.6789
+    const c = Math.sin(i * 3.1415) * 9876.5432
+    const d = Math.sin(i * 45.164) * 5678.1234
+    const frac = (n: number) => n - Math.floor(n)
+    return [
+      Math.round(frac(a) * 1000) / 10,
+      Math.round(frac(b) * 1000) / 10,
+      Math.round((0.5 + frac(c) * 1.1) * 10) / 10,
+      Math.round((0.25 + frac(a + b) * 0.7) * 100) / 100,
+      Math.round((1.8 + frac(c + d) * 2.6) * 10) / 10,
+      Math.round(frac(d) * 30) / 10,
+    ]
+  },
+)
 
 export function Splash() {
   const reduceMotion = useReducedMotion()

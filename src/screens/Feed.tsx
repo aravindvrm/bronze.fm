@@ -63,7 +63,7 @@ export function Feed() {
   const nothing = q && shownCreators.length === 0 && shownProjects.length === 0
 
   return (
-    <div className="min-h-full bg-void">
+    <div className="min-h-full">
       <div
         className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
         style={{ paddingTop: 'calc(var(--safe-t) + 2rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}

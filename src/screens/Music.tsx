@@ -27,7 +27,7 @@ export function Music() {
   const albumPrimary = content.credits[0]?.name ?? content.ownerSlug
 
   return (
-    <div className="min-h-full bg-void">
+    <div className="min-h-full">
       <ScreenHeader
         title={content.title}
         titleOf="content"

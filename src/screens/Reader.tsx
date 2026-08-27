@@ -78,7 +78,7 @@ export function Reader() {
   const document = content?.document ?? []
 
   return (
-    <div className="min-h-full bg-void">
+    <div className="min-h-full">
       <ScreenHeader
         title={content?.title ?? project.title}
         titleOf="content"

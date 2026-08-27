@@ -39,7 +39,7 @@ export function StubGrid({
   const backTo = creatorPath(creator.slug)
 
   return (
-    <div className="min-h-full bg-void">
+    <div className="min-h-full">
       <ScreenHeader title={title} to={backTo} />
 
       <div className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8" style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}>
