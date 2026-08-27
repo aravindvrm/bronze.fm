@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Wordmark } from '@/components/Wordmark'
 
 const SEEN_KEY = 'bronze:splash-seen'
-const HOLD_MS = 2200
 
 /**
  * The app-open splash.
@@ -15,12 +14,16 @@ const HOLD_MS = 2200
  * since a session ends when the tab or the installed app closes.
  *
  * Shown only at the root. A deep link into a project is someone arriving at a
- * specific thing, usually from a shared URL, and holding that behind a timer
- * would be delay with no purpose. An installed PWA launches at start_url `/`,
- * so the normal open still gets it.
+ * specific thing, usually from a shared URL, and holding that behind a tap
+ * would be friction with no purpose. An installed PWA launches at start_url
+ * `/`, so the normal open still gets it.
  *
- * Never starts audio: browsers require a user gesture before playback, and a
- * timed screen is not one.
+ * Tap-gated, not timed — the mechanic the per-release splash used to have
+ * before the platform restructure folded it into this one global screen.
+ * Nobody is forced to sit through the animation on a length someone else
+ * chose; "Tap to enter" says explicitly what the gesture does, since a
+ * silent full-bleed scene with no timer and no visible action would leave a
+ * visitor unsure whether tapping does anything at all.
  */
 
 /**
@@ -172,19 +175,19 @@ export function Splash() {
     return sessionStorage.getItem(SEEN_KEY) === null
   })
 
-  useEffect(() => {
-    if (!visible) return
+  // Marked seen on the dismissing tap, not on mount: marking it up front
+  // would let a visitor who reloads mid-screen — before ever tapping — lose
+  // the splash on the retry, which is not what "once per cold open" means.
+  function enter() {
     sessionStorage.setItem(SEEN_KEY, '1')
-    const timer = setTimeout(() => setVisible(false), HOLD_MS)
-    return () => clearTimeout(timer)
-  }, [visible])
+    setVisible(false)
+  }
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
-          // Tap to skip: the hold is a flourish, never something to sit through.
-          onClick={() => setVisible(false)}
+          onClick={enter}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.6, ease: 'easeOut' }}
@@ -196,10 +199,27 @@ export function Splash() {
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: reduceMotion ? 0 : 0.35, duration: reduceMotion ? 0 : 1, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-x-0 grid place-items-center"
+            className="absolute inset-x-0 grid place-items-center gap-7"
             style={{ bottom: 'calc(var(--safe-b) + 4.5rem)' }}
           >
             <Wordmark centered className="text-2xl" />
+
+            {/* Breathing rather than static, so it registers as a live
+                prompt rather than a caption — the same treatment the
+                per-release splash used for this exact line. */}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: reduceMotion ? 0.6 : [0, 0.75, 0.35, 0.75] }}
+              transition={{
+                delay: reduceMotion ? 0 : 1.1,
+                duration: reduceMotion ? 0 : 3.2,
+                repeat: reduceMotion ? 0 : Infinity,
+                repeatType: 'reverse',
+              }}
+              className="text-[10px] uppercase tracking-[0.3em] text-parchment/50"
+            >
+              Tap to enter
+            </motion.span>
           </motion.div>
         </motion.div>
       )}

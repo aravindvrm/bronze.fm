@@ -60,9 +60,23 @@ export async function gotoCreator(page: Page, path = '') {
   })
 }
 
-/** The feed at the app root. */
+/**
+ * The feed at the app root.
+ *
+ * The splash is tap-gated rather than timed, so a bare `goto('/')` leaves it
+ * covering the screen indefinitely — dismiss it before anything below can be
+ * interacted with. `.first()` because a splash that hasn't mounted yet on a
+ * slow load matches nothing, which is fine: it is a `sessionStorage`-gated
+ * once-per-session overlay, so a run that lands here twice sees it at most
+ * once anyway.
+ */
 export async function gotoFeed(page: Page) {
   await page.goto('/')
+  const splash = page.locator('.z-\\[60\\]').first()
+  if (await splash.isVisible().catch(() => false)) {
+    await splash.click()
+    await splash.waitFor({ state: 'hidden' })
+  }
   await page.waitForFunction(() => !!(window as never as { __player?: unknown }).__player, undefined, {
     timeout: 10_000,
   })

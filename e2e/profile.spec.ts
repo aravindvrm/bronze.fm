@@ -36,22 +36,43 @@ test.describe('pinned content', () => {
 })
 
 test.describe('splash', () => {
-  test('covers the root on a cold open, then clears', async ({ page }) => {
+  // Tap-gated, not timed — the mechanic the per-release splash had before
+  // the restructure. It must not clear on its own: sitting there is exactly
+  // what "wait for the gesture" means.
+  test('covers the root on a cold open and stays until tapped', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('.z-\\[60\\]')).toBeVisible()
-    await expect(page.locator('.z-\\[60\\]')).toBeHidden({ timeout: 5000 })
+    const splash = page.locator('.z-\\[60\\]')
+    await expect(splash).toBeVisible()
+    await expect(page.getByText('Tap to enter')).toBeVisible()
+
+    await page.waitForTimeout(3000)
+    await expect(splash).toBeVisible()
+
+    await splash.click()
+    await expect(splash).toBeHidden()
     await expect(page.getByRole('searchbox')).toBeVisible()
   })
 
-  test('does not reappear within the same session', async ({ page }) => {
+  test('does not reappear within the same session once entered', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('.z-\\[60\\]')).toBeHidden({ timeout: 5000 })
+    await page.locator('.z-\\[60\\]').click()
+    await expect(page.locator('.z-\\[60\\]')).toBeHidden()
     await page.reload()
     await expect(page.locator('.z-\\[60\\]')).toHaveCount(0)
   })
 
+  // "Seen" is written on the dismissing tap, not on mount — otherwise a
+  // reload before ever tapping would lose the splash on retry, which breaks
+  // the tap gate rather than merely skipping a rewatch.
+  test('reappears on reload if the visitor reloads before tapping', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('.z-\\[60\\]')).toBeVisible()
+    await page.reload()
+    await expect(page.locator('.z-\\[60\\]')).toBeVisible()
+  })
+
   // A deep link is someone arriving at a specific thing, usually from a shared
-  // URL; holding that behind a timer would be delay with no purpose.
+  // URL; holding that behind a tap gate would be friction with no purpose.
   test('never covers a deep link', async ({ page }) => {
     await page.goto('/@dean/bronze')
     await expect(page.locator('.z-\\[60\\]')).toHaveCount(0)
