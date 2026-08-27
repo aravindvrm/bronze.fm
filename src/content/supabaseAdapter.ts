@@ -20,6 +20,7 @@ interface CreatorRow {
   slug: string
   name: string
   bio: string | null
+  avatar_url: string | null
   socials: Record<string, string> | null
   subdomain: string | null
   custom_domain: string | null
@@ -32,6 +33,7 @@ function toCreator(row: CreatorRow): Creator {
     slug: row.slug,
     name: row.name,
     bio: row.bio ?? undefined,
+    avatarUrl: row.avatar_url ?? undefined,
     // Passed through unfiltered: the column is writable only by the service
     // role, and the profile renders a known list of platforms, so an
     // unrecognised key here is ignored rather than shown.

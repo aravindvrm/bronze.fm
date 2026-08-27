@@ -50,6 +50,12 @@ export interface Creator {
   name: string
   bio?: string
   /**
+   * The Creator's own photo. Distinct from a Project's cover art — the
+   * profile fell back to borrowing the first Project's cover before this
+   * existed, which meant Dean's avatar was literally the Bronze artwork.
+   */
+  avatarUrl?: string
+  /**
    * Platform → profile URL. A missing entry is meaningful: the profile shows
    * a dimmed stub for it rather than hiding the platform, so the row reads as
    * "not connected yet" rather than as an oversight.

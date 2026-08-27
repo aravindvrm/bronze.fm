@@ -3,12 +3,16 @@
 // Regenerate: npm run fixtures
 
 import type { Content, Creator, Project } from '@/content/types'
+import deanAvatar from '@/assets/avatars/dean.jpg'
 
 export const dean: Creator = {
   id: 'crt_dean',
   slug: 'dean',
   name: 'Dean',
   bio: 'Technology executive, venture investor, and strategic advisor with 15+ years leading enterprise transformation, AI innovation, and technology-enabled value creation across Fortune 500 enterprises, venture-backed and growth-staged businesses. Combines executive leadership, investment perspective, and deep technical expertise to accelerate business transformation and performance.',
+  // Low-quality source photo, kept until Dean supplies a better one — see
+  // src/assets/avatars/dean.jpg.
+  avatarUrl: deanAvatar,
   // Mirrors the seed in 20260821020000_creator_profile.sql so fixtures and
   // Supabase render the same profile.
   socials: { linkedin: 'https://www.linkedin.com/in/odeanmaye/' },

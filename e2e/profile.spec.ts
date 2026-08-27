@@ -76,3 +76,30 @@ test.describe('reader', () => {
     await expect(page.getByRole('button', { name: /^Read/ })).toContainText(/min read/)
   })
 })
+
+test.describe('creator identity', () => {
+  /*
+   * The avatar used to be borrowed from the first Project's cover art, which
+   * meant Dean's photo was literally the Bronze album artwork — this asserts
+   * the avatar is his own image, not a project cover.
+   */
+  test('shows the creator’s own avatar, not a project cover', async ({ page }) => {
+    await gotoCreator(page)
+    // Decorative images (alt="") carry no accessible role, so getByRole
+    // can't reach them — a plain CSS locator is correct here.
+    const avatar = page.locator('img[alt=""]').first()
+    const src = await avatar.getAttribute('src')
+    expect(src).toContain('/avatars/dean')
+    expect(await avatar.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0)
+  })
+
+  // The profile background is a drawn grid now, not a blurred project cover —
+  // same assertion layout.spec.ts makes for the project hub.
+  test('has no blurred cover wash behind the profile', async ({ page }) => {
+    await gotoCreator(page)
+    const blurred = await page.evaluate(
+      () => [...document.querySelectorAll('*')].filter((el) => getComputedStyle(el).filter.includes('blur')).length,
+    )
+    expect(blurred).toBe(0)
+  })
+})

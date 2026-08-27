@@ -8,6 +8,7 @@ import { CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
 import { creatorPath, projectPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
+import { AmbientGrid } from '@/components/AmbientGrid'
 import {
   EventsIcon,
   InstagramIcon,
@@ -112,38 +113,19 @@ export function CreatorProfile() {
     if (content) playFrom(content, pin.itemIndex)
   }
 
-  const hero = projects?.[0] ?? null
-
   return (
     <div className="relative min-h-full overflow-hidden bg-void">
-      {/*
-        The Creator has no artwork of its own, so it borrows its first
-        project's — which is also what a visitor sees one tap later.
-
-        Desaturated on purpose. Real cover art keeps its colour everywhere it
-        is the subject, but blown up as an ambient wash it tints the entire
-        screen, which is the one thing the monochrome palette cannot survive:
-        bronze reads as deliberate only while it marks state, never as
-        atmosphere. Grayscale keeps the composition and drops the flood.
-      */}
-      <img
-        src={hero ? coverUrl(hero, 1000) : artUrl(`${creator.slug}-hero`, 'cover', 1000)}
-        alt=""
-        className="pointer-events-none absolute inset-0 size-full object-cover opacity-45 blur-lg grayscale"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-void/40 via-transparent via-40% to-void" />
+      <AmbientGrid />
 
       <div
         className="relative mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
-        {/* Avatar overlaps the glass panel below it — the identity block a
-            profile page needs, distinct from the project art it's cropped
-            from. There is no dedicated Creator photo yet, so the first
-            project's cover stands in, sharp rather than the blurred wash
-            behind it. */}
+        {/* Avatar overlaps the panel below it — the identity block a profile
+            page needs. Falls back to procedural art only for a Creator with
+            no photo yet, same as before this existed. */}
         <motion.img
-          src={hero ? coverUrl(hero, 300) : artUrl(`${creator.slug}-hero`, 'cover', 300)}
+          src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 300)}
           alt=""
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -151,8 +133,8 @@ export function CreatorProfile() {
           className="relative z-10 size-24 rounded-full border-2 border-void object-cover shadow-[0_4px_20px_rgba(0,0,0,0.5)] sm:size-32"
         />
 
-        {/* Glass panel: the cover runs bright behind this, and the Creator's
-            name is the one thing here with no artwork of its own to sit on. */}
+        {/* Glass panel over the ambient grid, giving the name and bio a
+            readable surface without a solid card breaking the backdrop. */}
         <motion.header
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
