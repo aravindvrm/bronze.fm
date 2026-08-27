@@ -21,6 +21,9 @@ export const atonomosWhitepaper: Content = {
   items: [],
   credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'writer' }],
   document: atonomosDocument,
+  // Mirrors this row's actual created_at in Supabase, so the feed orders
+  // fixtures the same way it orders production.
+  createdAt: '2026-08-27T19:27:44.713Z',
 }
 
 export const atonomos: Project = {

@@ -51,6 +51,7 @@ interface ContentRow {
   type: ContentType
   published: boolean
   document: DocBlock[] | null
+  created_at: string
   content_creators: { role: Credit['role']; creators: { slug: string; name: string } }[]
   content_items: {
     id: string
@@ -80,7 +81,7 @@ const PROJECT_SELECT = `
   id, slug, title, description, published,
   creators:owner_creator_id!inner ( slug ),
   content (
-    id, title, description, type, published, document,
+    id, title, description, type, published, document, created_at,
     content_creators ( role, creators ( slug, name ) ),
     content_items (
       id, position, title, is_interlude,
@@ -174,6 +175,7 @@ function toContent(row: ContentRow, ownerSlug: string, projectSlug: string): Con
     items,
     credits,
     document: row.document ?? undefined,
+    createdAt: row.created_at,
   }
 }
 

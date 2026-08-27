@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { content as adapter } from '@/content/adapter'
 import { usePlayer } from '@/audio/playerStore'
 import { useCreator } from '@/content/CreatorContext'
-import { CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
+import { CONTENT_TYPE_LABEL, CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
 import { creatorPath, projectPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
@@ -45,13 +45,6 @@ const SECTIONS = [
   { seg: 'merch', label: 'Merch', Icon: MerchIcon },
   { seg: 'events', label: 'Events', Icon: EventsIcon },
 ] as const
-
-/** What each interface is called where a project is summarised by its types. */
-const INTERFACE_LABEL: Record<string, string> = {
-  music: 'Music',
-  video: 'Video',
-  ereader: 'Whitepaper',
-}
 
 export function CreatorProfile() {
   const navigate = useNavigate()
@@ -267,7 +260,7 @@ export function CreatorProfile() {
                     </span>
                     <span className="mt-0.5 block text-[11px] text-parchment/50">
                       {project.contents.length
-                        ? project.contents.map((c) => INTERFACE_LABEL[c.type]).join(' · ')
+                        ? project.contents.map((c) => CONTENT_TYPE_LABEL[c.type]).join(' · ')
                         : 'Coming soon'}
                     </span>
                   </div>

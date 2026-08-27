@@ -288,6 +288,9 @@ export const bronzeMusic: Content = {
       "url": "/media/audio/14%20-%208.3%20Forevermore%2C%20I%20Pray.mp3"
     }
   ],
+  // Mirrors this row's actual created_at in Supabase, so the feed orders
+  // fixtures the same way it orders production.
+  createdAt: '2026-08-21T02:37:28.615Z',
 }
 
 export const bronze: Project = {

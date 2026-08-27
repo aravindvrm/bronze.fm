@@ -38,6 +38,32 @@ test.describe('the feed', () => {
     await page.getByRole('button', { name: /Dean/ }).first().click()
     await expect(page).toHaveURL(/\/@dean$/)
   })
+
+  // The creator row used to show a Project's cover art rather than the
+  // Creator's own avatar — same regression the profile page had.
+  test('shows the creator’s own avatar, not a project cover', async ({ page }) => {
+    await gotoFeed(page)
+    const avatar = page.locator('img[alt=""]').first()
+    expect(await avatar.getAttribute('src')).toContain('/avatars/dean')
+  })
+
+  /*
+   * Feed entries are typed interfaces, not Projects: Atonomos's whitepaper
+   * and Bronze's tracklist are each their own row, newest first, and each
+   * leads straight to that interface rather than to a project hub.
+   */
+  test('lists published interfaces newest first, and opens straight into one', async ({ page }) => {
+    await gotoFeed(page)
+    const feed = page.locator('section').filter({ hasText: 'FEED' }).first()
+    const rows = feed.getByRole('button')
+
+    await expect(rows).toHaveCount(2)
+    await expect(rows.nth(0)).toContainText('Autonomous: The Agentic Enterprise')
+    await expect(rows.nth(1)).toContainText('Bronze')
+
+    await rows.nth(1).click()
+    await expect(page).toHaveURL(/\/@dean\/bronze\/music$/)
+  })
 })
 
 test.describe('creator routing', () => {

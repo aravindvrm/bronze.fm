@@ -100,6 +100,9 @@ export const bronzeMusic: Content = {
   totalDurationMs: ${totalMs},
   credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
   items: ${JSON.stringify(items, null, 2).replace(/\n/g, '\n  ')},
+  // Mirrors this row's actual created_at in Supabase, so the feed orders
+  // fixtures the same way it orders production.
+  createdAt: '2026-08-21T02:37:28.615Z',
 }
 
 export const bronze: Project = {

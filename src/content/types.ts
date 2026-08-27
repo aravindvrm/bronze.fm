@@ -30,6 +30,13 @@ export function contentTypeFromSegment(segment: string): ContentType | null {
   return found ? (found[0] as ContentType) : null
 }
 
+/** What a type is called where a project or the feed summarises by type. */
+export const CONTENT_TYPE_LABEL: Record<ContentType, string> = {
+  music: 'Music',
+  video: 'Video',
+  ereader: 'Whitepaper',
+}
+
 export type CreditRole =
   | 'artist'
   | 'featured'
@@ -131,6 +138,13 @@ export interface Content {
   credits: Credit[]
   /** Set on `ereader` content: the document itself, in reading order. */
   document?: DocBlock[]
+  /**
+   * When this interface was published. Drives the feed's ordering and its
+   * relative-time label — each typed interface is its own feed entry, not
+   * each Project, so a Project that later gains a second interface gets a
+   * second entry rather than its existing one silently changing date.
+   */
+  createdAt?: string
 }
 
 /**
