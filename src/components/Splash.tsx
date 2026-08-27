@@ -40,35 +40,108 @@ const SEEN_KEY = 'bronze:splash-seen'
  * the thing that identifies it.
  */
 /**
- * One face of the disc: a conic sweep masked into a ring, laid into
- * perspective and spun. `nearSide` keeps only the half that passes in front
- * of the shadow. Both copies share the same animation parameters, so they
- * stay one object rather than drifting apart.
+ * One ring's shape and motion. Every ring still tilts on X — that's the axis
+ * the near/far crossing trick depends on (see `Disc` below) — but each also
+ * carries its own static Y and Z tilt, so the set reads as several rings
+ * strewn around the sphere at different angles rather than concentric
+ * copies of one plane. All colour stays inside the bronze family (the app's
+ * one accent, per `ParticleField`) — these vary temperature and depth
+ * within it, from a hot pale peak down to a low copper glow, rather than
+ * introducing a second hue.
  */
-function Disc({ still, nearSide = false }: { still: boolean; nearSide?: boolean }) {
-  const ring =
-    'radial-gradient(circle, transparent 56%, #000 58%, #000 92%, transparent 97%)'
+interface RingSpec {
+  size: string
+  rotateX: number
+  rotateY: number
+  rotateZ: number
+  duration: number
+  reverse?: boolean
+  /** Where the lit band sits, as a percent of the disc's radius — narrow
+   *  for a thin line of light rather than a broad glowing belt. */
+  band: [number, number]
+  gradient: string
+}
+
+const RINGS: RingSpec[] = [
+  {
+    size: 'min(78vw,26rem)',
+    rotateX: 74,
+    rotateY: 0,
+    rotateZ: 0,
+    duration: 6,
+    band: [58, 63],
+    gradient:
+      'conic-gradient(from 0deg, rgba(205,127,50,0) 0deg, #cd7f32 20deg, #fff1d6 60deg, #f0d3a8 100deg, #cd7f32 150deg, rgba(205,127,50,0.35) 210deg, rgba(205,127,50,0.08) 280deg, rgba(205,127,50,0) 340deg, rgba(205,127,50,0) 360deg)',
+  },
+  {
+    size: 'min(64vw,21.5rem)',
+    rotateX: 58,
+    rotateY: 14,
+    rotateZ: 30,
+    duration: 9,
+    reverse: true,
+    band: [61, 65],
+    gradient:
+      'conic-gradient(from 40deg, rgba(232,201,155,0) 0deg, #e8c99b 30deg, #fffdf3 70deg, #f7e6c4 110deg, #d9b075 160deg, rgba(232,201,155,0.3) 220deg, rgba(232,201,155,0.06) 290deg, rgba(232,201,155,0) 350deg, rgba(232,201,155,0) 360deg)',
+  },
+  {
+    size: 'min(94vw,31rem)',
+    rotateX: 80,
+    rotateY: -10,
+    rotateZ: -20,
+    duration: 13,
+    band: [63.5, 66.5],
+    gradient:
+      'conic-gradient(from 200deg, rgba(138,74,40,0) 0deg, #8a4a28 25deg, #e0956a 65deg, #b8683c 105deg, #8a4a28 150deg, rgba(138,74,40,0.3) 215deg, rgba(138,74,40,0.06) 285deg, rgba(138,74,40,0) 345deg, rgba(138,74,40,0) 360deg)',
+  },
+  {
+    size: 'min(52vw,17.5rem)',
+    rotateX: 48,
+    rotateY: 18,
+    rotateZ: 45,
+    duration: 7.5,
+    reverse: true,
+    band: [59.5, 63],
+    gradient:
+      'conic-gradient(from 110deg, rgba(216,178,120,0) 0deg, #d8b278 25deg, #fff3d9 65deg, #ecc98f 110deg, #c8935a 155deg, rgba(216,178,120,0.3) 215deg, rgba(216,178,120,0.06) 285deg, rgba(216,178,120,0) 345deg, rgba(216,178,120,0) 360deg)',
+  },
+]
+
+/**
+ * One face of one ring: a conic sweep masked into a thin band, laid into
+ * perspective and spun. `nearSide` keeps only the half that passes in front
+ * of the shadow. Both copies of a ring share the same spec, so they stay one
+ * object rather than drifting apart.
+ *
+ * The clip is cut from the element's own untransformed box, before any
+ * transform is applied — so it's judged purely against `rotateX`, the axis
+ * actually responsible for which half reads as nearer. Writing `rotateX`
+ * last in the transform list keeps it the innermost (first-applied)
+ * rotation; the ring's own Y/Z tilt then just carries that already-correct
+ * split along for the ride, rather than re-splitting the shape.
+ */
+function Disc({ ring, still, nearSide = false }: { ring: RingSpec; still: boolean; nearSide?: boolean }) {
+  const [bandIn, bandOut] = ring.band
+  const mask = `radial-gradient(circle, transparent ${bandIn - 1.5}%, #000 ${bandIn}%, #000 ${bandOut}%, transparent ${bandOut + 1.5}%)`
   return (
     <div
-      className="absolute size-[min(78vw,26rem)]"
+      className="absolute"
       style={{
-        transform: 'rotateX(74deg)',
+        width: ring.size,
+        height: ring.size,
+        transform: `rotateZ(${ring.rotateZ}deg) rotateY(${ring.rotateY}deg) rotateX(${ring.rotateX}deg)`,
         ...(nearSide ? { clipPath: 'inset(50% 0 0 0)' } : null),
       }}
     >
       <div
-        className={`size-full rounded-full ${still ? '' : 'animate-[spin_6s_linear_infinite]'}`}
+        className="size-full rounded-full"
         style={{
-          // Brighter and more of the ring lit than the first pass: at 18s a
-          // rotation barely moved during the splash's ~2s hold, so slowing
-          // was never the problem — too little of the ring glowed at once
-          // to read as motion even once it sped up. More arc lit plus a
-          // hotter peak makes the spin itself the thing you see, not an
-          // inference from a sliver sweeping past.
-          background:
-            'conic-gradient(from 0deg, rgba(205,127,50,0) 0deg, #cd7f32 20deg, #fff1d6 60deg, #f0d3a8 100deg, #cd7f32 150deg, rgba(205,127,50,0.35) 210deg, rgba(205,127,50,0.08) 280deg, rgba(205,127,50,0) 340deg, rgba(205,127,50,0) 360deg)',
-          mask: ring,
-          WebkitMask: ring,
+          background: ring.gradient,
+          mask,
+          WebkitMask: mask,
+          animation: still
+            ? undefined
+            : `spin ${ring.duration}s linear infinite${ring.reverse ? ' reverse' : ''}`,
         }}
       />
     </div>
@@ -117,15 +190,17 @@ function AccretionDisc({ still }: { still: boolean }) {
       />
 
       {/*
-        The disc is drawn TWICE around the sphere, and that is what makes it
+        Each ring is drawn TWICE around the sphere, and that is what makes it
         a black hole rather than a ringed planet: the far side passes behind
         the shadow, the near side in front of it. A single ring always reads
-        as Saturn, because nothing ever crosses the sphere.
-        `clip-path` is applied in the element's own coordinates before the
-        transform, so clipping the local bottom half yields exactly the near
-        side once it is laid down in perspective.
+        as Saturn, because nothing ever crosses the sphere. Far copies of
+        every ring go down first, then the shadow, then every near copy —
+        so a nearer ring's far half never wrongly draws over a farther
+        ring's near half.
       */}
-      <Disc still={still} />
+      {RINGS.map((ring, i) => (
+        <Disc key={`far-${i}`} ring={ring} still={still} />
+      ))}
 
       {/* Photon ring — the bright edge light that reads as gravity, and the
           shadow it wraps. */}
@@ -138,7 +213,9 @@ function AccretionDisc({ still }: { still: boolean }) {
         }}
       />
 
-      <Disc still={still} nearSide />
+      {RINGS.map((ring, i) => (
+        <Disc key={`near-${i}`} ring={ring} still={still} nearSide />
+      ))}
     </div>
   )
 }
