@@ -5,9 +5,10 @@ import { content as adapter } from '@/content/adapter'
 import { usePlayer } from '@/audio/playerStore'
 import { useCreator } from '@/content/CreatorContext'
 import { CONTENT_TYPE_LABEL, CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
-import { creatorPath, projectPath } from '@/lib/tenant'
+import { creatorPath, isDedicatedHost, projectPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
+import { Wordmark } from '@/components/Wordmark'
 import {
   EventsIcon,
   InstagramIcon,
@@ -105,8 +106,28 @@ export function CreatorProfile() {
     if (content) playFrom(content, pin.itemIndex)
   }
 
+  /*
+   * On the shared host this profile is one page among several — the feed at
+   * `/` is where a visitor actually landed, and nothing else on this screen
+   * leads back to it. On a dedicated host there is no feed to return to:
+   * this profile already is the root, so the mark would be a dead link back
+   * to itself.
+   */
+  const dedicated = isDedicatedHost()
+
   return (
     <div className="relative min-h-full overflow-hidden">
+      {!dedicated && (
+        <button
+          onClick={() => navigate('/')}
+          aria-label="bronze.fm home"
+          className="absolute left-5 top-0 z-10 text-parchment/50 transition hover:text-parchment sm:left-8"
+          style={{ marginTop: 'calc(var(--safe-t) + 1.1rem)' }}
+        >
+          <Wordmark className="text-xs" />
+        </button>
+      )}
+
       <div
         className="relative mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
         style={{ paddingTop: 'calc(var(--safe-t) + 3.5rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}

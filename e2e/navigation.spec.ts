@@ -106,6 +106,20 @@ test.describe('creator routing', () => {
     await page.goto('/@dean/merch')
     await expect(page.getByRole('heading', { name: 'Merch' }).first()).toBeVisible()
   })
+
+  /*
+   * The profile has no header of its own, so without this mark a visitor
+   * who arrives here (from a shared link, or by following the Creators tile
+   * from the feed) has no way back to the feed short of the browser's own
+   * back button — which does not exist at all as a PWA gesture on some
+   * platforms, and even where it does, is one tap the app itself should not
+   * lean on for a destination this core.
+   */
+  test('leads back to the feed', async ({ page }) => {
+    await gotoCreator(page)
+    await page.getByRole('button', { name: /bronze\.fm home/i }).click()
+    await expect(page).toHaveURL(/\/$/)
+  })
 })
 
 test.describe('projects', () => {
