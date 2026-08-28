@@ -19,10 +19,10 @@ import type { ISourceOptions } from '@tsparticles/engine'
  * `@tsparticles/slim` rather than the full engine: this only ever needs the
  * links preset, and slim is the trimmed build meant for exactly that.
  *
- * Neutral, not the reference clip's teal — bronze (and any other hue) reads
- * as deliberate only while it marks state, never as atmosphere; a tinted
- * background would compete with real cover art and the one accent colour
- * everywhere else in the app.
+ * A dull, desaturated blue — bronze's complement, not a second accent: kept
+ * dim and low-saturation enough that it reads as atmosphere sitting behind
+ * the app rather than competing with bronze (the one accent colour that
+ * actually marks state) or with real cover art.
  */
 export function ParticleField() {
   const reduceMotion = useReducedMotion()
@@ -53,14 +53,15 @@ export function ParticleField() {
          */
         number: { value: 90, density: { enable: false } },
         shape: { type: 'circle' },
+        color: { value: '#7a93ab' },
         size: { value: { min: 1, max: 2 } },
-        opacity: { value: { min: 0.3, max: 0.8 } },
+        opacity: { value: { min: 0.12, max: 0.32 } },
         move: { enable: !reduceMotion, speed: 0.35, direction: 'none', random: true, outModes: 'out' },
         links: {
           enable: true,
           distance: 110,
-          color: '#ffffff',
-          opacity: 0.22,
+          color: '#7a93ab',
+          opacity: 0.1,
           width: 1,
         },
       },
