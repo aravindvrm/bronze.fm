@@ -274,12 +274,12 @@ export function CreatorProfile() {
                     alt=""
                     className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-void via-void/75 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 from-0% via-black/45 via-32% to-transparent to-60%" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
-                    <span className="block truncate font-content text-xl text-parchment">
+                    <span className="block truncate font-content text-xl text-white">
                       {project.title}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-parchment/50">
+                    <span className="mt-0.5 block text-[11px] text-white/70">
                       {project.contents.length
                         ? project.contents.map((c) => CONTENT_TYPE_LABEL[c.type]).join(' · ')
                         : 'Coming soon'}
@@ -312,10 +312,10 @@ export function CreatorProfile() {
                   alt=""
                   className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-void via-void/75 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 from-0% via-black/45 via-32% to-transparent to-60%" />
                 <tile.Icon className="absolute left-4 top-4 size-6 text-gilt drop-shadow-[0_1px_6px_rgba(10,7,5,0.9)]" />
                 <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
-                  <span className="font-display text-xl text-parchment">{tile.label}</span>
+                  <span className="font-display text-xl text-white">{tile.label}</span>
                   <span className="rounded-full border border-gilt/25 px-2 py-0.5 text-[9px] uppercase tracking-[0.15em] text-gilt/70">
                     Soon
                   </span>

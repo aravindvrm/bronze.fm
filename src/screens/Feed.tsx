@@ -157,12 +157,12 @@ export function Feed() {
                     alt=""
                     className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-void via-void/75 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 from-0% via-black/45 via-32% to-transparent to-60%" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
-                    <span className="block truncate font-display text-xl text-parchment">
+                    <span className="block truncate font-display text-xl text-white">
                       {creator.name}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-parchment/50">
+                    <span className="mt-0.5 block text-[11px] text-white/70">
                       {projects.filter((p) => p.ownerSlug === creator.slug).length} projects
                     </span>
                   </div>
