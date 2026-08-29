@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { Wordmark } from '@/components/Wordmark'
 
 const SEEN_KEY = 'bronze:splash-seen'
 
@@ -18,239 +17,93 @@ const SEEN_KEY = 'bronze:splash-seen'
  * would be friction with no purpose. An installed PWA launches at start_url
  * `/`, so the normal open still gets it.
  *
- * Tap-gated, not timed — the mechanic the per-release splash used to have
- * before the platform restructure folded it into this one global screen.
- * Nobody is forced to sit through the animation on a length someone else
- * chose; "Tap to enter" says explicitly what the gesture does, since a
- * silent full-bleed scene with no timer and no visible action would leave a
- * visitor unsure whether tapping does anything at all.
+ * Tap-gated, not timed. Nobody is forced to sit through the animation on a
+ * length someone else chose; "Tap to enter" says explicitly what the gesture
+ * does, since a silent full-bleed screen with no timer and no visible action
+ * would leave a visitor unsure whether tapping does anything at all. Tapping
+ * during the reveal is honoured immediately — the animation is decoration,
+ * never a gate.
  */
 
 /**
- * The accretion disc, drawn rather than filmed.
+ * The wordmark, one letter at a time.
  *
- * This is CSS and SVG — a few hundred bytes that scale to any screen, cache
- * with the shell, cost no download and no video decode, and tint from the
- * palette. A 4K wallpaper loop would have been ~1.2 MB after transcoding,
- * would decode video on a phone for a two-second screen, and would fix the
- * artwork at one resolution.
+ * Each letter arrives from its own direction, in sequence. The alternation
+ * is what makes it read as typography assembling itself rather than a single
+ * block sliding in — and the directions are deliberately not a repeating
+ * cycle, so the eye cannot predict the next one.
  *
- * The disc is the one place the accent appears at full strength, which is
- * the point: it is the app's only colour, so the first thing a visitor sees
- * is the thing that identifies it.
+ * `.FM` carries the accent, the same split the static Wordmark uses
+ * everywhere else in the app: the mark is the one piece of chrome always
+ * allowed to be a colour.
  */
-/**
- * One ring's shape and motion. Every ring still tilts on X — that's the axis
- * the near/far crossing trick depends on (see `Disc` below) — but each also
- * carries its own static Y and Z tilt, so the set reads as several rings
- * strewn around the sphere at different angles rather than concentric
- * copies of one plane. All colour stays inside the accent family (the
- * app's one colour, per `ParticleField`) — these vary temperature and depth
- * within it, from a hot pale peak down to a low oxblood glow, rather than
- * introducing a second hue.
- */
-interface RingSpec {
-  size: string
-  rotateX: number
-  rotateY: number
-  rotateZ: number
-  duration: number
-  reverse?: boolean
-  /** Where the lit band sits, as a percent of the disc's radius — narrow
-   *  for a thin line of light rather than a broad glowing belt. */
-  band: [number, number]
-  gradient: string
-}
+const LETTERS = [
+  { char: 'B', axis: 'y', from: -40 },
+  { char: 'R', axis: 'y', from: 40 },
+  { char: 'O', axis: 'x', from: -40 },
+  { char: 'N', axis: 'x', from: 40 },
+  { char: 'Z', axis: 'y', from: -40 },
+  { char: 'E', axis: 'y', from: 40 },
+  { char: '.', axis: 'x', from: -40, accent: true },
+  { char: 'F', axis: 'x', from: 40, accent: true },
+  { char: 'M', axis: 'y', from: -40, accent: true },
+] as const
 
-const RINGS: RingSpec[] = [
-  {
-    size: 'min(78vw,26rem)',
-    rotateX: 74,
-    rotateY: 0,
-    rotateZ: 0,
-    duration: 6,
-    band: [58, 63],
-    gradient:
-      'conic-gradient(from 0deg, rgba(201,44,16,0) 0deg, #c92c10 20deg, #ffece4 60deg, #f0a894 100deg, #c92c10 150deg, rgba(201,44,16,0.35) 210deg, rgba(201,44,16,0.08) 280deg, rgba(201,44,16,0) 340deg, rgba(201,44,16,0) 360deg)',
-  },
-  {
-    size: 'min(64vw,21.5rem)',
-    rotateX: 58,
-    rotateY: 14,
-    rotateZ: 30,
-    duration: 9,
-    reverse: true,
-    band: [61, 65],
-    gradient:
-      'conic-gradient(from 40deg, rgba(240,163,148,0) 0deg, #f0a394 30deg, #ffffff 70deg, #fadcd5 110deg, #e07f6a 160deg, rgba(240,163,148,0.3) 220deg, rgba(240,163,148,0.06) 290deg, rgba(240,163,148,0) 350deg, rgba(240,163,148,0) 360deg)',
-  },
-  {
-    size: 'min(94vw,31rem)',
-    rotateX: 80,
-    rotateY: -10,
-    rotateZ: -20,
-    duration: 13,
-    band: [63.5, 66.5],
-    gradient:
-      'conic-gradient(from 200deg, rgba(122,26,12,0) 0deg, #7a1a0c 25deg, #cc5f48 65deg, #9c3520 105deg, #7a1a0c 150deg, rgba(122,26,12,0.3) 215deg, rgba(122,26,12,0.06) 285deg, rgba(122,26,12,0) 345deg, rgba(122,26,12,0) 360deg)',
-  },
-  {
-    size: 'min(52vw,17.5rem)',
-    rotateX: 48,
-    rotateY: 18,
-    rotateZ: 45,
-    duration: 7.5,
-    reverse: true,
-    band: [59.5, 63],
-    gradient:
-      'conic-gradient(from 110deg, rgba(224,110,86,0) 0deg, #e06e56 25deg, #fff4f0 65deg, #f8cec2 110deg, #b8452c 155deg, rgba(224,110,86,0.3) 215deg, rgba(224,110,86,0.06) 285deg, rgba(224,110,86,0) 345deg, rgba(224,110,86,0) 360deg)',
-  },
-]
+const STEP = 0.15
+const REVEAL = 1.5
+/** When the last letter has settled, so the prompt follows rather than
+ *  competing with the animation it belongs to. */
+const SETTLED = STEP * LETTERS.length + REVEAL * 0.55
 
-/**
- * One face of one ring: a conic sweep masked into a thin band, laid into
- * perspective and spun. `nearSide` keeps only the half that passes in front
- * of the shadow. Both copies of a ring share the same spec, so they stay one
- * object rather than drifting apart.
- *
- * The clip is cut from the element's own untransformed box, before any
- * transform is applied — so it's judged purely against `rotateX`, the axis
- * actually responsible for which half reads as nearer. Writing `rotateX`
- * last in the transform list keeps it the innermost (first-applied)
- * rotation; the ring's own Y/Z tilt then just carries that already-correct
- * split along for the ride, rather than re-splitting the shape.
- */
-function Disc({ ring, still, nearSide = false }: { ring: RingSpec; still: boolean; nearSide?: boolean }) {
-  const [bandIn, bandOut] = ring.band
-  const mask = `radial-gradient(circle, transparent ${bandIn - 1.5}%, #000 ${bandIn}%, #000 ${bandOut}%, transparent ${bandOut + 1.5}%)`
+function Wordmark({ still }: { still: boolean }) {
   return (
     <div
-      className="absolute"
-      style={{
-        width: ring.size,
-        height: ring.size,
-        transform: `rotateZ(${ring.rotateZ}deg) rotateY(${ring.rotateY}deg) rotateX(${ring.rotateX}deg)`,
-        ...(nearSide ? { clipPath: 'inset(50% 0 0 0)' } : null),
-      }}
+      /*
+       * `role="img"`, not a heading. The splash overlays the feed, which has
+       * its own h1 naming the app — two headings with the same accessible
+       * name is a confusing thing to hand a screen reader, and this is a
+       * drawn rendition of the mark rather than the page's title. The label
+       * also spares anyone the nine separate letter spans.
+       */
+      role="img"
+      aria-label="bronze.fm"
+      /*
+       * Sized against the viewport rather than a breakpoint: the mark is the
+       * only thing on this screen, so it should fill the width it is given
+       * on any device instead of stepping between two fixed sizes. The
+       * ceiling stops it from becoming a billboard on a desktop monitor.
+       */
+      className="flex select-none font-display text-[clamp(2rem,12vw,5rem)] font-bold leading-none tracking-[0.06em]"
     >
-      <div
-        className="size-full rounded-full"
-        style={{
-          background: ring.gradient,
-          mask,
-          WebkitMask: mask,
-          animation: still
-            ? undefined
-            : `spin ${ring.duration}s linear infinite${ring.reverse ? ' reverse' : ''}`,
-        }}
-      />
+      {LETTERS.map(({ char, axis, from, ...rest }, i) => {
+        const accent = 'accent' in rest && rest.accent
+        return (
+          <motion.span
+            key={i}
+            aria-hidden
+            // `false` skips the enter animation outright, so reduced motion
+            // gets the finished mark rather than a faster version of the
+            // same movement.
+            initial={still ? false : { opacity: 0, [axis]: from }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{
+              delay: still ? 0 : STEP * (i + 1),
+              duration: still ? 0 : REVEAL,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className={`inline-block ${accent ? 'text-gilt' : 'text-parchment'}`}
+          >
+            {char}
+          </motion.span>
+        )
+      })}
     </div>
   )
 }
-
-/**
- * Fine dust suspended in light, not stars in a night sky — white specks read
- * as a hole in the page against this ground, so the same twinkle mechanic
- * now draws in ink instead, kept faint enough to read as texture rather than
- * print debris. Each speck still breathes opacity on its own cycle, offset
- * so the field never pulses in unison. Driven by Framer rather than a CSS
- * @keyframes block, matching how the rest of this screen is animated;
- * 70-odd opacity tweens is cheap next to the disc's own gradient repaints.
- */
-function Starfield({ still }: { still: boolean }) {
-  return (
-    <svg className="absolute inset-0 size-full" aria-hidden>
-      {STARS.map(([x, y, r, o, dur, delay], i) => (
-        <motion.circle
-          key={i}
-          cx={`${x}%`}
-          cy={`${y}%`}
-          r={r}
-          fill="#111111"
-          initial={{ opacity: o }}
-          animate={still ? { opacity: o } : { opacity: [o, o * 0.15, o] }}
-          transition={{ duration: dur, delay, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
-    </svg>
-  )
-}
-
-function AccretionDisc({ still }: { still: boolean }) {
-  return (
-    <div className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden">
-      <Starfield still={still} />
-
-      {/* Warm haze the disc sits in, so the black centre has something to
-          eat into rather than meeting a flat white background. */}
-      <div
-        className="absolute size-[140%] opacity-60"
-        style={{
-          background:
-            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(201,44,16,0.28) 0%, rgba(201,44,16,0.08) 45%, rgba(201,44,16,0) 70%)',
-        }}
-      />
-
-      {/*
-        Each ring is drawn TWICE around the sphere, and that is what makes it
-        a black hole rather than a ringed planet: the far side passes behind
-        the shadow, the near side in front of it. A single ring always reads
-        as Saturn, because nothing ever crosses the sphere. Far copies of
-        every ring go down first, then the shadow, then every near copy —
-        so a nearer ring's far half never wrongly draws over a farther
-        ring's near half.
-      */}
-      {RINGS.map((ring, i) => (
-        <Disc key={`far-${i}`} ring={ring} still={still} />
-      ))}
-
-      {/* Photon ring — the bright edge light that reads as gravity, and the
-          shadow it wraps. */}
-      <div
-        className="absolute size-[min(30vw,10rem)] rounded-full"
-        style={{
-          boxShadow:
-            '0 0 2px 2px rgba(255,240,235,1), 0 0 40px 12px rgba(201,44,16,0.5), inset 0 0 18px 3px rgba(0,0,0,1)',
-          background: '#000',
-        }}
-      />
-
-      {RINGS.map((ring, i) => (
-        <Disc key={`near-${i}`} ring={ring} still={still} nearSide />
-      ))}
-    </div>
-  )
-}
-
-/**
- * Deterministic, so the field is identical on every open — position and
- * size as before; opacity rescaled down from the old white-on-black range
- * (up to 0.95) to one that reads as faint ink texture on a white ground
- * rather than print debris — plus a per-speck twinkle duration and phase
- * offset drawn from the same PRNG so the cycle is stable too, not re-rolled
- * on rerender.
- */
-const STARS: [number, number, number, number, number, number][] = Array.from(
-  { length: 70 },
-  (_, i) => {
-    const a = Math.sin(i * 12.9898) * 43758.5453
-    const b = Math.sin(i * 78.233) * 12345.6789
-    const c = Math.sin(i * 3.1415) * 9876.5432
-    const d = Math.sin(i * 45.164) * 5678.1234
-    const frac = (n: number) => n - Math.floor(n)
-    return [
-      Math.round(frac(a) * 1000) / 10,
-      Math.round(frac(b) * 1000) / 10,
-      Math.round((0.5 + frac(c) * 1.1) * 10) / 10,
-      Math.round((0.05 + frac(a + b) * 0.22) * 100) / 100,
-      Math.round((1.8 + frac(c + d) * 2.6) * 10) / 10,
-      Math.round(frac(d) * 30) / 10,
-    ]
-  },
-)
 
 export function Splash() {
   const reduceMotion = useReducedMotion()
+  const still = !!reduceMotion
   const [visible, setVisible] = useState(() => {
     if (typeof window === 'undefined') return false
     if (window.location.pathname !== '/') return false
@@ -272,37 +125,29 @@ export function Splash() {
           onClick={enter}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduceMotion ? 0 : 0.6, ease: 'easeOut' }}
-          className="fixed inset-0 z-[60] cursor-pointer overflow-hidden bg-void"
+          transition={{ duration: still ? 0 : 0.6, ease: 'easeOut' }}
+          className="fixed inset-0 z-[60] grid cursor-pointer place-items-center overflow-hidden bg-void"
         >
-          <AccretionDisc still={!!reduceMotion} />
+          <Wordmark still={still} />
 
-          <motion.div
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: reduceMotion ? 0 : 0.35, duration: reduceMotion ? 0 : 1, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-x-0 grid place-items-center gap-7"
+          {/* Breathing rather than static, so it registers as a live prompt
+              rather than a caption. Held back until the mark has assembled:
+              arriving mid-reveal, it would compete with the one thing this
+              screen exists to show. */}
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: still ? 0.6 : [0, 0.75, 0.35, 0.75] }}
+            transition={{
+              delay: still ? 0 : SETTLED,
+              duration: still ? 0 : 3.2,
+              repeat: still ? 0 : Infinity,
+              repeatType: 'reverse',
+            }}
+            className="absolute inset-x-0 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-parchment/50"
             style={{ bottom: 'calc(var(--safe-b) + 4.5rem)' }}
           >
-            <Wordmark centered className="text-2xl" />
-
-            {/* Breathing rather than static, so it registers as a live
-                prompt rather than a caption — the same treatment the
-                per-release splash used for this exact line. */}
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: reduceMotion ? 0.6 : [0, 0.75, 0.35, 0.75] }}
-              transition={{
-                delay: reduceMotion ? 0 : 1.1,
-                duration: reduceMotion ? 0 : 3.2,
-                repeat: reduceMotion ? 0 : Infinity,
-                repeatType: 'reverse',
-              }}
-              className="text-[10px] uppercase tracking-[0.3em] text-parchment/50"
-            >
-              Tap to enter
-            </motion.span>
-          </motion.div>
+            Tap to enter
+          </motion.span>
         </motion.div>
       )}
     </AnimatePresence>

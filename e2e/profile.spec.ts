@@ -54,6 +54,41 @@ test.describe('splash', () => {
     await expect(page.getByRole('heading', { name: 'Featured Creators' })).toBeVisible()
   })
 
+  /*
+   * The wordmark assembles letter by letter over ~2.9s. That reveal is
+   * decoration and must never become a gate: a visitor who taps while it is
+   * still running gets in immediately, exactly as one who waits.
+   */
+  test('lets you in mid-reveal, without waiting for the animation', async ({ page }) => {
+    await page.goto('/')
+    const splash = page.locator('.z-\\[60\\]')
+    await expect(splash).toBeVisible()
+
+    // Well before the last letter has landed.
+    await page.waitForTimeout(300)
+    await splash.click()
+    await expect(splash).toBeHidden()
+    await expect(page.getByRole('heading', { name: 'Featured Creators' })).toBeVisible()
+  })
+
+  test('shows the full wordmark once the reveal settles', async ({ page }) => {
+    await page.goto('/')
+    // role=img, not a heading: the feed underneath owns the page's h1.
+    const mark = page.getByRole('img', { name: 'bronze.fm' })
+    await expect(mark).toBeVisible()
+    // Every letter present, and none left stranded mid-flight.
+    await expect(mark).toHaveText(/B\s*R\s*O\s*N\s*Z\s*E\s*\.\s*F\s*M/)
+    await expect
+      .poll(async () =>
+        mark.evaluate((el) =>
+          [...el.querySelectorAll('span')].every(
+            (s) => getComputedStyle(s).opacity === '1',
+          ),
+        ),
+      )
+      .toBe(true)
+  })
+
   test('does not reappear within the same session once entered', async ({ page }) => {
     await page.goto('/')
     await page.locator('.z-\\[60\\]').click()
