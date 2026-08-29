@@ -1,105 +1,6 @@
 @import 'tailwindcss';
 
 /*
- * Abhaya Libre — the Bronze Content's own face, self-hosted rather than linked
- * from Google: the shell is precached for offline use (woff2 is in the PWA
- * glob), a third-party stylesheet is render-blocking on first paint, and the
- * CDN would hand every visitor's IP to Google. Latin and Latin-Extended only;
- * the family's Sinhala range is dead weight here.
- */
-/* latin */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-400-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-400-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-500-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-500-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-600-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-600-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-700-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-700-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-800-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Abhaya Libre';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url('./assets/fonts/abhaya-libre-800-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-
-/*
  * Geist — the app's voice, replacing Cantarell in the Stitch redesign.
  * Self-hosted on the same terms as the faces above: precached with the
  * shell, no render-blocking third-party stylesheet, and no handing every
@@ -138,14 +39,18 @@
  * audio tool rather than a generic feed, and restricting it to data (never
  * prose) is what keeps that from becoming a costume.
  *
- * Weight 500 alone, which is all the design calls for; asking for any other
- * weight gets a synthesised approximation, so don't.
+ * One master, weight 500, which is the weight the design calls for. It is
+ * declared across 400-500 because that is the span actually requested: no
+ * `font-mono` call site sets a weight, so every one of them asks for 400.
+ * Declaring the real 500 outlines as covering that request is what stops the
+ * browser treating it as a mismatch the moment a second weight is ever
+ * added. Anything outside the range would be synthesised, so don't.
  */
 /* latin */
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400 500;
   font-display: swap;
   src: url('./assets/fonts/jetbrains-mono-500-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
@@ -154,7 +59,7 @@
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400 500;
   font-display: swap;
   src: url('./assets/fonts/jetbrains-mono-500-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
@@ -202,16 +107,18 @@
   --color-gilt: var(--color-bronze);
   --color-parchment: #111111;
 
-  /* Geist for the app's voice, replacing Cantarell in the Stitch redesign —
+  /* Geist for everything that is not data.
+     The app used to set Content titles in a serif — Abhaya Libre — so a
+     release's own titles read in a different voice from the chrome around
+     them. That split is retired: one face now, and the separation between a
+     title and its surroundings comes from size and weight instead. --font-mono
+     below is the only other face, and it is reserved for data.
+
+     Geist replaced Cantarell in the Stitch redesign —
      a tighter, more geometric sans that takes the heavy display weights the
      new headings lean on (Cantarell only ever had 400 and 700, so a 600
      came back synthesised). */
   --font-display: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  /* Typeface of the Content itself — titles owned by a release, not by the
-     app around it. Chrome stays on --font-display. Unchanged across
-     directions: the app-voice/content-voice split is the concept, not tied
-     to any one aesthetic, so it survived the move to Geist. */
-  --font-content: 'Abhaya Libre', 'Georgia', serif;
   /* Body and UI share the app's voice rather than the OS's, so a label and
      the paragraph under it are the same typeface. */
   --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;

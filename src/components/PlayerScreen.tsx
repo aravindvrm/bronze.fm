@@ -60,7 +60,7 @@ export function PlayerScreen() {
           <button onClick={() => setExpanded(false)} aria-label="Close player" className="text-parchment/70 transition hover:text-parchment">
             <ChevronDown />
           </button>
-          <div className="font-content text-[10px] uppercase tracking-[0.22em] text-parchment/40">{content?.title}</div>
+          <div className="text-[10px] uppercase tracking-[0.22em] text-parchment/40">{content?.title}</div>
           <button onClick={() => setQueueOpen(true)} aria-label="Show track list" className="text-parchment/70 transition hover:text-parchment">
             <QueueIcon />
           </button>
@@ -83,7 +83,7 @@ export function PlayerScreen() {
           <div className="pb-2 sm:flex-1">
             <div className="mb-5 flex items-end justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="truncate font-content text-[1.75rem] leading-tight text-parchment sm:text-4xl">
+                <h1 className="truncate text-[1.75rem] leading-tight text-parchment sm:text-4xl">
                   {item.title}
                 </h1>
                 <p className="mt-1 truncate text-sm text-parchment/50">

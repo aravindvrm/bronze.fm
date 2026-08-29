@@ -67,7 +67,7 @@ export function ProjectHub() {
         >
           <div className="min-w-0 flex-1">
             <p className="text-[10px] uppercase tracking-[0.4em] text-gilt/70">{creator.name}</p>
-            <h1 className="mt-2 font-content text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
+            <h1 className="mt-2 text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
               {project.title}
             </h1>
             {project.description && (

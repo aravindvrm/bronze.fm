@@ -25,14 +25,14 @@ function Block({ block }: { block: DocBlock }) {
     // document's headings start one level down visually.
     if (block.level === 1) {
       return (
-        <h2 className="mt-12 font-content text-3xl leading-tight text-parchment first:mt-0 sm:text-4xl">
+        <h2 className="mt-12 text-3xl leading-tight text-parchment first:mt-0 sm:text-4xl">
           {block.text}
         </h2>
       )
     }
     if (block.level === 2) {
       return (
-        <h3 className="mt-10 font-content text-2xl leading-snug text-parchment">{block.text}</h3>
+        <h3 className="mt-10 text-2xl leading-snug text-parchment">{block.text}</h3>
       )
     }
     return (

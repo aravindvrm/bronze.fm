@@ -232,7 +232,7 @@ export function Feed() {
                       className="size-14 shrink-0 object-cover"
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate font-content text-sm text-parchment">
+                      <span className="block truncate text-sm text-parchment">
                         {content.title}
                       </span>
                       <span className="mt-0.5 block truncate font-mono text-[11px] text-parchment/40">

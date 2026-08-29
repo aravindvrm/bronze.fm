@@ -53,7 +53,7 @@ export function ScreenHeader({
         {title && (
           <h1
             className={`truncate text-2xl text-parchment sm:text-3xl ${
-              titleOf === 'content' ? 'font-content' : 'font-display'
+              titleOf === 'content' ? '' : 'font-display'
             }`}
           >
             {title}

@@ -178,8 +178,9 @@ export function CreatorProfile() {
                 className="size-28 rounded-full object-cover sm:size-32"
               />
 
-              {/* Creator names are identity, not a Content title, so they stay
-                  on the app face rather than the release's. */}
+              {/* The largest thing on the screen, because the page is about
+                  this person. Hierarchy comes from size and weight now that
+                  there is one face rather than a separate one for titles. */}
               <h1 className="mt-5 text-center font-display text-4xl font-bold tracking-[-0.03em] text-parchment sm:text-5xl">
                 {creator.name}
               </h1>
@@ -309,7 +310,7 @@ export function CreatorProfile() {
                     className="size-12 shrink-0 object-cover"
                   />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-content text-sm text-parchment">
+                    <span className="block truncate text-sm text-parchment">
                       {pin.title}
                     </span>
                     {pin.subtitle && (
@@ -354,7 +355,7 @@ export function CreatorProfile() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 from-0% via-black/45 via-32% to-transparent to-60%" />
                     <div className="absolute inset-x-0 bottom-0 p-4">
-                      <span className="block truncate font-content text-xl text-white">
+                      <span className="block truncate text-xl text-white">
                         {project.title}
                       </span>
                       <span className="mt-0.5 block font-mono text-[11px] text-white/70">
