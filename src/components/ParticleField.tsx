@@ -55,11 +55,16 @@ export function ParticleField() {
   // Read once on mount: the palette is a build-time constant today, and
   // re-reading per render would touch the DOM on every frame the app draws.
   const [ambient] = useState(() => resolveToken('--color-ambient'))
-  // Looser than the first pass, which cropped most of a tall phone viewport
-  // away — this covers the visible screen and only fades right at its edges.
-  // A MASK, not a colour: only the alpha channel matters here, so the black
-  // is opacity 1 and never paints. It is deliberately not a theme token.
-  const fadeMask = 'radial-gradient(ellipse 92% 88% at 50% 42%, #000 0%, transparent 92%)'
+  /*
+   * A MASK, not a colour: only the alpha channel matters here, so the black
+   * is opacity 1 and never paints. Deliberately not a theme token.
+   *
+   * Centred, and large enough that the falloff only bites at the very edges.
+   * It used to sit at 50% 42% — biased toward the top — which, together with
+   * the overlay below, is why the field appeared to stop halfway down the
+   * page.
+   */
+  const fadeMask = 'radial-gradient(ellipse 105% 100% at 50% 50%, #000 55%, transparent 100%)'
 
   const options: ISourceOptions = useMemo(
     () => ({
@@ -112,7 +117,15 @@ export function ParticleField() {
           <Particles id="app-field" options={options} className="size-full" />
         </ParticlesProvider>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-void/30 to-void" />
+      {/*
+        A gentle settle toward the foot of the screen, where the docked
+        player sits. It ended at full `to-void`, which painted the page
+        ground straight over the lower half and made the field look like it
+        covered only the top of the page. It now never reaches opaque, so
+        the field carries edge to edge and merely quietens where the dock
+        needs a calm ground.
+      */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-void/45" />
     </div>
   )
 }
