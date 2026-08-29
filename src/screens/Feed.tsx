@@ -148,7 +148,11 @@ export function Feed() {
               keeps the first card flush to the page margin while later
               cards still land cleanly under a swipe.
             */}
-            <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 no-scrollbar sm:-mx-8 sm:px-8">
+            <div // `pt-2` matching `pb-2` is not decoration: `overflow-x: auto` forces
+              // the block to clip vertically as well, and the avatars carry a
+              // ring drawn OUTSIDE their box plus a hover scale. Without room
+              // above, the top of every circle is shaved off.
+              className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 pt-2 no-scrollbar sm:-mx-8 sm:px-8">
               {shownCreators.map((creator, i) => (
                 <motion.button
                   key={creator.id}

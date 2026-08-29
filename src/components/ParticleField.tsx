@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { Particles, ParticlesProvider } from '@tsparticles/react'
 import { loadSlim } from '@tsparticles/slim'
@@ -19,16 +19,47 @@ import type { ISourceOptions } from '@tsparticles/engine'
  * `@tsparticles/slim` rather than the full engine: this only ever needs the
  * links preset, and slim is the trimmed build meant for exactly that.
  *
- * A dull, desaturated blue — bronze's complement, not a second accent: kept
- * dim and low-saturation enough that it reads as atmosphere sitting behind
- * the app rather than competing with bronze (the one accent colour that
- * actually marks state) or with real cover art.
+ * Colour comes from `--color-ambient`, which follows the accent by default,
+ * so retheming the app rethemes the field behind it. It is drawn at 10-32%
+ * opacity, which is what keeps it atmosphere rather than a second accent
+ * competing with the one that marks state, or with real cover art.
  */
+
+/**
+ * Resolves a theme token to a literal colour.
+ *
+ * tsParticles paints to a canvas, so it needs a concrete value — it cannot
+ * take `var(--color-ambient)`. Reading the custom property directly would
+ * hand back the *specified* text, which for a token defined as another
+ * token is the string "var(--color-gilt)". Painting it onto a probe and
+ * reading the computed colour is what forces the cascade to resolve it, and
+ * is why the field follows a palette change rather than freezing whatever
+ * colour it was written with.
+ */
+function resolveToken(token: string): string {
+  // 'transparent' rather than a literal fallback colour: if the token cannot
+  // be read, the field simply does not draw. Naming a colour here would be
+  // naming one outside the palette, which is the thing this whole file is
+  // being careful about — and it would be the one that survives a retheme.
+  if (typeof window === 'undefined') return 'transparent'
+  const probe = document.createElement('span')
+  probe.style.cssText = `color: var(${token}); position: absolute; visibility: hidden`
+  document.body.appendChild(probe)
+  const resolved = getComputedStyle(probe).color
+  probe.remove()
+  return resolved || 'transparent'
+}
+
 export function ParticleField() {
   const reduceMotion = useReducedMotion()
+  // Read once on mount: the palette is a build-time constant today, and
+  // re-reading per render would touch the DOM on every frame the app draws.
+  const [ambient] = useState(() => resolveToken('--color-ambient'))
   // Looser than the first pass, which cropped most of a tall phone viewport
   // away — this covers the visible screen and only fades right at its edges.
-  const fade = 'radial-gradient(ellipse 92% 88% at 50% 42%, #000 0%, transparent 92%)'
+  // A MASK, not a colour: only the alpha channel matters here, so the black
+  // is opacity 1 and never paints. It is deliberately not a theme token.
+  const fadeMask = 'radial-gradient(ellipse 92% 88% at 50% 42%, #000 0%, transparent 92%)'
 
   const options: ISourceOptions = useMemo(
     () => ({
@@ -53,25 +84,25 @@ export function ParticleField() {
          */
         number: { value: 90, density: { enable: false } },
         shape: { type: 'circle' },
-        color: { value: '#7a93ab' },
+        color: { value: ambient },
         size: { value: { min: 1, max: 2 } },
         opacity: { value: { min: 0.12, max: 0.32 } },
         move: { enable: !reduceMotion, speed: 0.35, direction: 'none', random: true, outModes: 'out' },
         links: {
           enable: true,
           distance: 110,
-          color: '#7a93ab',
+          color: ambient,
           opacity: 0.1,
           width: 1,
         },
       },
     }),
-    [reduceMotion],
+    [reduceMotion, ambient],
   )
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-void">
-      <div className="absolute inset-0" style={{ mask: fade, WebkitMask: fade }}>
+      <div className="absolute inset-0" style={{ mask: fadeMask, WebkitMask: fadeMask }}>
         <ParticlesProvider
           init={async (engine) => {
             await loadSlim(engine)

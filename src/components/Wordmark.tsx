@@ -36,14 +36,14 @@ export function Wordmark({
         deliberately as the one gap that should exist.
       */}
       <span
-        className={`-mr-[0.42em] tracking-[0.42em] ${inverted ? 'text-void' : 'text-parchment'}`}
+        className={`-mr-[0.42em] tracking-[0.42em] ${inverted ? 'text-on-accent' : 'text-parchment'}`}
       >
         bronze
       </span>
 
       <span
         className={`ml-[0.2em] px-[0.34em] py-[0.1em] ${
-          inverted ? 'bg-void text-gilt' : 'bg-gilt text-void'
+          inverted ? 'bg-on-accent text-gilt' : 'bg-gilt text-on-accent'
         }`}
       >
         {/* Same trailing-gap cancellation, so the block's padding is even on

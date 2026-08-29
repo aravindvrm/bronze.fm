@@ -362,12 +362,12 @@ export function CreatorProfile() {
                       alt=""
                       className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 from-0% via-black/45 via-32% to-transparent to-60%" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 from-0% via-scrim/45 via-32% to-transparent to-60%" />
                     <div className="absolute inset-x-0 bottom-0 p-4">
-                      <span className="block truncate text-xl text-white">
+                      <span className="block truncate text-xl text-on-media">
                         {project.title}
                       </span>
-                      <span className="mt-0.5 block font-mono text-[11px] text-white/70">
+                      <span className="mt-0.5 block font-mono text-[11px] text-on-media/70">
                         {project.contents.length
                           ? project.contents.map((c) => CONTENT_TYPE_LABEL[c.type]).join(' · ')
                           : 'Coming soon'}

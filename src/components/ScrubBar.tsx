@@ -90,7 +90,7 @@ export function ScrubBar({ compact = false }: { compact?: boolean }) {
            * a user is most likely to press.
            */
           <div
-            className="pointer-events-none absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gilt shadow-[0_1px_4px_rgba(0,0,0,0.35)] transition-transform group-hover:scale-125 group-active:scale-125"
+            className="pointer-events-none absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gilt shadow-[0_1px_4px_var(--color-shade)] transition-transform group-hover:scale-125 group-active:scale-125"
             style={{ left: `${pct}%` }}
           />
         )}

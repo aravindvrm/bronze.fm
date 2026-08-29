@@ -75,7 +75,7 @@ export function PlayerScreen() {
             <motion.img
               src={art}
               alt={`${item.title} artwork`}
-              className="pointer-events-none aspect-square max-h-full w-full max-w-[min(78vw,26rem)] select-none object-cover shadow-2xl shadow-black/70 sm:max-w-none"
+              className="pointer-events-none aspect-square max-h-full w-full max-w-[min(78vw,26rem)] select-none object-cover shadow-2xl shadow-scrim/70 sm:max-w-none"
               draggable={false}
             />
           </div>

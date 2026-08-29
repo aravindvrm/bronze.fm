@@ -24,12 +24,12 @@ export function Transport({ size = 'lg' }: { size?: 'sm' | 'lg' }) {
         // The accent, not ink: play is the one action this whole surface
         // exists for, and the app's rule is that colour marks state and the
         // thing you came to do. White on #c92c10 measures 5.45:1.
-        className={`relative grid place-items-center rounded-full bg-gilt text-void transition active:scale-95 ${
+        className={`relative grid place-items-center rounded-full bg-gilt text-on-accent transition active:scale-95 ${
           lg ? 'size-16' : 'size-10'
         }`}
       >
         {isBuffering ? (
-          <span className={`animate-spin rounded-full border-2 border-void/30 border-t-void ${lg ? 'size-6' : 'size-4'}`} />
+          <span className={`animate-spin rounded-full border-2 border-on-accent/30 border-t-on-accent ${lg ? 'size-6' : 'size-4'}`} />
         ) : isPlaying ? (
           <PauseIcon className={lg ? 'size-7' : 'size-4'} />
         ) : (

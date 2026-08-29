@@ -55,18 +55,18 @@ export function StubTiles({ kind, emptyLabel }: { kind: StubKind; emptyLabel: st
             alt=""
             className={`w-full object-cover ${wide ? 'aspect-[16/9]' : 'aspect-square'}`}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 from-0% via-black/45 via-32% to-transparent to-60%" />
+          <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 from-0% via-scrim/45 via-32% to-transparent to-60%" />
 
           {/* Corner badge, not inline — on two-column cards an inline badge
               ate enough width to truncate "Bronze Tee" to "Bronz…". */}
-          <span className="absolute right-3 top-3 border border-gilt/25 bg-black/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-gilt/70 backdrop-blur-sm">
+          <span className="absolute right-3 top-3 border border-gilt/25 bg-scrim/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-gilt/70 backdrop-blur-sm">
             Soon
           </span>
 
           <div className="absolute inset-x-0 bottom-0 p-4">
-            <div className="truncate font-display text-lg text-white">{item.title}</div>
+            <div className="truncate font-display text-lg text-on-media">{item.title}</div>
             {item.subtitle && (
-              <div className="truncate font-mono text-[11px] text-white/70">{item.subtitle}</div>
+              <div className="truncate font-mono text-[11px] text-on-media/70">{item.subtitle}</div>
             )}
           </div>
         </motion.div>

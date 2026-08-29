@@ -66,58 +66,66 @@
 }
 
 /*
- * Design tokens — monochrome base, bronze as the only colour.
+ * Design tokens — a neutral base with one accent.
  *
- * The surfaces, type and artwork are pure neutrals: no hue at all, so
- * contrast and weight carry the hierarchy. Bronze is then the single thing
- * in the interface that is a colour, which is what makes it read as
- * deliberate — it marks state and identity (active row, play, a live link,
- * the wordmark) and nothing else. Spend it anywhere ambient and the whole
- * effect collapses back into a warm wash.
- *
- * --color-patina/umber/antique/brass are unused by any component and kept
- * only because src/lib/art.ts once drew on them; that ramp is now neutral.
+ * Surfaces, type and placeholder artwork are pure neutrals, so contrast and
+ * weight carry the hierarchy and the accent is the single thing in the
+ * interface that is a colour. That is what makes it read as deliberate: it
+ * marks state and identity — active row, play, a live link, the wordmark —
+ * and the ambient field, which is drawn faint enough not to spend it.
  */
 @theme {
-  /* Light-palette experiment: white ground, near-black ink, bronze accent.
-     --color-void and --color-parchment keep their names (background /
-     foreground) even though the values no longer match those words; every
-     component reads them by variable, so nothing else had to change. */
+  /* ═══════════════════════════════════════════════════════════════════
+     THE PALETTE — five values. Change these and the whole app follows.
+
+       --color-void        the page ground
+       --color-ink         a raised surface sitting on that ground
+       --color-parchment   everything written on the ground
+       --color-gilt        THE accent, and the only colour in the app
+       --color-ambient     the drifting field behind everything
+
+     The names are historical and describe roles, not hues: this is a
+     light theme, so `void` is white and `parchment` is near-black. Read
+     them as background / surface / foreground / accent.
+
+     Nothing outside this block may hard-code a colour. A unit test
+     enforces that (src/lib/__tests__/theme.test.ts) — it fails the build
+     on a raw hex or a literal `bg-black`/`text-white` in a component,
+     because those are exactly the things that survive a theme change and
+     leave one screen on the old palette.
+     ═══════════════════════════════════════════════════════════════════ */
   --color-void: #ffffff;
-  /* Darkened from the first pass (#f2f2f2), which sat only ~5% off pure
-     white — too close to read as a distinct raised surface once paired
-     with equally-faint borders. */
   --color-ink: #e9e9e9;
-  --color-patina: #1a0f07;
-  --color-umber: #3d2614;
-  --color-antique: #6b4423;
-  /* A hot vermilion red. Kept exactly as picked — it contrasts white at
-     ~5.45:1, comfortably past WCAG AA's 4.5:1 floor for normal text, so
-     unlike the bronze and blue tried before it needed no darkening.
-
-     The token is still named `bronze` after the app rather than the hue;
-     renaming it would touch every call site for no behavioural change, and
-     `gilt` below is the name components actually use. */
-  --color-bronze: #c92c10;
-  --color-brass: #d9a05b;
-  /* One accent, not two: collapsed onto bronze rather than kept as a second,
-     lighter gold. Every existing text-gilt/border-gilt/bg-gilt call site
-     (labels, progress fill, active-row state, badges) inherits this without
-     being touched individually. */
-  --color-gilt: var(--color-bronze);
   --color-parchment: #111111;
+  /* A hot vermilion. Contrasts the ground at ~5.45:1, past WCAG AA's
+     4.5:1 for normal text, which is what lets it carry text and not only
+     decoration. Anything swapped in here wants checking against both
+     --color-void and --color-on-accent. */
+  --color-gilt: #c92c10;
+  /* Follows the accent by default, so one change themes the background
+     too. Set it independently for a complementary field instead — it is
+     drawn at 10-32% opacity, so it reads as atmosphere either way. */
+  --color-ambient: var(--color-gilt);
 
-  /* Geist for everything that is not data.
-     The app used to set Content titles in a serif — Abhaya Libre — so a
-     release's own titles read in a different voice from the chrome around
-     them. That split is retired: one face now, and the separation between a
-     title and its surroundings comes from size and weight instead. --font-mono
-     below is the only other face, and it is reserved for data.
+  /* ── On the accent ──────────────────────────────────────────────────
+     What sits ON --color-gilt: the search bar's text, the drawer's
+     labels, the play icon, the `.fm` block. Separate from --color-void
+     because a dark theme would keep this light while the ground went
+     dark. */
+  --color-on-accent: #ffffff;
 
-     Geist replaced Cantarell in the Stitch redesign —
-     a tighter, more geometric sans that takes the heavy display weights the
-     new headings lean on (Cantarell only ever had 400 and 700, so a 600
-     came back synthesised). */
+  /* ── On artwork ─────────────────────────────────────────────────────
+     Cover art is a photograph, not a surface the theme controls, so what
+     sits on it is judged against the IMAGE and not the page. These stay
+     dark-scrim/light-text in any theme; that is the point of them being
+     their own tokens rather than reusing the ground and the ink. */
+  --color-scrim: #000000;
+  --color-on-media: #ffffff;
+
+  /* Shadows read as depth, not colour — one near-black for all of them
+     rather than a per-component rgba(). */
+  --color-shade: rgb(0 0 0 / 0.35);
+
   --font-display: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
   /* Body and UI share the app's voice rather than the OS's, so a label and
      the paragraph under it are the same typeface. */

@@ -186,7 +186,7 @@ export function AppHeader({
                   inversion the wordmark's badge and the primary buttons use.
                   Full white on #c92c10 measures 5.45:1; the softer weights
                   here stay above 3:1. */}
-              <SearchIcon className="size-5 shrink-0 text-void/80" />
+              <SearchIcon className="size-5 shrink-0 text-on-accent/80" />
               <input
                 ref={searchRef}
                 type="search"
@@ -198,12 +198,12 @@ export function AppHeader({
                 // the browser's own blue, immediately beside our close
                 // control, so the bar ends up with two adjacent crosses in
                 // two different palettes.
-                className="min-w-0 flex-1 bg-transparent text-sm text-void caret-void placeholder:text-void/80 focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
+                className="min-w-0 flex-1 bg-transparent text-sm text-on-accent caret-on-accent placeholder:text-on-accent/80 focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
               />
               <button
                 onClick={closeSearch}
                 aria-label="Close search"
-                className="-mr-2 shrink-0 p-2 text-void/80 transition hover:text-void"
+                className="-mr-2 shrink-0 p-2 text-on-accent/80 transition hover:text-on-accent"
               >
                 <CloseIcon className="size-5" />
               </button>
@@ -245,7 +245,7 @@ export function AppHeader({
                 <button
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
-                  className="-mr-2 p-2 text-void/80 transition hover:text-void"
+                  className="-mr-2 p-2 text-on-accent/80 transition hover:text-on-accent"
                 >
                   <CloseIcon className="size-5" />
                 </button>
@@ -260,20 +260,20 @@ export function AppHeader({
                         setMenuOpen(false)
                         navigate(to)
                       }}
-                      className="flex items-center gap-3 px-4 py-3.5 text-left text-sm text-void transition hover:bg-void/15"
+                      className="flex items-center gap-3 px-4 py-3.5 text-left text-sm text-on-accent transition hover:bg-on-accent/15"
                     >
-                      <Icon className="size-5 text-void" />
+                      <Icon className="size-5 text-on-accent" />
                       {label}
                     </button>
                   ) : (
                     <span
                       key={label}
                       title={`${label} — not available yet`}
-                      className="flex items-center gap-3 px-4 py-3.5 text-sm text-void/65"
+                      className="flex items-center gap-3 px-4 py-3.5 text-sm text-on-accent/65"
                     >
                       <Icon className="size-5" />
                       {label}
-                      <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.15em] text-void/65">
+                      <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.15em] text-on-accent/65">
                         Soon
                       </span>
                     </span>

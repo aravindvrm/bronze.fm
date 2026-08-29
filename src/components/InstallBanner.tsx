@@ -47,7 +47,7 @@ export function InstallBanner() {
         // where a viewport-wide bar for a dismissible prompt reads as an
         // error banner rather than an offer. Sits clear of the docked mini
         // player, which is taller on desktop.
-        className="pointer-events-auto fixed inset-x-4 bottom-[calc(var(--safe-b)+1rem)] z-40 flex items-center gap-3 border border-parchment/25 bg-ink/90 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:inset-x-auto sm:bottom-[calc(var(--safe-b)+7rem)] sm:right-6 sm:w-80"
+        className="pointer-events-auto fixed inset-x-4 bottom-[calc(var(--safe-b)+1rem)] z-40 flex items-center gap-3 border border-parchment/25 bg-ink/90 px-4 py-3 shadow-[0_8px_30px_var(--color-shade)] backdrop-blur-xl sm:inset-x-auto sm:bottom-[calc(var(--safe-b)+7rem)] sm:right-6 sm:w-80"
       >
         <div className="min-w-0 flex-1">
           <p className="font-display text-sm text-parchment">Install bronze.fm</p>
