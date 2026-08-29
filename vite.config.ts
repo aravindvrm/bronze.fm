@@ -6,6 +6,21 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 /**
+ * The manifest's colours, read from the theme block rather than restated.
+ *
+ * They were pinned to #0b0b0b — the background of a dark palette the app no
+ * longer uses — so Android drew a black launch splash before opening a white
+ * app, and the browser chrome was tinted for a theme that had been replaced.
+ * Reading them here means a palette change carries the installed app with it.
+ */
+function themeColour(name: string): string {
+  const css = fs.readFileSync(path.resolve(__dirname, 'src/index.css'), 'utf8')
+  const m = css.match(new RegExp(`--color-${name}:\\s*(#[0-9a-fA-F]{3,8})`))
+  if (!m) throw new Error(`--color-${name} missing or not a hex in src/index.css`)
+  return m[1]
+}
+
+/**
  * Serves the local master audio at /media/audio/* during development.
  *
  * `apply: 'serve'` is load-bearing: this runs in dev only, so the masters can
@@ -62,9 +77,31 @@ function localMedia(): Plugin {
   }
 }
 
+/**
+ * Keeps <meta name="theme-color"> on the palette.
+ *
+ * The tag is read before any stylesheet, so it cannot use a CSS variable and
+ * has to carry a literal — which is exactly the kind of value that silently
+ * outlives a retheme. Rewriting it at build time from the same token the app
+ * uses means the one in index.html is only a placeholder, and a stale one
+ * cannot ship.
+ */
+function themeColorMeta(): Plugin {
+  return {
+    name: 'bronze-theme-color',
+    transformIndexHtml(html) {
+      return html.replace(
+        /(<meta name="theme-color" content=")[^"]*(")/,
+        `$1${themeColour('void')}$2`,
+      )
+    },
+  }
+}
+
 export default defineConfig({
   plugins: [
     react(),
+    themeColorMeta(),
     tailwindcss(),
     localMedia(),
     VitePWA({
@@ -100,8 +137,8 @@ export default defineConfig({
         scope: '/',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#0b0b0b',
-        theme_color: '#0b0b0b',
+        background_color: themeColour('void'),
+        theme_color: themeColour('void'),
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
