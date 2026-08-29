@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 
 const SEEN_KEY = 'bronze:splash-seen'
@@ -53,12 +53,27 @@ const BADGE = [
   { char: 'M', axis: 'y', from: -40 },
 ] as const
 
-const STEP = 0.15
-const REVEAL = 1.5
+/*
+ * Tightened once the tagline was added: the mark used to have the screen to
+ * itself and could take its time, but it is now the first of three beats
+ * rather than the whole show. Faster cadence between letters and a shorter
+ * settle each, which keeps the full sequence under ~2.4s instead of ~3.3s.
+ */
+const STEP = 0.09
+const REVEAL = 0.9
 const LETTER_COUNT = WORD.length + BADGE.length
-/** When the last letter has settled, so the prompt follows rather than
- *  competing with the animation it belongs to. */
-const SETTLED = STEP * LETTER_COUNT + REVEAL * 0.55
+
+const TAGLINE = 'Create. Share. Thrive.'
+const TYPE_MS = 42
+/**
+ * The tagline starts before the final letters have fully eased in, rather
+ * than after. The reveal's tail is slow by design, so waiting for it to
+ * finish outright leaves a dead beat in the middle of the sequence.
+ */
+const TAGLINE_START = STEP * LETTER_COUNT + REVEAL * 0.45
+/** Everything has had its turn, so the prompt can arrive without talking
+ *  over the animation it belongs to. */
+const SETTLED = TAGLINE_START + (TAGLINE.length * TYPE_MS) / 1000 + 0.25
 
 function Wordmark({ still }: { still: boolean }) {
   return (
@@ -145,6 +160,89 @@ function Letter({
   )
 }
 
+/**
+ * The tagline, typed out.
+ *
+ * Set in the mono face at 500 — the weight the design system specifies for
+ * it, and the first place in the app that asks for it explicitly rather than
+ * inheriting 400.
+ *
+ * The full string is always in the DOM, visually hidden, so assistive
+ * technology reads one sentence instead of announcing a partial line on
+ * every keystroke. The animated copy beside it is hidden from that tree.
+ *
+ * Width is reserved by an invisible copy of the finished string, so the
+ * centred block does not creep sideways as characters land — a typewriter
+ * that shoves its own line around reads as a layout bug.
+ */
+function Tagline({ still }: { still: boolean }) {
+  const [typed, setTyped] = useState(still ? TAGLINE.length : 0)
+
+  useEffect(() => {
+    if (still) return
+    let interval: number | undefined
+    const start = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        setTyped((n) => {
+          if (n >= TAGLINE.length) {
+            window.clearInterval(interval)
+            return n
+          }
+          return n + 1
+        })
+      }, TYPE_MS)
+    }, TAGLINE_START * 1000)
+
+    return () => {
+      window.clearTimeout(start)
+      window.clearInterval(interval)
+    }
+  }, [still])
+
+  return (
+    <p className="mt-5 font-mono text-[clamp(0.72rem,3.3vw,1rem)] font-medium tracking-[0.02em] text-parchment/55">
+      <span className="sr-only">{TAGLINE}</span>
+
+      <span aria-hidden className="relative inline-block text-left">
+        {/*
+          Holds the final width; never painted. It reserves room for the
+          CURSOR as well as the text — sized off the same rule the real one
+          uses — because a trailing space is narrower than the caret, and the
+          caret then wrapped onto a line of its own once the last character
+          landed.
+        */}
+        <span className="invisible whitespace-nowrap">
+          {TAGLINE}
+          <span className="ml-[0.1em] inline-block w-[0.55em]" />
+        </span>
+        <span className="absolute inset-0 whitespace-nowrap">
+          {TAGLINE.slice(0, typed)}
+          <Cursor still={still} />
+        </span>
+      </span>
+    </p>
+  )
+}
+
+/**
+ * A hard square-wave blink rather than a fade: a terminal cursor snaps on
+ * and off, and easing it makes it read as a pulsing dot instead. Held solid
+ * under reduced motion, where a blink is the whole of the animation.
+ */
+function Cursor({ still }: { still: boolean }) {
+  return (
+    <motion.span
+      animate={still ? { opacity: 1 } : { opacity: [1, 1, 0, 0] }}
+      transition={
+        still
+          ? { duration: 0 }
+          : { duration: 1, times: [0, 0.5, 0.5, 1], repeat: Infinity, ease: 'linear' }
+      }
+      className="ml-[0.1em] inline-block w-[0.55em] border-b-2 border-gilt align-baseline"
+    />
+  )
+}
+
 export function Splash() {
   const reduceMotion = useReducedMotion()
   const still = !!reduceMotion
@@ -172,7 +270,10 @@ export function Splash() {
           transition={{ duration: still ? 0 : 0.6, ease: 'easeOut' }}
           className="fixed inset-0 z-[60] grid cursor-pointer place-items-center overflow-hidden bg-void"
         >
-          <Wordmark still={still} />
+          <div className="flex flex-col items-center">
+            <Wordmark still={still} />
+            <Tagline still={still} />
+          </div>
 
           {/* Breathing rather than static, so it registers as a live prompt
               rather than a caption. Held back until the mark has assembled:

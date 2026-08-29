@@ -89,6 +89,26 @@ test.describe('splash', () => {
       .toBe(true)
   })
 
+  /*
+   * The tagline types itself out. Assistive technology gets the finished
+   * sentence from a visually-hidden copy rather than a line that changes on
+   * every keystroke, so this asserts the accessible text is whole from the
+   * start while the visible copy is still filling in.
+   */
+  test('announces the whole tagline while it is still typing', async ({ page }) => {
+    await page.goto('/')
+    const line = page.locator('p.font-mono').first()
+    await expect(line).toContainText('Create. Share. Thrive.')
+    await expect
+      .poll(async () =>
+        line.evaluate(
+          (el) =>
+            el.querySelector('span[aria-hidden] > span:last-child')?.textContent?.trim(),
+        ),
+      )
+      .toBe('Create. Share. Thrive.')
+  })
+
   test('does not reappear within the same session once entered', async ({ page }) => {
     await page.goto('/')
     await page.locator('.z-\\[60\\]').click()
