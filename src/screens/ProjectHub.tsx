@@ -58,7 +58,7 @@ export function ProjectHub() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-4 rounded-md border border-parchment/[0.14] p-4 sm:gap-8 sm:p-8"
+          className="flex items-center gap-4 rounded-md border border-parchment/25 p-4 sm:gap-8 sm:p-8"
         >
           <div className="min-w-0 flex-1">
             <p className="text-[10px] uppercase tracking-[0.4em] text-gilt/70">{creator.name}</p>
@@ -96,14 +96,14 @@ export function ProjectHub() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.14 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                   whileTap={{ scale: 0.97 }}
-                  className="group relative aspect-square overflow-hidden rounded-md border border-parchment/[0.14] text-left"
+                  className="group relative aspect-square overflow-hidden rounded-md border border-parchment/25 text-left"
                 >
                   <img
                     src={coverUrl(project, 600)}
                     alt=""
                     className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/40 to-void/20" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-void via-void/75 to-void/35" />
                   <meta.Icon className="absolute left-4 top-4 size-7 text-gilt drop-shadow-[0_1px_6px_rgba(10,7,5,0.9)]" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
                     <span className="block font-display text-xl text-parchment">{meta.label}</span>

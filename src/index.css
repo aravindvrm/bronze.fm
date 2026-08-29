@@ -166,7 +166,10 @@
      though the values no longer match those words; every component reads
      them by variable, so nothing else had to change. */
   --color-void: #ffffff;
-  --color-ink: #f2f2f2;
+  /* Darkened from the first pass (#f2f2f2), which sat only ~5% off pure
+     white — too close to read as a distinct raised surface once paired
+     with equally-faint borders. */
+  --color-ink: #e9e9e9;
   --color-patina: #1a0f07;
   --color-umber: #3d2614;
   --color-antique: #6b4423;

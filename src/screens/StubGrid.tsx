@@ -46,7 +46,7 @@ export function StubGrid({
         <p className="mb-6 text-xs leading-relaxed text-parchment/40">{blurb}</p>
 
         {items?.length === 0 && (
-          <div className="rounded-md border border-parchment/[0.14] p-5">
+          <div className="rounded-md border border-parchment/25 p-5">
             <p className="text-sm text-parchment/60">{creator.name} has nothing here yet.</p>
           </div>
         )}
@@ -58,14 +58,14 @@ export function StubGrid({
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              className="relative overflow-hidden rounded-md border border-parchment/[0.14]"
+              className="relative overflow-hidden rounded-md border border-parchment/25"
             >
               <img
                 src={artUrl(item.seed, kind, 800)}
                 alt=""
                 className={`w-full object-cover ${wide ? 'aspect-[16/9]' : 'aspect-square'}`}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-void via-void/70 to-transparent" />
 
               {/* Corner badge, not inline — on two-column cards an inline badge
                   ate enough width to truncate "Bronze Tee" to "Bronz…". */}

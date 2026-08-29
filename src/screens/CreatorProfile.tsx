@@ -150,7 +150,7 @@ export function CreatorProfile() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="-mt-4 rounded-md border border-parchment/[0.14] bg-ink/50 px-5 pb-4 pt-8 backdrop-blur-xl"
+          className="-mt-4 rounded-md border border-parchment/25 bg-ink/50 px-5 pb-4 pt-8 backdrop-blur-xl"
         >
           {/* Creator names are identity, not a Content title, so they stay on
               the app face rather than the release's. */}
@@ -177,7 +177,7 @@ export function CreatorProfile() {
             </div>
           )}
 
-          <div className="mt-4 flex items-center gap-2.5 border-t border-parchment/[0.08] pt-4">
+          <div className="mt-4 flex items-center gap-2.5 border-t border-parchment/15 pt-4">
             {SOCIALS.map(({ key, label, Icon }) => {
               const href = creator.socials?.[key]
               return href ? (
@@ -198,7 +198,7 @@ export function CreatorProfile() {
                 <span
                   key={key}
                   title={`${label} — not connected yet`}
-                  className="grid size-9 place-items-center rounded-full border border-parchment/10 text-parchment/25"
+                  className="grid size-9 place-items-center rounded-full border border-parchment/20 text-parchment/40"
                 >
                   <Icon className="size-4" />
                 </span>
@@ -223,7 +223,7 @@ export function CreatorProfile() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.07, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                   whileTap={{ scale: 0.99 }}
-                  className="flex items-center gap-3 rounded-md border border-parchment/[0.14] bg-ink/40 p-2.5 text-left backdrop-blur-sm transition hover:border-parchment/25"
+                  className="flex items-center gap-3 rounded-md border border-parchment/25 bg-ink/40 p-2.5 text-left backdrop-blur-sm transition hover:border-parchment/25"
                 >
                   <img
                     src={pin.hash ? artUrl(pin.hash, 'item', 128) : artUrl(`${pin.projectSlug}-cover`, 'cover', 128)}
@@ -267,14 +267,14 @@ export function CreatorProfile() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.14 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                   whileTap={{ scale: 0.97 }}
-                  className="group relative aspect-square overflow-hidden rounded-md border border-parchment/[0.14] text-left"
+                  className="group relative aspect-square overflow-hidden rounded-md border border-parchment/25 text-left"
                 >
                   <img
                     src={coverUrl(project, 600)}
                     alt=""
                     className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-void via-void/75 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
                     <span className="block truncate font-content text-xl text-parchment">
                       {project.title}
@@ -305,14 +305,14 @@ export function CreatorProfile() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                 whileTap={{ scale: 0.97 }}
-                className="group relative aspect-square overflow-hidden rounded-md border border-parchment/[0.14] text-left"
+                className="group relative aspect-square overflow-hidden rounded-md border border-parchment/25 text-left"
               >
                 <img
                   src={artUrl(`${creator.slug}-${tile.seg}`, 'item', 600)}
                   alt=""
                   className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-void/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-void via-void/75 to-transparent" />
                 <tile.Icon className="absolute left-4 top-4 size-6 text-gilt drop-shadow-[0_1px_6px_rgba(10,7,5,0.9)]" />
                 <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
                   <span className="font-display text-xl text-parchment">{tile.label}</span>
