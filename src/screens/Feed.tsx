@@ -164,7 +164,7 @@ export function Feed() {
                     alt=""
                     className="size-[5.5rem] rounded-full border border-parchment/15 object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="w-full font-mono text-[11px] leading-tight text-parchment/70">
+                  <span className="w-full font-mono text-[13px] leading-tight text-parchment/80">
                     {creator.name}
                   </span>
                 </motion.button>
