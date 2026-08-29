@@ -25,9 +25,18 @@ test.describe('project hub layout', () => {
 
     // body carries the page-level background (index.css sets it from
     // --color-void directly), so this holds regardless of which wrapper
-    // element the screen itself uses.
-    const bg = await page.locator('body').evaluate((el) => getComputedStyle(el).backgroundColor)
-    expect(bg).toBe('rgb(11, 11, 11)')
+    // element the screen itself uses. Compared against a probe element
+    // styled from the same token, rather than a hardcoded literal, so this
+    // doesn't need updating every time the palette does.
+    const { bg, tokenBg } = await page.evaluate(() => {
+      const probe = document.createElement('div')
+      probe.style.background = 'var(--color-void)'
+      document.body.appendChild(probe)
+      const tokenBg = getComputedStyle(probe).backgroundColor
+      probe.remove()
+      return { bg: getComputedStyle(document.body).backgroundColor, tokenBg }
+    })
+    expect(bg).toBe(tokenBg)
   })
 
   test('shows the cover as a thumbnail on the right of the title card', async ({ page }) => {

@@ -133,7 +133,7 @@ export function Feed() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search creators and content"
           aria-label="Search creators and content"
-          className="mt-5 w-full rounded-md border border-white/[0.14] bg-ink/60 px-4 py-2.5 text-sm text-parchment placeholder:text-parchment/30 focus:border-gilt/50 focus:outline-none"
+          className="mt-5 w-full rounded-md border border-parchment/[0.14] bg-ink/60 px-4 py-2.5 text-sm text-parchment placeholder:text-parchment/30 focus:border-gilt/50 focus:outline-none"
         />
 
         {nothing && <p className="mt-8 text-sm text-parchment/40">Nothing matches “{query}”.</p>}
@@ -150,7 +150,7 @@ export function Feed() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.06 * i, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                   whileTap={{ scale: 0.97 }}
-                  className="group relative aspect-square overflow-hidden rounded-md border border-white/[0.14] text-left"
+                  className="group relative aspect-square overflow-hidden rounded-md border border-parchment/[0.14] text-left"
                 >
                   <img
                     src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 600)}
@@ -191,7 +191,7 @@ export function Feed() {
                         className={`rounded-full border px-2.5 py-1 text-[9px] uppercase tracking-[0.15em] transition ${
                           active
                             ? 'border-gilt/60 bg-gilt/15 text-gilt'
-                            : 'border-white/10 text-parchment/40 hover:border-white/25 hover:text-parchment/70'
+                            : 'border-parchment/10 text-parchment/40 hover:border-parchment/25 hover:text-parchment/70'
                         }`}
                       >
                         {t === 'all' ? 'All' : CONTENT_TYPE_LABEL[t]}
@@ -223,7 +223,7 @@ export function Feed() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 * i, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     whileTap={{ scale: 0.99 }}
-                    className="flex items-center gap-3 rounded-md border border-white/[0.14] bg-ink/40 p-2.5 text-left transition hover:border-white/25"
+                    className="flex items-center gap-3 rounded-md border border-parchment/[0.14] bg-ink/40 p-2.5 text-left transition hover:border-parchment/25"
                   >
                     <img
                       src={coverUrl(project, 200)}

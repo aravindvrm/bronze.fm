@@ -160,19 +160,24 @@
  * only because src/lib/art.ts once drew on them; that ramp is now neutral.
  */
 @theme {
-  --color-void: #0b0b0b;
-  --color-ink: #151515;
+  /* Light-palette experiment: white ground, near-black ink, blue accent —
+     swapped in place of the original dark/bronze pair. --color-void and
+     --color-parchment keep their names (background / foreground) even
+     though the values no longer match those words; every component reads
+     them by variable, so nothing else had to change. */
+  --color-void: #ffffff;
+  --color-ink: #f2f2f2;
   --color-patina: #1a0f07;
   --color-umber: #3d2614;
   --color-antique: #6b4423;
-  --color-bronze: #cd7f32;
+  --color-bronze: #539fe0;
   --color-brass: #d9a05b;
   /* One accent, not two: collapsed onto bronze rather than kept as a second,
      lighter gold. Every existing text-gilt/border-gilt/bg-gilt call site
      (labels, progress fill, active-row state, badges) inherits this without
      being touched individually. */
   --color-gilt: var(--color-bronze);
-  --color-parchment: #ededed;
+  --color-parchment: #111111;
 
   /* Cantarell for the app's voice.
      A sans against Abhaya Libre's serif was tried once before, with Archivo,

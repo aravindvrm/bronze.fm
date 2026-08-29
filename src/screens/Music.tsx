@@ -58,7 +58,7 @@ export function Music() {
               <button
                 onClick={() => playFrom(content, i)}
                 className={`flex w-full items-center gap-3 rounded px-2 py-2.5 text-left transition ${
-                  active ? 'bg-white/[0.07]' : 'hover:bg-white/[0.04]'
+                  active ? 'bg-parchment/[0.07]' : 'hover:bg-parchment/[0.04]'
                 }`}
               >
                 <span className="relative shrink-0">

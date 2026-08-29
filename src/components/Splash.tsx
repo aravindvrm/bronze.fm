@@ -35,18 +35,18 @@ const SEEN_KEY = 'bronze:splash-seen'
  * would decode video on a phone for a two-second screen, and would fix the
  * artwork at one resolution.
  *
- * The disc is the one place bronze appears at full strength, which is the
- * point: it is the app's only colour, so the first thing a visitor sees is
- * the thing that identifies it.
+ * The disc is the one place the accent appears at full strength, which is
+ * the point: it is the app's only colour, so the first thing a visitor sees
+ * is the thing that identifies it.
  */
 /**
  * One ring's shape and motion. Every ring still tilts on X — that's the axis
  * the near/far crossing trick depends on (see `Disc` below) — but each also
  * carries its own static Y and Z tilt, so the set reads as several rings
  * strewn around the sphere at different angles rather than concentric
- * copies of one plane. All colour stays inside the bronze family (the app's
- * one accent, per `ParticleField`) — these vary temperature and depth
- * within it, from a hot pale peak down to a low copper glow, rather than
+ * copies of one plane. All colour stays inside the accent family (the
+ * app's one colour, per `ParticleField`) — these vary temperature and depth
+ * within it, from a hot pale peak down to a low ink-blue glow, rather than
  * introducing a second hue.
  */
 interface RingSpec {
@@ -71,7 +71,7 @@ const RINGS: RingSpec[] = [
     duration: 6,
     band: [58, 63],
     gradient:
-      'conic-gradient(from 0deg, rgba(205,127,50,0) 0deg, #cd7f32 20deg, #fff1d6 60deg, #f0d3a8 100deg, #cd7f32 150deg, rgba(205,127,50,0.35) 210deg, rgba(205,127,50,0.08) 280deg, rgba(205,127,50,0) 340deg, rgba(205,127,50,0) 360deg)',
+      'conic-gradient(from 0deg, rgba(83,159,224,0) 0deg, #539fe0 20deg, #eaf5ff 60deg, #bcdcf5 100deg, #539fe0 150deg, rgba(83,159,224,0.35) 210deg, rgba(83,159,224,0.08) 280deg, rgba(83,159,224,0) 340deg, rgba(83,159,224,0) 360deg)',
   },
   {
     size: 'min(64vw,21.5rem)',
@@ -82,7 +82,7 @@ const RINGS: RingSpec[] = [
     reverse: true,
     band: [61, 65],
     gradient:
-      'conic-gradient(from 40deg, rgba(232,201,155,0) 0deg, #e8c99b 30deg, #fffdf3 70deg, #f7e6c4 110deg, #d9b075 160deg, rgba(232,201,155,0.3) 220deg, rgba(232,201,155,0.06) 290deg, rgba(232,201,155,0) 350deg, rgba(232,201,155,0) 360deg)',
+      'conic-gradient(from 40deg, rgba(168,200,234,0) 0deg, #a8c8ea 30deg, #ffffff 70deg, #dcecfa 110deg, #8fb8dd 160deg, rgba(168,200,234,0.3) 220deg, rgba(168,200,234,0.06) 290deg, rgba(168,200,234,0) 350deg, rgba(168,200,234,0) 360deg)',
   },
   {
     size: 'min(94vw,31rem)',
@@ -92,7 +92,7 @@ const RINGS: RingSpec[] = [
     duration: 13,
     band: [63.5, 66.5],
     gradient:
-      'conic-gradient(from 200deg, rgba(138,74,40,0) 0deg, #8a4a28 25deg, #e0956a 65deg, #b8683c 105deg, #8a4a28 150deg, rgba(138,74,40,0.3) 215deg, rgba(138,74,40,0.06) 285deg, rgba(138,74,40,0) 345deg, rgba(138,74,40,0) 360deg)',
+      'conic-gradient(from 200deg, rgba(42,93,143,0) 0deg, #2a5d8f 25deg, #6fa8d8 65deg, #3f74a8 105deg, #2a5d8f 150deg, rgba(42,93,143,0.3) 215deg, rgba(42,93,143,0.06) 285deg, rgba(42,93,143,0) 345deg, rgba(42,93,143,0) 360deg)',
   },
   {
     size: 'min(52vw,17.5rem)',
@@ -103,7 +103,7 @@ const RINGS: RingSpec[] = [
     reverse: true,
     band: [59.5, 63],
     gradient:
-      'conic-gradient(from 110deg, rgba(216,178,120,0) 0deg, #d8b278 25deg, #fff3d9 65deg, #ecc98f 110deg, #c8935a 155deg, rgba(216,178,120,0.3) 215deg, rgba(216,178,120,0.06) 285deg, rgba(216,178,120,0) 345deg, rgba(216,178,120,0) 360deg)',
+      'conic-gradient(from 110deg, rgba(127,178,224,0) 0deg, #7fb2e0 25deg, #eef7ff 65deg, #cfe6f8 110deg, #5a94c8 155deg, rgba(127,178,224,0.3) 215deg, rgba(127,178,224,0.06) 285deg, rgba(127,178,224,0) 345deg, rgba(127,178,224,0) 360deg)',
   },
 ]
 
@@ -149,11 +149,13 @@ function Disc({ ring, still, nearSide = false }: { ring: RingSpec; still: boolea
 }
 
 /**
- * The starfield twinkles rather than sitting static — each star breathes
- * opacity on its own cycle, offset so the sky never pulses in unison. Driven
- * by Framer rather than a CSS @keyframes block, matching how the rest of
- * this screen is animated; 70-odd opacity tweens is cheap next to the disc's
- * own gradient repaints.
+ * Fine dust suspended in light, not stars in a night sky — white specks read
+ * as a hole in the page against this ground, so the same twinkle mechanic
+ * now draws in ink instead, kept faint enough to read as texture rather than
+ * print debris. Each speck still breathes opacity on its own cycle, offset
+ * so the field never pulses in unison. Driven by Framer rather than a CSS
+ * @keyframes block, matching how the rest of this screen is animated;
+ * 70-odd opacity tweens is cheap next to the disc's own gradient repaints.
  */
 function Starfield({ still }: { still: boolean }) {
   return (
@@ -164,7 +166,7 @@ function Starfield({ still }: { still: boolean }) {
           cx={`${x}%`}
           cy={`${y}%`}
           r={r}
-          fill="#fff"
+          fill="#111111"
           initial={{ opacity: o }}
           animate={still ? { opacity: o } : { opacity: [o, o * 0.15, o] }}
           transition={{ duration: dur, delay, repeat: Infinity, ease: 'easeInOut' }}
@@ -179,13 +181,13 @@ function AccretionDisc({ still }: { still: boolean }) {
     <div className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden">
       <Starfield still={still} />
 
-      {/* Warm haze the disc sits in, so the black centre has something to
-          eat into rather than meeting a flat background. */}
+      {/* Cool haze the disc sits in, so the black centre has something to
+          eat into rather than meeting a flat white background. */}
       <div
-        className="absolute size-[140%] opacity-70"
+        className="absolute size-[140%] opacity-60"
         style={{
           background:
-            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(205,127,50,0.38) 0%, rgba(205,127,50,0.10) 45%, rgba(0,0,0,0) 70%)',
+            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(83,159,224,0.28) 0%, rgba(83,159,224,0.08) 45%, rgba(83,159,224,0) 70%)',
         }}
       />
 
@@ -208,7 +210,7 @@ function AccretionDisc({ still }: { still: boolean }) {
         className="absolute size-[min(30vw,10rem)] rounded-full"
         style={{
           boxShadow:
-            '0 0 2px 2px rgba(250,225,190,1), 0 0 40px 12px rgba(205,127,50,0.55), inset 0 0 18px 3px rgba(0,0,0,1)',
+            '0 0 2px 2px rgba(225,240,253,1), 0 0 40px 12px rgba(83,159,224,0.5), inset 0 0 18px 3px rgba(0,0,0,1)',
           background: '#000',
         }}
       />
@@ -221,9 +223,12 @@ function AccretionDisc({ still }: { still: boolean }) {
 }
 
 /**
- * Deterministic, so the sky is identical on every open — position, size and
- * opacity as before, plus a per-star twinkle duration and phase offset drawn
- * from the same PRNG so the cycle is stable too, not re-rolled on rerender.
+ * Deterministic, so the field is identical on every open — position and
+ * size as before; opacity rescaled down from the old white-on-black range
+ * (up to 0.95) to one that reads as faint ink texture on a white ground
+ * rather than print debris — plus a per-speck twinkle duration and phase
+ * offset drawn from the same PRNG so the cycle is stable too, not re-rolled
+ * on rerender.
  */
 const STARS: [number, number, number, number, number, number][] = Array.from(
   { length: 70 },
@@ -237,7 +242,7 @@ const STARS: [number, number, number, number, number, number][] = Array.from(
       Math.round(frac(a) * 1000) / 10,
       Math.round(frac(b) * 1000) / 10,
       Math.round((0.5 + frac(c) * 1.1) * 10) / 10,
-      Math.round((0.25 + frac(a + b) * 0.7) * 100) / 100,
+      Math.round((0.05 + frac(a + b) * 0.22) * 100) / 100,
       Math.round((1.8 + frac(c + d) * 2.6) * 10) / 10,
       Math.round(frac(d) * 30) / 10,
     ]

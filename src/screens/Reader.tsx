@@ -97,7 +97,7 @@ export function Reader() {
         ) : null}
 
         {loaded && document.length === 0 && (
-          <div className="mt-8 rounded-md border border-white/[0.14] p-5">
+          <div className="mt-8 rounded-md border border-parchment/[0.14] p-5">
             <p className="text-sm text-parchment/60">This paper has no text yet.</p>
           </div>
         )}
