@@ -75,24 +75,54 @@ test.describe('app header', () => {
   })
 
   /*
-   * The two header shapes: the feed is a root screen and offers the menu,
-   * the profile is one you navigate into and offers a way back. The menu
-   * moves to the right there rather than disappearing, so it is reachable
-   * everywhere and the right slot is never an empty gap.
+   * The menu sits on the right on EVERY screen — a control that moves
+   * between pages is one you have to hunt for. Only the left slot varies:
+   * search on the feed, a way back on a screen below it.
+   *
+   * Asserted by position, not just presence, because "it exists somewhere in
+   * the header" is exactly the bug this replaced.
    */
-  test('offers back from the profile and the menu from the feed', async ({ page }) => {
+  test('keeps the menu on the right, whatever the left slot holds', async ({ page }) => {
+    const centreOf = async (name: RegExp) => {
+      const box = (await page.getByRole('button', { name }).boundingBox())!
+      return box.x + box.width / 2
+    }
+
     await gotoFeed(page)
-    await expect(page.getByRole('button', { name: /open menu/i })).toBeVisible()
+    const feedWidth = page.viewportSize()!.width
+    expect(await centreOf(/open menu/i)).toBeGreaterThan(feedWidth / 2)
+    expect(await centreOf(/^Search$/)).toBeLessThan(feedWidth / 2)
     await expect(page.getByRole('button', { name: /^Back$/ })).toHaveCount(0)
 
     await gotoCreator(page)
-    const back = page.getByRole('button', { name: /^Back$/ })
-    await expect(back).toBeVisible()
-    // Still reachable, just from the other side of the bar.
-    await expect(page.getByRole('button', { name: /open menu/i })).toBeVisible()
+    expect(await centreOf(/open menu/i)).toBeGreaterThan(feedWidth / 2)
+    expect(await centreOf(/^Back$/)).toBeLessThan(feedWidth / 2)
 
-    await back.click()
+    await page.getByRole('button', { name: /^Back$/ }).click()
     await expect(page).toHaveURL(/\/$/)
+  })
+
+  // The drawer must arrive from the edge its button lives on.
+  test('the drawer opens from the right edge', async ({ page }) => {
+    await gotoFeed(page)
+    await page.getByRole('button', { name: /open menu/i }).click()
+    const nav = page.getByRole('navigation', { name: 'Main' })
+    await expect(nav).toBeVisible()
+
+    const width = page.viewportSize()!.width
+
+    // Polled, not sampled once: the panel slides in, and `toBeVisible`
+    // passes the moment it is in the DOM — which is while it is still
+    // mostly off-screen. Settling on the right edge is the assertion.
+    await expect
+      .poll(async () => {
+        const box = (await nav.boundingBox())!
+        return Math.round(box.x + box.width)
+      })
+      .toBe(width)
+
+    // And it is a panel, not a full-screen takeover.
+    expect((await nav.boundingBox())!.x).toBeGreaterThan(0)
   })
 
   /*

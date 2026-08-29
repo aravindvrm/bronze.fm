@@ -31,16 +31,14 @@ const LINKS = [
 /**
  * The app's global header: wordmark centre, one control either side.
  *
- * Which controls depends on where you are, following the convention every
- * phone app shares — a root screen offers the menu, a screen you navigated
- * *into* offers a way back:
+ *   root (the feed)   search · wordmark · menu
+ *   a screen below    back   · wordmark · menu
  *
- *   root (the feed)   menu · wordmark · search
- *   a screen below    back · wordmark · menu
- *
- * The menu shifts right rather than disappearing when Back takes the left
- * slot, so it is reachable from every screen and the right side is never a
- * gap.
+ * The menu is ALWAYS on the right, on every screen, and the drawer opens
+ * from that same edge — a control that moves between screens is a control
+ * you have to look for. The left slot is the one that varies, holding
+ * whatever action belongs to the screen you are on: search where there is
+ * something to search, a way back where there is somewhere above.
  *
  * The wordmark is optically centred with `absolute` rather than by flex
  * spacing, because the two side controls are different widths — a plain
@@ -108,6 +106,8 @@ export function AppHeader({
         style={{ paddingTop: 'var(--safe-t)' }}
       >
         <div className="relative mx-auto flex h-14 max-w-[var(--app-w)] items-center px-4 sm:px-8">
+          {/* Left slot: whatever this screen offers. Back wins where both
+              apply, since leaving is the more urgent of the two. */}
           {backTo ? (
             <button
               onClick={() => navigate(backTo)}
@@ -116,15 +116,19 @@ export function AppHeader({
             >
               <BackIcon className="size-6" />
             </button>
-          ) : (
+          ) : searchable ? (
             <button
-              onClick={() => setMenuOpen(true)}
-              aria-label="Open menu"
-              aria-expanded={menuOpen}
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+              aria-expanded={searchOpen}
               className="relative z-10 -ml-2 p-2 text-parchment transition hover:text-gilt"
             >
-              <MenuIcon className="size-6" />
+              <SearchIcon className="size-6" />
             </button>
+          ) : (
+            // Holds the slot so the wordmark's neighbours stay balanced on a
+            // screen that offers neither.
+            <span className="size-10" aria-hidden />
           )}
 
           {/* Centred against the bar, not against the gap between controls. */}
@@ -136,29 +140,15 @@ export function AppHeader({
             <Wordmark className="text-sm" />
           </button>
 
-          {/* Right slot: search where there is something to search, else the
-              menu that Back displaced from the left. */}
-          {searchable ? (
-            <button
-              onClick={() => setSearchOpen(true)}
-              aria-label="Search"
-              aria-expanded={searchOpen}
-              className="relative z-10 -mr-2 ml-auto p-2 text-parchment transition hover:text-gilt"
-            >
-              <SearchIcon className="size-6" />
-            </button>
-          ) : (
-            backTo && (
-              <button
-                onClick={() => setMenuOpen(true)}
-                aria-label="Open menu"
-                aria-expanded={menuOpen}
-                className="relative z-10 -mr-2 ml-auto p-2 text-parchment transition hover:text-gilt"
-              >
-                <MenuIcon className="size-6" />
-              </button>
-            )
-          )}
+          {/* Right slot: the menu, on every screen without exception. */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            className="relative z-10 -mr-2 ml-auto p-2 text-parchment transition hover:text-gilt"
+          >
+            <MenuIcon className="size-6" />
+          </button>
         </div>
 
         {/*
@@ -215,13 +205,17 @@ export function AppHeader({
               onClick={() => setMenuOpen(false)}
               className="fixed inset-0 z-50 bg-parchment/25"
             />
+            {/* Opens from the right, the edge its button sits on: a panel
+                that flies in from the opposite side of the screen reads as
+                unrelated to the control that summoned it. Close lands under
+                the same thumb that opened it, for the same reason. */}
             <motion.nav
-              initial={reduceMotion ? false : { x: '-100%' }}
+              initial={reduceMotion ? false : { x: '100%' }}
               animate={{ x: 0 }}
-              exit={reduceMotion ? undefined : { x: '-100%' }}
+              exit={reduceMotion ? undefined : { x: '100%' }}
               transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.16, 1, 0.3, 1] }}
               aria-label="Main"
-              className="fixed inset-y-0 left-0 z-50 flex w-72 max-w-[80vw] flex-col border-r border-parchment/15 bg-void"
+              className="fixed inset-y-0 right-0 z-50 flex w-72 max-w-[80vw] flex-col border-l border-parchment/15 bg-void"
               style={{ paddingTop: 'var(--safe-t)', paddingBottom: 'var(--safe-b)' }}
             >
               <div className="flex h-14 items-center justify-between px-4">
