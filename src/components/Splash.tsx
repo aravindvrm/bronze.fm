@@ -33,27 +33,32 @@ const SEEN_KEY = 'bronze:splash-seen'
  * block sliding in — and the directions are deliberately not a repeating
  * cycle, so the eye cannot predict the next one.
  *
- * `.FM` carries the accent, the same split the static Wordmark uses
- * everywhere else in the app: the mark is the one piece of chrome always
- * allowed to be a colour.
+ * `.FM` sits in a solid accent block, matching the static Wordmark used
+ * everywhere else in the app. The block arrives as one object on the same
+ * cadence while its own letters keep animating inside it, so it reads as a
+ * badge landing rather than three more loose characters.
  */
-const LETTERS = [
+const WORD = [
   { char: 'B', axis: 'y', from: -40 },
   { char: 'R', axis: 'y', from: 40 },
   { char: 'O', axis: 'x', from: -40 },
   { char: 'N', axis: 'x', from: 40 },
   { char: 'Z', axis: 'y', from: -40 },
   { char: 'E', axis: 'y', from: 40 },
-  { char: '.', axis: 'x', from: -40, accent: true },
-  { char: 'F', axis: 'x', from: 40, accent: true },
-  { char: 'M', axis: 'y', from: -40, accent: true },
+] as const
+
+const BADGE = [
+  { char: '.', axis: 'x', from: -40 },
+  { char: 'F', axis: 'x', from: 40 },
+  { char: 'M', axis: 'y', from: -40 },
 ] as const
 
 const STEP = 0.15
 const REVEAL = 1.5
+const LETTER_COUNT = WORD.length + BADGE.length
 /** When the last letter has settled, so the prompt follows rather than
  *  competing with the animation it belongs to. */
-const SETTLED = STEP * LETTERS.length + REVEAL * 0.55
+const SETTLED = STEP * LETTER_COUNT + REVEAL * 0.55
 
 function Wordmark({ still }: { still: boolean }) {
   return (
@@ -73,31 +78,70 @@ function Wordmark({ still }: { still: boolean }) {
        * on any device instead of stepping between two fixed sizes. The
        * ceiling stops it from becoming a billboard on a desktop monitor.
        */
-      className="flex select-none font-display text-[clamp(2rem,12vw,5rem)] font-bold leading-none tracking-[0.06em]"
+      className="flex select-none items-baseline font-display text-[clamp(2rem,12vw,5rem)] font-bold leading-none tracking-[0.06em]"
     >
-      {LETTERS.map(({ char, axis, from, ...rest }, i) => {
-        const accent = 'accent' in rest && rest.accent
-        return (
-          <motion.span
-            key={i}
-            aria-hidden
-            // `false` skips the enter animation outright, so reduced motion
-            // gets the finished mark rather than a faster version of the
-            // same movement.
-            initial={still ? false : { opacity: 0, [axis]: from }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{
-              delay: still ? 0 : STEP * (i + 1),
-              duration: still ? 0 : REVEAL,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className={`inline-block ${accent ? 'text-gilt' : 'text-parchment'}`}
-          >
+      <span className="text-parchment">
+        {WORD.map(({ char, axis, from }, i) => (
+          <Letter key={char} still={still} axis={axis} from={from} index={i}>
             {char}
-          </motion.span>
-        )
-      })}
+          </Letter>
+        ))}
+      </span>
+
+      {/*
+        The badge lands as one object — it is a shape, not three characters —
+        and its letters animate inside it, so the two motions layer rather
+        than one replacing the other.
+      */}
+      <motion.span
+        initial={still ? false : { opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: still ? 0 : STEP * (WORD.length + 1),
+          duration: still ? 0 : REVEAL,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="ml-[0.16em] bg-gilt px-[0.16em] py-[0.07em] text-void"
+      >
+        {BADGE.map(({ char, axis, from }, i) => (
+          <Letter key={char} still={still} axis={axis} from={from} index={WORD.length + i}>
+            {char}
+          </Letter>
+        ))}
+      </motion.span>
     </div>
+  )
+}
+
+function Letter({
+  children,
+  still,
+  axis,
+  from,
+  index,
+}: {
+  children: string
+  still: boolean
+  axis: 'x' | 'y'
+  from: number
+  index: number
+}) {
+  return (
+    <motion.span
+      aria-hidden
+      // `false` skips the enter animation outright, so reduced motion gets
+      // the finished mark rather than a faster version of the same movement.
+      initial={still ? false : { opacity: 0, [axis]: from }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      transition={{
+        delay: still ? 0 : STEP * (index + 1),
+        duration: still ? 0 : REVEAL,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      className="inline-block"
+    >
+      {children}
+    </motion.span>
   )
 }
 
