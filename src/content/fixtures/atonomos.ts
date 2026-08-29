@@ -1,5 +1,5 @@
 import type { Content, Project } from '@/content/types'
-import { atonomosDocument } from '@/content/fixtures/atonomos.document'
+import { atonomosWordCount } from '@/content/fixtures/atonomos.meta'
 
 /**
  * Atonomos — the whitepaper project.
@@ -20,7 +20,13 @@ export const atonomosWhitepaper: Content = {
   totalDurationMs: 0,
   items: [],
   credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'writer' }],
-  document: atonomosDocument,
+  /*
+   * No `document` here. The prose is ~26 KB gzipped and was riding in the
+   * initial bundle for every visitor, including the ones who never open the
+   * reader. The adapter attaches it on demand in `getContent`; the hub uses
+   * the word count below, which is all it ever needed.
+   */
+  wordCount: atonomosWordCount,
   // Mirrors this row's actual created_at in Supabase, so the feed orders
   // fixtures the same way it orders production.
   createdAt: '2026-08-27T19:27:44.713Z',

@@ -12,6 +12,7 @@ import { ParticleField } from '@/components/ParticleField'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { InstallBanner } from '@/components/InstallBanner'
+import { UpdateBanner } from '@/components/UpdateBanner'
 import { Splash } from '@/components/Splash'
 import { CreatorProfile } from '@/screens/CreatorProfile'
 import { Feed } from '@/screens/Feed'
@@ -198,6 +199,7 @@ export default function App() {
       <AnimatePresence>{expanded && <PlayerScreen key="full" />}</AnimatePresence>
 
       {!expanded && <InstallBanner />}
+      {!expanded && <UpdateBanner />}
 
       {/* Above everything, including the player: it covers the app on open. */}
       <Splash />

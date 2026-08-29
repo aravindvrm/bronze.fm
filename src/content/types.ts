@@ -139,6 +139,15 @@ export interface Content {
   /** Set on `ereader` content: the document itself, in reading order. */
   document?: DocBlock[]
   /**
+   * Words in `document`, when it is known without the document being loaded.
+   *
+   * The hub shows a read time for a paper it never renders, and counting
+   * requires the prose. Carrying the count separately is what lets the
+   * document itself be fetched only when the reader is actually opened.
+   * Absent on Supabase-backed content, which arrives with its body anyway.
+   */
+  wordCount?: number
+  /**
    * When this interface was published. Drives the feed's ordering and its
    * relative-time label — each typed interface is its own feed entry, not
    * each Project, so a Project that later gains a second interface gets a

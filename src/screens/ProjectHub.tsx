@@ -31,10 +31,15 @@ function subtitle(content: Content): string {
       : 'Coming soon'
   }
   if (content.type === 'ereader') {
-    const words = (content.document ?? []).reduce(
-      (n, b) => n + (b.kind === 'ul' ? b.items.join(' ') : b.text).split(/\s+/).length,
-      0,
-    )
+    // Prefer the carried count: fixture content deliberately arrives without
+    // its body (see the adapter), while Supabase content brings the body and
+    // no count. Either path yields a read time.
+    const words =
+      content.wordCount ??
+      (content.document ?? []).reduce(
+        (n, b) => n + (b.kind === 'ul' ? b.items.join(' ') : b.text).split(/\s+/).length,
+        0,
+      )
     // ~230wpm is the usual silent-reading estimate for prose of this register.
     return words ? `${Math.max(1, Math.round(words / 230))} min read` : 'Coming soon'
   }

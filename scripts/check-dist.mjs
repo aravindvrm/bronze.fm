@@ -105,6 +105,25 @@ if (total > MAX_TOTAL_BYTES) {
 const swPath = path.join(dist, 'sw.js')
 if (fs.existsSync(swPath)) {
   const swSource = fs.readFileSync(swPath, 'utf8')
+  /*
+   * The precache must actually have been injected.
+   *
+   * Workbox's injectManifest asserts when the manifest token appears more
+   * than once in the worker source — and on that assertion it skips injection
+   * entirely while `vite build` still exits 0. The worker then ships with an
+   * empty precache and a token that is undefined at runtime, so `install`
+   * throws, `activate` never claims, and every navigation silently falls
+   * through to the network. That shipped once; this is the guard.
+   */
+  if (swSource.includes('__WB_MANIFEST')) {
+    problems.push(
+      'sw.js still contains the raw precache token — Workbox skipped injection (it asserts when the token appears more than once) and the worker has no precache at all',
+    )
+  }
+  if (!/"revision"/.test(swSource)) {
+    problems.push('sw.js contains no precache entries — the shell will not be cached and the app cannot open offline')
+  }
+
   const manifestMatch = swSource.match(/\[\{"revision"[^;]*?\]\.map\(\w+=>\w+\.url\)/)
   if (manifestMatch) {
     const arrayLiteral = manifestMatch[0].split('.map')[0]

@@ -22,7 +22,24 @@ const fixtureAdapter: ContentAdapter = {
     const project = allProjects.find(
       (p) => p.ownerSlug === creatorSlug && p.slug === projectSlug,
     )
-    return project?.contents.find((c) => c.type === type) ?? null
+    const content = project?.contents.find((c) => c.type === type) ?? null
+    if (!content) return null
+
+    /*
+     * The document is fetched here rather than bundled, so the whitepaper's
+     * prose only reaches a visitor who opens the reader. This is the one
+     * call site that needs the body — the hub and the feed describe the
+     * paper from its metadata alone.
+     *
+     * Cached back onto the fixture so a second visit to the reader is
+     * synchronous, and so the object identity screens compare against stays
+     * stable.
+     */
+    if (content.type === 'ereader' && !content.document) {
+      const { atonomosDocument } = await import('@/content/fixtures/atonomos.document')
+      content.document = atonomosDocument
+    }
+    return content
   },
   async getStubs(kind: StubKind, opts?: { creatorSlug?: string }) {
     void opts
