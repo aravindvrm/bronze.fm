@@ -82,6 +82,19 @@ export async function gotoFeed(page: Page) {
   })
 }
 
+/**
+ * Opens the header's search field and returns it.
+ *
+ * Search lives behind an icon in the app header rather than as a permanent
+ * input, so every test that types into it has to open it first.
+ */
+export async function openSearch(page: Page) {
+  await page.getByRole('button', { name: /^Search$/ }).click()
+  const box = page.getByRole('searchbox', { name: /search/i })
+  await box.waitFor({ timeout: 5_000 })
+  return box
+}
+
 /** A Project hub — the interfaces onto one body of work, at /@dean/bronze. */
 export async function gotoProject(page: Page, projectSlug = 'bronze') {
   await gotoCreator(page, `/${projectSlug}`)

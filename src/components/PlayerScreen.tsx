@@ -75,7 +75,7 @@ export function PlayerScreen() {
             <motion.img
               src={art}
               alt={`${item.title} artwork`}
-              className="pointer-events-none aspect-square max-h-full w-full max-w-[min(78vw,26rem)] select-none rounded-md object-cover shadow-2xl shadow-black/70 sm:max-w-none"
+              className="pointer-events-none aspect-square max-h-full w-full max-w-[min(78vw,26rem)] select-none object-cover shadow-2xl shadow-black/70 sm:max-w-none"
               draggable={false}
             />
           </div>
@@ -117,7 +117,7 @@ export function PlayerScreen() {
                   value={volume}
                   onChange={(e) => setVolume(Number(e.target.value))}
                   aria-label="Volume"
-                  className="h-1 w-full cursor-pointer appearance-none rounded-full bg-parchment/20 accent-gilt"
+                  className="h-1 w-full cursor-pointer appearance-none bg-parchment/20 accent-gilt"
                 />
               </div>
             )}

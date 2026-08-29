@@ -69,9 +69,9 @@ export function ScrubBar({ compact = false }: { compact?: boolean }) {
         }}
         className={`group relative cursor-pointer touch-none ${compact ? 'py-1' : 'py-3'}`}
       >
-        <div className={`w-full overflow-hidden rounded-full bg-parchment/20 ${compact ? 'h-[2px]' : 'h-[3px]'}`}>
+        <div className={`w-full overflow-hidden bg-parchment/20 ${compact ? 'h-[2px]' : 'h-[3px]'}`}>
           <div
-            className="h-full rounded-full bg-gilt"
+            className="h-full bg-gilt"
             style={{ width: `${pct}%`, transition: 'width 90ms linear' }}
           />
         </div>

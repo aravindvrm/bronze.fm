@@ -143,3 +143,42 @@ export const XIcon = ({ className = 'size-5' }: P) => (
     <path d="M5 5l14 14M19 5 5 19" />
   </svg>
 )
+
+export const MenuIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
+    <path d="M3 6h18M3 12h18M3 18h18" />
+  </svg>
+)
+
+export const SearchIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+)
+
+export const CloseIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
+    <path d="M6 6l12 12M18 6 6 18" />
+  </svg>
+)
+
+export const HomeIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z" />
+  </svg>
+)
+
+export const AccountIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+  </svg>
+)
+
+export const SettingsIcon = ({ className = 'size-6' }: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
+    <circle cx="12" cy="12" r="3.25" />
+    <path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9 5.3 5.3" />
+  </svg>
+)

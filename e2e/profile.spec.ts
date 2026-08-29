@@ -4,7 +4,8 @@ import { gotoCreator, snapshot } from './helpers'
 test.describe('pinned content', () => {
   test('lists the creator’s curation in order', async ({ page }) => {
     await gotoCreator(page)
-    const pinned = page.locator('section').filter({ hasText: 'PINNED' }).first()
+    // Pinned is the profile's default tab, so it is already on screen.
+    const pinned = page.getByTestId('panel-pinned')
     await expect(pinned.getByRole('button')).toHaveCount(3)
     await expect(pinned).toContainText('Summer Flame')
     await expect(pinned).toContainText('Autonomous: The Agentic Enterprise')
@@ -50,7 +51,7 @@ test.describe('splash', () => {
 
     await splash.click()
     await expect(splash).toBeHidden()
-    await expect(page.getByRole('searchbox')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Featured Creators' })).toBeVisible()
   })
 
   test('does not reappear within the same session once entered', async ({ page }) => {

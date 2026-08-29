@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { gotoCreator, gotoFeed, gotoProject } from './helpers'
+import { gotoCreator, gotoFeed, gotoProject, openSearch } from './helpers'
 
 /**
  * The route structure from PLAN.md §8.2. These are the safety net for the
@@ -23,7 +23,7 @@ test.describe('the feed', () => {
 
   test('filters as you search, and says so when nothing matches', async ({ page }) => {
     await gotoFeed(page)
-    const search = page.getByRole('searchbox', { name: /search/i })
+    const search = await openSearch(page)
 
     await search.fill('bronze')
     await expect(page.getByRole('button', { name: /Bronze/ }).first()).toBeVisible()
@@ -63,6 +63,59 @@ test.describe('the feed', () => {
 
     await rows.nth(1).click()
     await expect(page).toHaveURL(/\/@dean\/bronze\/music$/)
+  })
+})
+
+test.describe('app header', () => {
+  test('the menu opens and leads home', async ({ page }) => {
+    await gotoCreator(page)
+    await page.getByRole('button', { name: /open menu/i }).click()
+    await page.getByRole('navigation', { name: 'Main' }).getByText('Home').click()
+    await expect(page).toHaveURL(/\/$/)
+  })
+
+  /*
+   * Account and Settings are deliberately inert until those features exist.
+   * They render as text rather than disabled buttons so the tab order skips
+   * them outright, which is what this asserts: no control, just a label.
+   */
+  test('unbuilt destinations are shown but not actionable', async ({ page }) => {
+    await gotoFeed(page)
+    await page.getByRole('button', { name: /open menu/i }).click()
+    const nav = page.getByRole('navigation', { name: 'Main' })
+    await expect(nav).toContainText('Account')
+    await expect(nav).toContainText('Settings')
+    await expect(nav.getByRole('button', { name: /^Account$/ })).toHaveCount(0)
+    await expect(nav.getByRole('button', { name: /^Settings$/ })).toHaveCount(0)
+  })
+
+  // Closing search must also drop the query, or the screen stays filtered
+  // by a control the visitor just dismissed.
+  test('closing search clears the filter it applied', async ({ page }) => {
+    await gotoFeed(page)
+    const search = await openSearch(page)
+    await search.fill('zzzz-no-such-thing')
+    await expect(page.getByText(/Nothing matches/)).toBeVisible()
+
+    await page.getByRole('button', { name: /close search/i }).click()
+    await expect(page.getByText(/Nothing matches/)).toHaveCount(0)
+  })
+})
+
+test.describe('creator profile tabs', () => {
+  test('each tab reveals its own panel, one at a time', async ({ page }) => {
+    await gotoCreator(page)
+    await expect(page.getByTestId('panel-pinned')).toBeVisible()
+
+    for (const [name, panel] of [
+      ['Projects', 'panel-projects'],
+      ['Store', 'panel-store'],
+      ['Events', 'panel-events'],
+    ] as const) {
+      await page.getByRole('tab', { name }).click()
+      await expect(page.getByTestId(panel)).toBeVisible()
+      await expect(page.getByTestId('panel-pinned')).toHaveCount(0)
+    }
   })
 })
 

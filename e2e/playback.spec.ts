@@ -24,8 +24,12 @@ test.describe('playback', () => {
     await expect(page).toHaveURL(/\/@dean\/bronze$/)
     await page.getByRole('button', { name: 'Back' }).click()
     await expect(page).toHaveURL(/\/@dean$/)
-    await page.getByRole('button', { name: /^Store/ }).click()
-    await expect(page).toHaveURL(/\/@dean\/store$/)
+    // Store and Events became tabs on the profile rather than links, so the
+    // last hop routes into a Project — still a genuine cross-section
+    // navigation, which is what this asserts survives.
+    await page.getByRole('tab', { name: 'Projects' }).click()
+    await page.getByRole('button', { name: /^Atonomos/ }).click()
+    await expect(page).toHaveURL(/\/@dean\/atonomos$/)
 
     await page.waitForTimeout(1500)
     const after = await snapshot(page)

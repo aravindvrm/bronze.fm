@@ -100,49 +100,63 @@
 
 
 /*
- * Cantarell — the app's own voice, self-hosted on the same terms as Abhaya
- * Libre above: precached with the shell, no render-blocking third-party
- * stylesheet, and no handing every visitor's IP to a font CDN. SIL Open Font
- * License; the licence text sits beside the files.
+ * Geist — the app's voice, replacing Cantarell in the Stitch redesign.
+ * Self-hosted on the same terms as the faces above: precached with the
+ * shell, no render-blocking third-party stylesheet, and no handing every
+ * visitor's IP to a font CDN. SIL Open Font License; the licence text sits
+ * beside the files.
  *
- * Only 400 and 700 exist in the family, so anything asking for 500/600 gets
- * 400 rather than a synthesised weight — worth knowing before reaching for
- * font-medium.
+ * ONE file per subset, not one per weight: Geist ships as a variable font,
+ * and Google serves byte-identical files for 400/600/700 (verified by
+ * checksum). Declaring the axis range here gets every weight in between
+ * from that single file rather than downloading the same ~29 KB three
+ * times — and unlike Cantarell, which really only had 400 and 700, any
+ * weight now renders as drawn rather than synthesised.
  */
 /* latin */
 @font-face {
-  font-family: 'Cantarell';
+  font-family: 'Geist';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100 900;
   font-display: swap;
-  src: url('./assets/fonts/cantarell-400-latin.woff2') format('woff2');
+  src: url('./assets/fonts/geist-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 /* latin-ext */
 @font-face {
-  font-family: 'Cantarell';
+  font-family: 'Geist';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100 900;
   font-display: swap;
-  src: url('./assets/fonts/cantarell-400-latin-ext.woff2') format('woff2');
+  src: url('./assets/fonts/geist-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+
+/*
+ * JetBrains Mono — technical metadata only: durations, track counts, the
+ * uppercase section labels. The mockup uses it to make the app read as an
+ * audio tool rather than a generic feed, and restricting it to data (never
+ * prose) is what keeps that from becoming a costume.
+ *
+ * Weight 500 alone, which is all the design calls for; asking for any other
+ * weight gets a synthesised approximation, so don't.
+ */
 /* latin */
 @font-face {
-  font-family: 'Cantarell';
+  font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   font-display: swap;
-  src: url('./assets/fonts/cantarell-700-latin.woff2') format('woff2');
+  src: url('./assets/fonts/jetbrains-mono-500-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 /* latin-ext */
 @font-face {
-  font-family: 'Cantarell';
+  font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   font-display: swap;
-  src: url('./assets/fonts/cantarell-700-latin-ext.woff2') format('woff2');
+  src: url('./assets/fonts/jetbrains-mono-500-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -188,22 +202,22 @@
   --color-gilt: var(--color-bronze);
   --color-parchment: #111111;
 
-  /* Cantarell for the app's voice.
-     A sans against Abhaya Libre's serif was tried once before, with Archivo,
-     and reverted: the two read as a clash rather than a system. What changed
-     is the palette — with every surface neutral and one accent, the contrast
-     between chrome and content has to come from the type, and a humanist
-     sans separates from the serif more clearly than a second serif did.
-     Georgia remains the fallback, so nothing shifts if the face fails. */
-  --font-display: 'Cantarell', 'Georgia', serif;
+  /* Geist for the app's voice, replacing Cantarell in the Stitch redesign —
+     a tighter, more geometric sans that takes the heavy display weights the
+     new headings lean on (Cantarell only ever had 400 and 700, so a 600
+     came back synthesised). */
+  --font-display: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
   /* Typeface of the Content itself — titles owned by a release, not by the
      app around it. Chrome stays on --font-display. Unchanged across
      directions: the app-voice/content-voice split is the concept, not tied
-     to any one aesthetic. */
+     to any one aesthetic, so it survived the move to Geist. */
   --font-content: 'Abhaya Libre', 'Georgia', serif;
   /* Body and UI share the app's voice rather than the OS's, so a label and
      the paragraph under it are the same typeface. */
-  --font-sans: 'Cantarell', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Data, never prose: durations, counts, and the uppercase section labels.
+     See the @font-face note above for why the line is drawn there. */
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 

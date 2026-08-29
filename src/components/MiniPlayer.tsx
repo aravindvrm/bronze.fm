@@ -27,7 +27,7 @@ export function MiniPlayer() {
     >
       {/* A floating card on phones; on desktop it becomes a full-width docked
           bar, the shape a music app has there. */}
-      <div className="mx-3 mb-3 overflow-hidden rounded-md border border-parchment/25 bg-ink/80 shadow-2xl shadow-black/60 backdrop-blur-xl sm:mx-0 sm:mb-0 sm:rounded-none sm:border-x-0 sm:border-b-0">
+      <div className="mx-3 mb-3 overflow-hidden border border-parchment/25 bg-ink/80 shadow-2xl shadow-black/60 backdrop-blur-xl sm:mx-0 sm:mb-0 sm:rounded-none sm:border-x-0 sm:border-b-0">
         <div className="mx-auto max-w-[var(--app-w)] px-3 pt-1 sm:px-8">
           <ScrubBar compact />
         </div>
@@ -45,7 +45,7 @@ export function MiniPlayer() {
               layoutId="player-art"
               src={artUrl(item.hash, 'item', 256)}
               alt=""
-              className="size-11 shrink-0 rounded object-cover sm:size-14"
+              className="size-11 shrink-0 object-cover sm:size-14"
             />
             <span className="min-w-0 flex-1">
               <span className="block truncate font-content text-sm font-medium text-parchment">{item.title}</span>

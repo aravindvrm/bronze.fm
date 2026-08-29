@@ -54,7 +54,7 @@ export function OfflineControl({ content }: { content: Content }) {
   const pct = totalBytes > 0 ? Math.round((cached / totalBytes) * 100) : 0
 
   return (
-    <div className="rounded-md border border-parchment/25 p-4">
+    <div className="border border-parchment/25 p-4">
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
           <p className="text-sm text-parchment">Save offline</p>
@@ -70,7 +70,7 @@ export function OfflineControl({ content }: { content: Content }) {
         {state === 'done' ? (
           <button
             onClick={remove}
-            className="shrink-0 rounded-full border border-parchment/25 px-3 py-1.5 text-[11px] uppercase tracking-[0.12em] text-parchment/60 transition hover:text-parchment"
+            className="shrink-0 border border-parchment/25 px-3 py-1.5 text-[11px] uppercase tracking-[0.12em] text-parchment/60 transition hover:text-parchment"
           >
             Remove
           </button>
@@ -78,7 +78,7 @@ export function OfflineControl({ content }: { content: Content }) {
           <button
             onClick={save}
             disabled={state === 'working'}
-            className="shrink-0 rounded-full bg-parchment px-4 py-1.5 text-[11px] uppercase tracking-[0.12em] text-void transition disabled:opacity-50"
+            className="shrink-0 bg-parchment px-4 py-1.5 text-[11px] uppercase tracking-[0.12em] text-void transition disabled:opacity-50"
           >
             {state === 'working' ? 'Saving' : 'Save'}
           </button>
@@ -86,7 +86,7 @@ export function OfflineControl({ content }: { content: Content }) {
       </div>
 
       {state === 'working' && progress.total > 0 && (
-        <div className="mt-3 h-[3px] w-full overflow-hidden rounded-full bg-parchment/18">
+        <div className="mt-3 h-[3px] w-full overflow-hidden bg-parchment/18">
           <motion.div
             className="h-full bg-gilt"
             animate={{ width: `${(progress.done / progress.total) * 100}%` }}

@@ -14,7 +14,7 @@ import { creatorPath, defaultCreatorSlug, projectPath } from '@/lib/tenant'
 import { coverUrl } from '@/lib/cover'
 import { artUrl } from '@/lib/art'
 import { formatRelative } from '@/lib/format'
-import { Wordmark } from '@/components/Wordmark'
+import { AppHeader } from '@/components/AppHeader'
 import { MusicIcon, ReadIcon, VideosIcon } from '@/components/Icons'
 
 const TYPE_ICON = { music: MusicIcon, video: VideosIcon, ereader: ReadIcon } as const
@@ -115,33 +115,40 @@ export function Feed() {
 
   return (
     <div className="min-h-full">
+      <AppHeader query={query} onQueryChange={setQuery} />
+
       <div
         className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
-        style={{ paddingTop: 'calc(var(--safe-t) + 2rem)', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
+        style={{ paddingTop: '1.75rem', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Wordmark className="text-xl sm:text-2xl" />
-        </motion.h1>
+        {/* The visible wordmark is in the header and is a link, not a
+            heading, so the page would otherwise have no h1 for a screen
+            reader to announce or navigate by. */}
+        <h1 className="sr-only">bronze.fm</h1>
 
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search creators and content"
-          aria-label="Search creators and content"
-          className="mt-5 w-full rounded-md border border-parchment/25 bg-ink/60 px-4 py-2.5 text-sm text-parchment placeholder:text-parchment/30 focus:border-gilt/50 focus:outline-none"
-        />
-
-        {nothing && <p className="mt-8 text-sm text-parchment/40">Nothing matches “{query}”.</p>}
+        {nothing && <p className="mb-8 text-sm text-parchment/40">Nothing matches “{query}”.</p>}
 
         {shownCreators.length > 0 && (
-          <section className="mt-8">
-            <h2 className="mb-3.5 text-[10px] uppercase tracking-[0.25em] text-parchment/40">Creators</h2>
-            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4 sm:gap-5">
+          <section>
+            <div className="mb-3.5 flex items-baseline justify-between gap-3">
+              <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">
+                Featured Creators
+              </h2>
+            </div>
+
+            {/*
+              A rail rather than the grid this used to be. It scrolls
+              horizontally on every viewport, so the section keeps one
+              behaviour instead of being a grid on desktop and a rail on a
+              phone — and it stays honest at the current count: one creator
+              simply renders one card and the rail grows as creators join,
+              rather than being padded out with invented people.
+
+              `snap` on the items and none on the container's own padding
+              keeps the first card flush to the page margin while later
+              cards still land cleanly under a swipe.
+            */}
+            <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 no-scrollbar sm:-mx-8 sm:px-8">
               {shownCreators.map((creator, i) => (
                 <motion.button
                   key={creator.id}
@@ -150,22 +157,16 @@ export function Feed() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.06 * i, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                   whileTap={{ scale: 0.97 }}
-                  className="group relative aspect-square overflow-hidden rounded-md border border-parchment/25 text-left"
+                  className="group flex w-[5.5rem] shrink-0 snap-start flex-col items-center gap-2 text-center"
                 >
                   <img
-                    src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 600)}
+                    src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 300)}
                     alt=""
-                    className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="size-[5.5rem] rounded-full border border-parchment/15 object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 from-0% via-black/45 via-32% to-transparent to-60%" />
-                  <div className="absolute inset-x-0 bottom-0 p-4">
-                    <span className="block truncate font-display text-xl text-white">
-                      {creator.name}
-                    </span>
-                    <span className="mt-0.5 block text-[11px] text-white/70">
-                      {projects.filter((p) => p.ownerSlug === creator.slug).length} projects
-                    </span>
-                  </div>
+                  <span className="w-full font-mono text-[11px] leading-tight text-parchment/70">
+                    {creator.name}
+                  </span>
                 </motion.button>
               ))}
             </div>
@@ -175,7 +176,7 @@ export function Feed() {
         {feedItems.length > 0 && (
           <section className="mt-10">
             <div className="mb-3.5 flex items-center justify-between gap-3">
-              <h2 className="text-[10px] uppercase tracking-[0.25em] text-parchment/40">Feed</h2>
+              <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">Feed</h2>
 
               {/* A single type has nothing to filter, so the row only earns
                   its place once there is a real choice to make. */}
@@ -188,7 +189,7 @@ export function Feed() {
                         key={t}
                         onClick={() => setTypeFilter(t)}
                         aria-pressed={active}
-                        className={`rounded-full border px-2.5 py-1 text-[9px] uppercase tracking-[0.15em] transition ${
+                        className={`border px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] transition ${
                           active
                             ? 'border-gilt/60 bg-gilt/15 text-gilt'
                             : 'border-parchment/20 text-parchment/40 hover:border-parchment/25 hover:text-parchment/70'
@@ -223,18 +224,18 @@ export function Feed() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 * i, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     whileTap={{ scale: 0.99 }}
-                    className="flex items-center gap-3 rounded-md border border-parchment/25 bg-ink/40 p-2.5 text-left transition hover:border-parchment/25"
+                    className="flex items-center gap-3 border border-parchment/25 bg-ink/40 p-2.5 text-left transition hover:border-parchment/25"
                   >
                     <img
                       src={coverUrl(project, 200)}
                       alt=""
-                      className="size-14 shrink-0 rounded object-cover"
+                      className="size-14 shrink-0 object-cover"
                     />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-content text-sm text-parchment">
                         {content.title}
                       </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-parchment/40">
+                      <span className="mt-0.5 block truncate font-mono text-[11px] text-parchment/40">
                         {creatorName.get(project.ownerSlug) ?? project.ownerSlug} · {CONTENT_TYPE_LABEL[content.type]}
                         {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
                       </span>
