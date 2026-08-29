@@ -162,7 +162,9 @@ export function Feed() {
                   <img
                     src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 300)}
                     alt=""
-                    className="size-[5.5rem] rounded-full border border-parchment/15 object-cover transition-transform duration-500 group-hover:scale-105"
+                    // Same accent ring the profile avatar carries, so a creator looks
+                    // like themselves in both places.
+                    className="size-[5.5rem] rounded-full object-cover ring-2 ring-gilt/50 transition-transform duration-500 group-hover:scale-105"
                   />
                   <span className="w-full font-mono text-[13px] leading-tight text-parchment/80">
                     {creator.name}

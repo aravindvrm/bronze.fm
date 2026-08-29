@@ -175,7 +175,11 @@ export function CreatorProfile() {
               <img
                 src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 300)}
                 alt=""
-                className="size-28 rounded-full object-cover sm:size-32"
+                // A thin accent ring rather than a heavy border: enough to
+                // mark the avatar as the page's subject without turning it
+                // into a badge. `ring` rather than `border` so it sits
+                // outside the image box and cannot shrink the photo.
+                className="size-28 rounded-full object-cover ring-2 ring-gilt/50 sm:size-32"
               />
 
               {/* The largest thing on the screen, because the page is about
@@ -293,7 +297,10 @@ export function CreatorProfile() {
             {pins.length === 0 && (
               <p className="text-sm text-parchment/40">Nothing pinned yet.</p>
             )}
-            <div className="flex flex-col gap-2.5">
+            {/* Ruled, not boxed — the same list language the feed uses. The
+                two carry identical rows (art, title, subtitle, action), so
+                they should not be two different objects. */}
+            <div className="flex flex-col divide-y divide-parchment/15">
               {pins.map((pin, i) => (
                 <motion.button
                   key={pin.id}
@@ -302,7 +309,9 @@ export function CreatorProfile() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.07, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                   whileTap={{ scale: 0.99 }}
-                  className="flex items-center gap-3 border border-parchment/25 bg-ink/40 p-2.5 text-left backdrop-blur-sm transition hover:border-parchment/25"
+                  // Hover bleeds to the page margin, so it reads as the row
+                  // lighting up rather than a band inset from its own text.
+                  className="-mx-2 flex items-center gap-3 px-2 py-3 text-left transition hover:bg-parchment/[0.04]"
                 >
                   <img
                     src={pin.hash ? artUrl(pin.hash, 'item', 128) : artUrl(`${pin.projectSlug}-cover`, 'cover', 128)}
@@ -314,7 +323,7 @@ export function CreatorProfile() {
                       {pin.title}
                     </span>
                     {pin.subtitle && (
-                      <span className="block truncate text-[11px] text-parchment/40">
+                      <span className="block truncate font-mono text-[11px] text-parchment/40">
                         {pin.subtitle}
                       </span>
                     )}
