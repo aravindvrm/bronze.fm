@@ -176,7 +176,9 @@ export default function App() {
         interrupted animation strands the user on the old screen. Screens
         animate themselves on mount, which needs neither.
       */}
-      <div className="h-full overflow-y-auto no-scrollbar">
+      {/* Marked so AppHeader can watch it: the page scrolls in here, not on
+          the window, so window.scrollY never moves. */}
+      <div data-app-scroll className="h-full overflow-y-auto no-scrollbar">
         <Routes location={location}>
           {dedicated ? (
             <Route path="/*" element={<CreatorShell />} />

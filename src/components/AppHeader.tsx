@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useScrolledPast } from '@/lib/useScrolledPast'
 import { Wordmark } from '@/components/Wordmark'
 import {
   AccountIcon,
@@ -68,6 +69,7 @@ export function AppHeader({
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
+  const scrolled = useScrolledPast()
   const [searchOpen, setSearchOpen] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
   const searchable = onQueryChange !== undefined
@@ -102,7 +104,9 @@ export function AppHeader({
   return (
     <>
       <header
-        className="sticky top-0 z-40 bg-void/85 backdrop-blur-xl"
+        className={`sticky top-0 z-40 transition-colors duration-200 ${
+          scrolled ? 'bg-void/80 backdrop-blur-xl' : ''
+        }`}
         style={{ paddingTop: 'var(--safe-t)' }}
       >
         {/* px-5 to match every screen's content column, so the controls land

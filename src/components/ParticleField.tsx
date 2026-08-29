@@ -118,14 +118,15 @@ export function ParticleField() {
         </ParticlesProvider>
       </div>
       {/*
-        A gentle settle toward the foot of the screen, where the docked
-        player sits. It ended at full `to-void`, which painted the page
-        ground straight over the lower half and made the field look like it
-        covered only the top of the page. It now never reaches opaque, so
-        the field carries edge to edge and merely quietens where the dock
-        needs a calm ground.
+        No vertical overlay at all.
+        
+        There used to be one here to calm the foot of the screen behind the
+        docked player. Any such gradient veils one end toward the page ground
+        and leaves the other bare, which is read — correctly — as the field
+        being darker at the top. Softening it from opaque to 45% only made
+        the imbalance subtler, not absent. The mini player already carries
+        its own translucent ground, so it never needed this.
       */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-void/45" />
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useScrolledPast } from '@/lib/useScrolledPast'
 import { useCreator } from '@/content/CreatorContext'
 import { creatorPath } from '@/lib/tenant'
 import { BackIcon } from '@/components/Icons'
@@ -14,6 +15,11 @@ import { BackIcon } from '@/components/Icons'
  *
  * `transparent` drops the bar's own background for screens that supply their
  * own backdrop — the Content hero runs full-bleed behind the header.
+ *
+ * Otherwise the bar takes its ground only once content is behind it, the same
+ * rule AppHeader follows: a permanent fill plus a backdrop blur flattens the
+ * ambient field into plain colour, so the background appeared to stop at
+ * every header in the app.
  */
 export function ScreenHeader({
   title,
@@ -31,11 +37,15 @@ export function ScreenHeader({
 }) {
   const navigate = useNavigate()
   const creator = useCreator()
+  const scrolled = useScrolledPast()
+  const grounded = !transparent && scrolled
   return (
     <header
       // The bar spans the viewport so its blur and background still reach the
       // edges on a wide screen; only its contents align to the content column.
-      className={`sticky top-0 z-20 ${transparent ? '' : 'bg-void/80 backdrop-blur-xl'}`}
+      className={`sticky top-0 z-20 transition-colors duration-200 ${
+        grounded ? 'bg-void/80 backdrop-blur-xl' : ''
+      }`}
       style={{ paddingTop: 'calc(var(--safe-t) + 0.9rem)' }}
     >
       <div
