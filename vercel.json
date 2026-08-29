@@ -2,22 +2,18 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
-      "comment": "Vite fingerprints everything under /assets/, so a changed file is a changed URL. Without this they fall back to Vercel's revalidating default and cost a conditional request each on any load the service worker does not already answer — a first visit, a browser with the worker disabled, or a hard reload.",
       "source": "/assets/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
-      "comment": "The worker itself must never be held: a stale sw.js is a deploy that never reaches anyone, since the browser only learns about a new build by re-fetching this file.",
       "source": "/sw.js",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     },
     {
-      "comment": "Unfingerprinted, and the document the worker precaches. Held only as long as it takes to notice a new one.",
       "source": "/index.html",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     },
     {
-      "comment": "Names the current icon and start_url set, so it is checked rather than assumed.",
       "source": "/manifest.webmanifest",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     }

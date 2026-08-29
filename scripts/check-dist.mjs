@@ -139,6 +139,41 @@ if (fs.existsSync(swPath)) {
   }
 }
 
+/*
+ * vercel.json must satisfy Vercel's schema, which rejects unknown keys
+ * outright and only reports it at deploy time — two deploys failed on a
+ * stray `comment` property inside a headers entry. JSON has nowhere to put
+ * a note, so the rule is simply: these objects carry these keys and nothing
+ * else, checked here rather than in the deploy log.
+ */
+const vercelPath = new URL('../vercel.json', import.meta.url)
+if (fs.existsSync(vercelPath)) {
+  let cfg
+  try {
+    cfg = JSON.parse(fs.readFileSync(vercelPath, 'utf8'))
+  } catch (err) {
+    problems.push(`vercel.json is not valid JSON: ${err.message}`)
+  }
+  if (cfg) {
+    const allowed = {
+      headers: new Set(['source', 'headers', 'has', 'missing']),
+      rewrites: new Set(['source', 'destination', 'has', 'missing']),
+      redirects: new Set(['source', 'destination', 'permanent', 'statusCode', 'has', 'missing']),
+    }
+    for (const [section, keys] of Object.entries(allowed)) {
+      for (const [i, entry] of (cfg[section] ?? []).entries()) {
+        for (const key of Object.keys(entry)) {
+          if (!keys.has(key)) {
+            problems.push(
+              `vercel.json ${section}[${i}] has unsupported key "${key}" — Vercel rejects unknown properties and the deploy will fail schema validation`,
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
 const summary = `${count} files, ${(total / 1048576).toFixed(2)} MB`
 
 if (problems.length) {
