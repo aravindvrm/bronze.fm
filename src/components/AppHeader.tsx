@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Wordmark } from '@/components/Wordmark'
 import {
   AccountIcon,
+  BackIcon,
   CloseIcon,
   HomeIcon,
   MenuIcon,
@@ -28,7 +29,18 @@ const LINKS = [
 ] as const
 
 /**
- * The app's global header: menu left, wordmark centre, search right.
+ * The app's global header: wordmark centre, one control either side.
+ *
+ * Which controls depends on where you are, following the convention every
+ * phone app shares — a root screen offers the menu, a screen you navigated
+ * *into* offers a way back:
+ *
+ *   root (the feed)   menu · wordmark · search
+ *   a screen below    back · wordmark · menu
+ *
+ * The menu shifts right rather than disappearing when Back takes the left
+ * slot, so it is reachable from every screen and the right side is never a
+ * gap.
  *
  * The wordmark is optically centred with `absolute` rather than by flex
  * spacing, because the two side controls are different widths — a plain
@@ -42,10 +54,18 @@ const LINKS = [
 export function AppHeader({
   query,
   onQueryChange,
+  backTo,
 }: {
   /** Present only on screens that actually have something to search. */
   query?: string
   onQueryChange?: (next: string) => void
+  /**
+   * Where Back goes. An explicit destination rather than history: it is
+   * predictable however the screen was reached, and a deep link opened in a
+   * fresh tab has no history to pop. Omit on a screen that is its own root
+   * — there is nothing above it to return to.
+   */
+  backTo?: string
 }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
@@ -88,14 +108,24 @@ export function AppHeader({
         style={{ paddingTop: 'var(--safe-t)' }}
       >
         <div className="relative mx-auto flex h-14 max-w-[var(--app-w)] items-center px-4 sm:px-8">
-          <button
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={menuOpen}
-            className="relative z-10 -ml-2 p-2 text-parchment transition hover:text-gilt"
-          >
-            <MenuIcon className="size-6" />
-          </button>
+          {backTo ? (
+            <button
+              onClick={() => navigate(backTo)}
+              aria-label="Back"
+              className="relative z-10 -ml-2 p-2 text-parchment transition hover:text-gilt"
+            >
+              <BackIcon className="size-6" />
+            </button>
+          ) : (
+            <button
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+              className="relative z-10 -ml-2 p-2 text-parchment transition hover:text-gilt"
+            >
+              <MenuIcon className="size-6" />
+            </button>
+          )}
 
           {/* Centred against the bar, not against the gap between controls. */}
           <button
@@ -106,7 +136,9 @@ export function AppHeader({
             <Wordmark className="text-sm" />
           </button>
 
-          {searchable && (
+          {/* Right slot: search where there is something to search, else the
+              menu that Back displaced from the left. */}
+          {searchable ? (
             <button
               onClick={() => setSearchOpen(true)}
               aria-label="Search"
@@ -115,6 +147,17 @@ export function AppHeader({
             >
               <SearchIcon className="size-6" />
             </button>
+          ) : (
+            backTo && (
+              <button
+                onClick={() => setMenuOpen(true)}
+                aria-label="Open menu"
+                aria-expanded={menuOpen}
+                className="relative z-10 -mr-2 ml-auto p-2 text-parchment transition hover:text-gilt"
+              >
+                <MenuIcon className="size-6" />
+              </button>
+            )
           )}
         </div>
 

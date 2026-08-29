@@ -75,6 +75,27 @@ test.describe('app header', () => {
   })
 
   /*
+   * The two header shapes: the feed is a root screen and offers the menu,
+   * the profile is one you navigate into and offers a way back. The menu
+   * moves to the right there rather than disappearing, so it is reachable
+   * everywhere and the right slot is never an empty gap.
+   */
+  test('offers back from the profile and the menu from the feed', async ({ page }) => {
+    await gotoFeed(page)
+    await expect(page.getByRole('button', { name: /open menu/i })).toBeVisible()
+    await expect(page.getByRole('button', { name: /^Back$/ })).toHaveCount(0)
+
+    await gotoCreator(page)
+    const back = page.getByRole('button', { name: /^Back$/ })
+    await expect(back).toBeVisible()
+    // Still reachable, just from the other side of the bar.
+    await expect(page.getByRole('button', { name: /open menu/i })).toBeVisible()
+
+    await back.click()
+    await expect(page).toHaveURL(/\/$/)
+  })
+
+  /*
    * Account and Settings are deliberately inert until those features exist.
    * They render as text rather than disabled buttons so the tab order skips
    * them outright, which is what this asserts: no control, just a label.
