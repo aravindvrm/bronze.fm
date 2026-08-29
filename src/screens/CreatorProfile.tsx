@@ -145,10 +145,13 @@ export function CreatorProfile() {
           the largest thing on the screen without competing with a panel
           edge around it.
 
-          Only the avatar and the name are centred. Everything below —
-          the bio, its toggle and the social row — is left-aligned and
-          shares one left edge, so the ragged right of a centred paragraph
-          doesn't fight the rest of the page.
+          The identity block is a row: avatar and name in a column, the
+          social links stacked beside them. Four stacked icons come out
+          within a few pixels of the avatar-plus-name height, so the two
+          columns read as one object rather than a badge tacked on.
+
+          The bio below stays left-aligned on the content margin, so its
+          ragged right doesn't fight the rest of the page.
         */}
         <motion.header
           initial={{ opacity: 0, y: 16 }}
@@ -156,48 +159,33 @@ export function CreatorProfile() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col items-center"
         >
-          <img
-            src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 300)}
-            alt=""
-            className="size-28 rounded-full object-cover sm:size-32"
-          />
-
-          {/* Creator names are identity, not a Content title, so they stay on
-              the app face rather than the release's. */}
-          <h1 className="mt-5 text-center font-display text-4xl font-bold tracking-[-0.03em] text-parchment sm:text-5xl">
-            {creator.name}
-          </h1>
-
           {/*
-            One block so the bio, the More toggle and the icons align to the
-            same edge. `max-w-prose` keeps the bio at a readable measure on a
-            wide screen; on a phone it exceeds the viewport, so `w-full`
-            governs and the block simply spans the column.
+            Three columns: an empty spacer, the identity, then the links.
+            The two flanking columns are `flex-1`, so they take an equal
+            share and the avatar and name stay dead-centre on the page
+            rather than being pushed off it by the links' width. The links
+            then sit against the content's right margin — which is the same
+            edge the header's menu button lands on, so they read as one
+            vertical line down the right of the screen.
           */}
-          <div className="mt-3 w-full max-w-prose text-left">
-            {creator.bio && (
-              <>
-                <p
-                  ref={bioRef}
-                  className={`text-[15px] leading-relaxed text-parchment/60 ${
-                    bioExpanded ? '' : 'line-clamp-3'
-                  }`}
-                >
-                  {creator.bio}
-                </p>
-                {bioOverflows && (
-                  <button
-                    onClick={() => setBioExpanded((open) => !open)}
-                    aria-expanded={bioExpanded}
-                    className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-gilt/80 transition hover:text-gilt"
-                  >
-                    {bioExpanded ? 'Less' : 'More'}
-                  </button>
-                )}
-              </>
-            )}
+          <div className="flex w-full items-center">
+            <div className="flex-1" aria-hidden />
 
-            <div className="mt-5 flex items-center gap-2.5">
+            <div className="flex min-w-0 flex-col items-center">
+              <img
+                src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 300)}
+                alt=""
+                className="size-28 rounded-full object-cover sm:size-32"
+              />
+
+              {/* Creator names are identity, not a Content title, so they stay
+                  on the app face rather than the release's. */}
+              <h1 className="mt-5 text-center font-display text-4xl font-bold tracking-[-0.03em] text-parchment sm:text-5xl">
+                {creator.name}
+              </h1>
+            </div>
+
+            <div className="flex flex-1 shrink-0 flex-col items-end gap-2.5">
               {SOCIALS.map(({ key, label, Icon }) => {
                 const href = creator.socials?.[key]
                 return href ? (
@@ -226,6 +214,33 @@ export function CreatorProfile() {
               })}
             </div>
           </div>
+
+          {/*
+            `max-w-prose` keeps the bio at a readable measure on a wide
+            screen; on a phone it exceeds the viewport, so `w-full` governs
+            and the block simply spans the column.
+          */}
+          {creator.bio && (
+            <div className="mt-5 w-full max-w-prose text-left">
+              <p
+                ref={bioRef}
+                className={`text-[15px] leading-relaxed text-parchment/60 ${
+                  bioExpanded ? '' : 'line-clamp-3'
+                }`}
+              >
+                {creator.bio}
+              </p>
+              {bioOverflows && (
+                <button
+                  onClick={() => setBioExpanded((open) => !open)}
+                  aria-expanded={bioExpanded}
+                  className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-gilt/80 transition hover:text-gilt"
+                >
+                  {bioExpanded ? 'Less' : 'More'}
+                </button>
+              )}
+            </div>
+          )}
         </motion.header>
 
         {/*

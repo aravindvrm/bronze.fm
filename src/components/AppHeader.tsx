@@ -105,7 +105,9 @@ export function AppHeader({
         className="sticky top-0 z-40 bg-void/85 backdrop-blur-xl"
         style={{ paddingTop: 'var(--safe-t)' }}
       >
-        <div className="relative mx-auto flex h-14 max-w-[var(--app-w)] items-center px-4 sm:px-8">
+        {/* px-5 to match every screen's content column, so the controls land
+            on the same margins as the page beneath them. */}
+        <div className="relative mx-auto flex h-14 max-w-[var(--app-w)] items-center px-5 sm:px-8">
           {/* Left slot: whatever this screen offers. Back wins where both
               apply, since leaving is the more urgent of the two. */}
           {backTo ? (
@@ -166,7 +168,7 @@ export function AppHeader({
               // z-20 clears the bar's own controls, which carry z-10 so they
               // sit above the centred wordmark. Without it the overlay paints
               // underneath them and the wordmark shows through the field.
-              className="absolute inset-x-0 bottom-0 top-[var(--safe-t)] z-20 flex h-14 items-center gap-2 bg-void px-4 sm:px-8"
+              className="absolute inset-x-0 bottom-0 top-[var(--safe-t)] z-20 flex h-14 items-center gap-2 bg-void px-5 sm:px-8"
             >
               <SearchIcon className="size-5 shrink-0 text-parchment/40" />
               <input
