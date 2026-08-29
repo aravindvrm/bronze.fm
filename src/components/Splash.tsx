@@ -46,7 +46,7 @@ const SEEN_KEY = 'bronze:splash-seen'
  * strewn around the sphere at different angles rather than concentric
  * copies of one plane. All colour stays inside the accent family (the
  * app's one colour, per `ParticleField`) — these vary temperature and depth
- * within it, from a hot pale peak down to a low ink-blue glow, rather than
+ * within it, from a hot pale peak down to a low oxblood glow, rather than
  * introducing a second hue.
  */
 interface RingSpec {
@@ -71,7 +71,7 @@ const RINGS: RingSpec[] = [
     duration: 6,
     band: [58, 63],
     gradient:
-      'conic-gradient(from 0deg, rgba(56,120,184,0) 0deg, #3878b8 20deg, #eaf5ff 60deg, #bcdcf5 100deg, #3878b8 150deg, rgba(56,120,184,0.35) 210deg, rgba(56,120,184,0.08) 280deg, rgba(56,120,184,0) 340deg, rgba(56,120,184,0) 360deg)',
+      'conic-gradient(from 0deg, rgba(201,44,16,0) 0deg, #c92c10 20deg, #ffece4 60deg, #f0a894 100deg, #c92c10 150deg, rgba(201,44,16,0.35) 210deg, rgba(201,44,16,0.08) 280deg, rgba(201,44,16,0) 340deg, rgba(201,44,16,0) 360deg)',
   },
   {
     size: 'min(64vw,21.5rem)',
@@ -82,7 +82,7 @@ const RINGS: RingSpec[] = [
     reverse: true,
     band: [61, 65],
     gradient:
-      'conic-gradient(from 40deg, rgba(168,200,234,0) 0deg, #a8c8ea 30deg, #ffffff 70deg, #dcecfa 110deg, #8fb8dd 160deg, rgba(168,200,234,0.3) 220deg, rgba(168,200,234,0.06) 290deg, rgba(168,200,234,0) 350deg, rgba(168,200,234,0) 360deg)',
+      'conic-gradient(from 40deg, rgba(240,163,148,0) 0deg, #f0a394 30deg, #ffffff 70deg, #fadcd5 110deg, #e07f6a 160deg, rgba(240,163,148,0.3) 220deg, rgba(240,163,148,0.06) 290deg, rgba(240,163,148,0) 350deg, rgba(240,163,148,0) 360deg)',
   },
   {
     size: 'min(94vw,31rem)',
@@ -92,7 +92,7 @@ const RINGS: RingSpec[] = [
     duration: 13,
     band: [63.5, 66.5],
     gradient:
-      'conic-gradient(from 200deg, rgba(42,93,143,0) 0deg, #2a5d8f 25deg, #6fa8d8 65deg, #3f74a8 105deg, #2a5d8f 150deg, rgba(42,93,143,0.3) 215deg, rgba(42,93,143,0.06) 285deg, rgba(42,93,143,0) 345deg, rgba(42,93,143,0) 360deg)',
+      'conic-gradient(from 200deg, rgba(122,26,12,0) 0deg, #7a1a0c 25deg, #cc5f48 65deg, #9c3520 105deg, #7a1a0c 150deg, rgba(122,26,12,0.3) 215deg, rgba(122,26,12,0.06) 285deg, rgba(122,26,12,0) 345deg, rgba(122,26,12,0) 360deg)',
   },
   {
     size: 'min(52vw,17.5rem)',
@@ -103,7 +103,7 @@ const RINGS: RingSpec[] = [
     reverse: true,
     band: [59.5, 63],
     gradient:
-      'conic-gradient(from 110deg, rgba(127,178,224,0) 0deg, #7fb2e0 25deg, #eef7ff 65deg, #cfe6f8 110deg, #5a94c8 155deg, rgba(127,178,224,0.3) 215deg, rgba(127,178,224,0.06) 285deg, rgba(127,178,224,0) 345deg, rgba(127,178,224,0) 360deg)',
+      'conic-gradient(from 110deg, rgba(224,110,86,0) 0deg, #e06e56 25deg, #fff4f0 65deg, #f8cec2 110deg, #b8452c 155deg, rgba(224,110,86,0.3) 215deg, rgba(224,110,86,0.06) 285deg, rgba(224,110,86,0) 345deg, rgba(224,110,86,0) 360deg)',
   },
 ]
 
@@ -181,13 +181,13 @@ function AccretionDisc({ still }: { still: boolean }) {
     <div className="pointer-events-none absolute inset-0 grid place-items-center overflow-hidden">
       <Starfield still={still} />
 
-      {/* Cool haze the disc sits in, so the black centre has something to
+      {/* Warm haze the disc sits in, so the black centre has something to
           eat into rather than meeting a flat white background. */}
       <div
         className="absolute size-[140%] opacity-60"
         style={{
           background:
-            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(56,120,184,0.28) 0%, rgba(56,120,184,0.08) 45%, rgba(56,120,184,0) 70%)',
+            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(201,44,16,0.28) 0%, rgba(201,44,16,0.08) 45%, rgba(201,44,16,0) 70%)',
         }}
       />
 
@@ -210,7 +210,7 @@ function AccretionDisc({ still }: { still: boolean }) {
         className="absolute size-[min(30vw,10rem)] rounded-full"
         style={{
           boxShadow:
-            '0 0 2px 2px rgba(225,240,253,1), 0 0 40px 12px rgba(56,120,184,0.5), inset 0 0 18px 3px rgba(0,0,0,1)',
+            '0 0 2px 2px rgba(255,240,235,1), 0 0 40px 12px rgba(201,44,16,0.5), inset 0 0 18px 3px rgba(0,0,0,1)',
           background: '#000',
         }}
       />

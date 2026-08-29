@@ -160,11 +160,10 @@
  * only because src/lib/art.ts once drew on them; that ramp is now neutral.
  */
 @theme {
-  /* Light-palette experiment: white ground, near-black ink, blue accent —
-     swapped in place of the original dark/bronze pair. --color-void and
-     --color-parchment keep their names (background / foreground) even
-     though the values no longer match those words; every component reads
-     them by variable, so nothing else had to change. */
+  /* Light-palette experiment: white ground, near-black ink, bronze accent.
+     --color-void and --color-parchment keep their names (background /
+     foreground) even though the values no longer match those words; every
+     component reads them by variable, so nothing else had to change. */
   --color-void: #ffffff;
   /* Darkened from the first pass (#f2f2f2), which sat only ~5% off pure
      white — too close to read as a distinct raised surface once paired
@@ -173,10 +172,14 @@
   --color-patina: #1a0f07;
   --color-umber: #3d2614;
   --color-antique: #6b4423;
-  /* Darkened from the original #539fe0 pick: that value contrasts white at
-     only ~2.84:1, below WCAG AA's 4.5:1 floor for normal text. This holds
-     the same ~210° hue and lands at ~4.62:1. */
-  --color-bronze: #3878b8;
+  /* A hot vermilion red. Kept exactly as picked — it contrasts white at
+     ~5.45:1, comfortably past WCAG AA's 4.5:1 floor for normal text, so
+     unlike the bronze and blue tried before it needed no darkening.
+
+     The token is still named `bronze` after the app rather than the hue;
+     renaming it would touch every call site for no behavioural change, and
+     `gilt` below is the name components actually use. */
+  --color-bronze: #c92c10;
   --color-brass: #d9a05b;
   /* One accent, not two: collapsed onto bronze rather than kept as a second,
      lighter gold. Every existing text-gilt/border-gilt/bg-gilt call site
