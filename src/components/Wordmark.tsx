@@ -14,7 +14,19 @@
  * document text stay "bronze.fm", which is how it is written in prose and
  * how a screen reader should say it.
  */
-export function Wordmark({ className = '' }: { className?: string }) {
+export function Wordmark({
+  className = '',
+  inverted = false,
+}: {
+  className?: string
+  /**
+   * For placing the mark ON the accent rather than on the page: the word
+   * turns white and the block swaps to a white ground with accent text.
+   * Both directions are the same two colours, so the pairing keeps its
+   * 5.45:1 either way round.
+   */
+  inverted?: boolean
+}) {
   return (
     <span className={`inline-flex items-baseline font-display uppercase ${className}`}>
       {/*
@@ -23,9 +35,17 @@ export function Wordmark({ className = '' }: { className?: string }) {
         own margin and push it visibly off. Cancelled here, then re-added
         deliberately as the one gap that should exist.
       */}
-      <span className="-mr-[0.42em] tracking-[0.42em] text-parchment">bronze</span>
+      <span
+        className={`-mr-[0.42em] tracking-[0.42em] ${inverted ? 'text-void' : 'text-parchment'}`}
+      >
+        bronze
+      </span>
 
-      <span className="ml-[0.2em] bg-gilt px-[0.34em] py-[0.1em] text-void">
+      <span
+        className={`ml-[0.2em] px-[0.34em] py-[0.1em] ${
+          inverted ? 'bg-void text-gilt' : 'bg-gilt text-void'
+        }`}
+      >
         {/* Same trailing-gap cancellation, so the block's padding is even on
             both sides instead of 0.42em wider on the right. */}
         <span className="-mr-[0.42em] inline-block tracking-[0.42em]">.fm</span>

@@ -161,16 +161,32 @@ export function AppHeader({
         <AnimatePresence>
           {searchOpen && (
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.15 }}
+              /*
+               * Wiped open left to right rather than faded. `clip-path`
+               * rather than width or scaleX: the contents are laid out at
+               * full size from the first frame and merely revealed, so
+               * nothing reflows mid-animation and no glyph is stretched on
+               * the way in.
+               */
+              initial={reduceMotion ? false : { clipPath: 'inset(0 100% 0 0)' }}
+              animate={{ clipPath: 'inset(0 0% 0 0)' }}
+              exit={reduceMotion ? undefined : { clipPath: 'inset(0 100% 0 0)' }}
+              transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
+              // `inset-0`, not inset-x + top-[safe]: the accent has to fill
+              // the safe-area strip too, or a notched phone shows a band of
+              // page background sitting above the bar.
+              //
               // z-20 clears the bar's own controls, which carry z-10 so they
               // sit above the centred wordmark. Without it the overlay paints
               // underneath them and the wordmark shows through the field.
-              className="absolute inset-x-0 bottom-0 top-[var(--safe-t)] z-20 flex h-14 items-center gap-2 bg-void px-5 sm:px-8"
+              style={{ paddingTop: 'var(--safe-t)' }}
+              className="absolute inset-0 z-20 flex items-center gap-2 bg-gilt px-5 sm:px-8"
             >
-              <SearchIcon className="size-5 shrink-0 text-parchment/40" />
+              {/* On the accent, white is the readable pairing — the same
+                  inversion the wordmark's badge and the primary buttons use.
+                  Full white on #c92c10 measures 5.45:1; the softer weights
+                  here stay above 3:1. */}
+              <SearchIcon className="size-5 shrink-0 text-void/80" />
               <input
                 ref={searchRef}
                 type="search"
@@ -182,12 +198,12 @@ export function AppHeader({
                 // the browser's own blue, immediately beside our close
                 // control, so the bar ends up with two adjacent crosses in
                 // two different palettes.
-                className="min-w-0 flex-1 bg-transparent text-sm text-parchment placeholder:text-parchment/30 focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
+                className="min-w-0 flex-1 bg-transparent text-sm text-void caret-void placeholder:text-void/80 focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
               />
               <button
                 onClick={closeSearch}
                 aria-label="Close search"
-                className="-mr-2 shrink-0 p-2 text-parchment/60 transition hover:text-parchment"
+                className="-mr-2 shrink-0 p-2 text-void/80 transition hover:text-void"
               >
                 <CloseIcon className="size-5" />
               </button>
@@ -217,15 +233,19 @@ export function AppHeader({
               exit={reduceMotion ? undefined : { x: '100%' }}
               transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.16, 1, 0.3, 1] }}
               aria-label="Main"
-              className="fixed inset-y-0 right-0 z-50 flex w-72 max-w-[80vw] flex-col border-l border-parchment/15 bg-void"
+              /* On the accent, like the search bar it shares an edge with —
+                 the two are the same gesture opening from the same side. Every
+                 colour inside is therefore stated against red, not inherited
+                 from the page: an accent-coloured icon would vanish here. */
+              className="fixed inset-y-0 right-0 z-50 flex w-72 max-w-[80vw] flex-col bg-gilt"
               style={{ paddingTop: 'var(--safe-t)', paddingBottom: 'var(--safe-b)' }}
             >
               <div className="flex h-14 items-center justify-between px-4">
-                <Wordmark className="text-sm" />
+                <Wordmark className="text-sm" inverted />
                 <button
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
-                  className="-mr-2 p-2 text-parchment/60 transition hover:text-parchment"
+                  className="-mr-2 p-2 text-void/80 transition hover:text-void"
                 >
                   <CloseIcon className="size-5" />
                 </button>
@@ -240,20 +260,20 @@ export function AppHeader({
                         setMenuOpen(false)
                         navigate(to)
                       }}
-                      className="flex items-center gap-3 px-4 py-3.5 text-left text-sm text-parchment transition hover:bg-ink"
+                      className="flex items-center gap-3 px-4 py-3.5 text-left text-sm text-void transition hover:bg-void/15"
                     >
-                      <Icon className="size-5 text-gilt" />
+                      <Icon className="size-5 text-void" />
                       {label}
                     </button>
                   ) : (
                     <span
                       key={label}
                       title={`${label} — not available yet`}
-                      className="flex items-center gap-3 px-4 py-3.5 text-sm text-parchment/30"
+                      className="flex items-center gap-3 px-4 py-3.5 text-sm text-void/65"
                     >
                       <Icon className="size-5" />
                       {label}
-                      <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.15em] text-parchment/30">
+                      <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.15em] text-void/65">
                         Soon
                       </span>
                     </span>
