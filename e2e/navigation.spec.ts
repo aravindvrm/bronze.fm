@@ -88,9 +88,9 @@ test.describe('creator routing', () => {
     await expect(page.getByText(/No creator called/)).toBeVisible()
   })
 
-  test('carries creator-level Merch and Events', async ({ page }) => {
+  test('carries creator-level Store and Events', async ({ page }) => {
     await gotoCreator(page)
-    for (const seg of ['merch', 'events']) {
+    for (const seg of ['store', 'events']) {
       await page.goto(`/@dean/${seg}`)
       await expect(page).toHaveURL(new RegExp(`/@dean/${seg}$`))
     }
@@ -98,13 +98,13 @@ test.describe('creator routing', () => {
 
   /*
    * Creator sections share a path segment with project slugs, so the router
-   * must match sections first. A project called `merch` is rejected by both
+   * must match sections first. A project called `store` is rejected by both
    * RESERVED_PROJECT_SLUGS and a CHECK constraint, which is what makes this
    * ordering safe rather than merely lucky.
    */
   test('creator sections resolve ahead of project slugs', async ({ page }) => {
-    await page.goto('/@dean/merch')
-    await expect(page.getByRole('heading', { name: 'Merch' }).first()).toBeVisible()
+    await page.goto('/@dean/store')
+    await expect(page.getByRole('heading', { name: 'Store' }).first()).toBeVisible()
   })
 
   /*

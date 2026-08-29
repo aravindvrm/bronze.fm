@@ -4,7 +4,7 @@ import type { Content, ContentItem } from '@/content/types'
 /**
  * ONE audio element for the whole app, held at module scope — deliberately
  * outside React so it survives every route change and re-render. Playback
- * continuing while the user browses Merch or Videos is a hard requirement,
+ * continuing while the user browses Store or Videos is a hard requirement,
  * and owning the element in a component would break it on unmount.
  */
 let el: HTMLAudioElement | null = null

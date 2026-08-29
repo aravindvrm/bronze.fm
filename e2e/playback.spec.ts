@@ -24,8 +24,8 @@ test.describe('playback', () => {
     await expect(page).toHaveURL(/\/@dean\/bronze$/)
     await page.getByRole('button', { name: 'Back' }).click()
     await expect(page).toHaveURL(/\/@dean$/)
-    await page.getByRole('button', { name: /^Merch/ }).click()
-    await expect(page).toHaveURL(/\/@dean\/merch$/)
+    await page.getByRole('button', { name: /^Store/ }).click()
+    await expect(page).toHaveURL(/\/@dean\/store$/)
 
     await page.waitForTimeout(1500)
     const after = await snapshot(page)

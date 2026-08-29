@@ -13,7 +13,7 @@ import {
   EventsIcon,
   InstagramIcon,
   LinkedInIcon,
-  MerchIcon,
+  StoreIcon,
   PlayIcon,
   ReadIcon,
   SpotifyIcon,
@@ -38,12 +38,12 @@ const SOCIALS = [
 /**
  * The Creator's profile — `/@dean`.
  *
- * Projects lead, because they are the work. Merch and Events are Creator-wide
+ * Projects lead, because they are the work. Store and Events are Creator-wide
  * sections and sit below as stubs (PLAN.md §8.2); there is no Content tile,
  * since Projects replaced that listing entirely.
  */
 const SECTIONS = [
-  { seg: 'merch', label: 'Merch', Icon: MerchIcon },
+  { seg: 'store', label: 'Store', Icon: StoreIcon },
   { seg: 'events', label: 'Events', Icon: EventsIcon },
 ] as const
 

@@ -64,7 +64,7 @@ test.describe('animation', () => {
   })
 
   // The hub lists the interfaces the project actually holds, so Bronze shows
-  // one. Merch and Events moved to creator level (PLAN.md §8.2) and Videos
+  // one. Store and Events moved to creator level (PLAN.md §8.2) and Videos
   // exists only when a project has video content.
   test('project hub tiles finish their staggered entrance', async ({ page }) => {
     await gotoProject(page)

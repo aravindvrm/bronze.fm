@@ -91,12 +91,12 @@ function ContentShell() {
  * Everything under one Creator.
  *
  *   /@dean            profile
- *   /@dean/merch      creator-level section
+ *   /@dean/store      creator-level section
  *   /@dean/events     creator-level section
  *   /@dean/bronze     a Project, with its interfaces below it
  *
  * Creator sections are matched before Project slugs, so a Project can never be
- * called `merch`. RESERVED_PROJECT_SLUGS and a CHECK constraint enforce that
+ * called `store`. RESERVED_PROJECT_SLUGS and a CHECK constraint enforce that
  * from both ends.
  */
 function CreatorShell() {
@@ -142,8 +142,8 @@ function CreatorShell() {
       <Routes>
         <Route index element={<CreatorProfile />} />
         <Route
-          path="merch"
-          element={<StubGrid kind="merch" title="Merch" blurb={`Everything ${creator.name} sells.`} />}
+          path="store"
+          element={<StubGrid kind="store" title="Store" blurb={`Everything ${creator.name} sells.`} />}
         />
         <Route
           path="events"

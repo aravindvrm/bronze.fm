@@ -5,7 +5,7 @@
  *
  *   /                        the feed
  *   /@dean                   creator
- *   /@dean/merch             creator-level section
+ *   /@dean/store             creator-level section
  *   /@dean/bronze            project
  *   /@dean/bronze/music      typed interface onto that project
  *
@@ -24,7 +24,7 @@ const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
  *
  * Projects sit directly under the creator (`/@dean/bronze`), sharing that
  * segment with the Creator's own sections — so a project may not be called
- * `merch` or `events`.
+ * `store` or `events`.
  *
  * This list grew back after migration 20260820050000 narrowed it: that
  * migration removed `merch`/`events` precisely because sections then lived
@@ -47,6 +47,7 @@ export const RESERVED_PROJECT_SLUGS = [
   'merch',
   'search',
   'settings',
+  'store',
 ] as const
 
 /**

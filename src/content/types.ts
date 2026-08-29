@@ -186,7 +186,7 @@ export interface Pin {
   hash?: string
 }
 
-export type StubKind = 'video' | 'merch' | 'event'
+export type StubKind = 'video' | 'store' | 'event'
 
 export interface StubItem {
   id: string
@@ -195,7 +195,7 @@ export interface StubItem {
   subtitle?: string
   seed: string
   /**
-   * Optional project association. Merch and Events are Creator-owned, but in
+   * Optional project association. Store and Events are Creator-owned, but in
    * music they usually carry a project dimension too — the Bronze vinyl, the
    * Bronze tour. Absent means Creator-wide.
    */
@@ -210,7 +210,7 @@ export interface ContentAdapter {
   /** One typed interface within a Project, or null if it has none of that type. */
   getContent(creatorSlug: string, projectSlug: string, type: ContentType): Promise<Content | null>
   /**
-   * Stub rows for a Creator. Merch and Events are Creator-level in this
+   * Stub rows for a Creator. Store and Events are Creator-level in this
    * structure (PLAN.md §8.2), so this is not narrowed by project today —
    * `projectSlug` stays on StubItem because the association is real data and
    * a project-scoped view may return.

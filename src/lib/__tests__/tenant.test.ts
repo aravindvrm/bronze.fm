@@ -68,7 +68,7 @@ describe('creatorPath', () => {
   // jsdom serves localhost, so creatorFromHost is null and the shared-host
   // branch is what these exercise.
   it('prefixes the handle on the shared host', () => {
-    expect(creatorPath('dean', 'merch')).toBe('/@dean/merch')
+    expect(creatorPath('dean', 'store')).toBe('/@dean/store')
   })
 
   it('returns the Creator root when given no segments', () => {
@@ -93,7 +93,7 @@ describe('projectPath', () => {
 
 describe('reserved Project slugs', () => {
   // Projects sit directly under the Creator (/@dean/bronze) alongside the
-  // Creator's own sections (/@dean/merch), so a colliding slug would be
+  // Creator's own sections (/@dean/store), so a colliding slug would be
   // permanently unreachable.
   it.each([...RESERVED_PROJECT_SLUGS])('reserves "%s"', (slug) => {
     expect(isReservedProjectSlug(slug)).toBe(true)
@@ -107,7 +107,7 @@ describe('reserved Project slugs', () => {
     // Re-reserved after 20260820050000 had narrowed them away: those sections
     // used to sit a segment deeper than project slugs and could not collide.
     // Under the current structure they share a segment. See PLAN.md §8.4.
-    for (const seg of ['merch', 'events']) {
+    for (const seg of ['store', 'events']) {
       expect(isReservedProjectSlug(seg)).toBe(true)
     }
   })
@@ -121,11 +121,11 @@ describe('reserved Project slugs', () => {
   })
 
   it('matches the database CHECK constraint', () => {
-    // supabase/migrations/20260821030000_projects.sql hard-codes the same
+    // supabase/migrations/20260829150000_store_reserved_slug.sql hard-codes the same
     // list; drift would let a bad slug into the database.
     const inMigration = [
       'about', 'admin', 'api', 'assets',
-      'events', 'login', 'merch', 'search', 'settings',
+      'events', 'login', 'merch', 'search', 'settings', 'store',
     ]
     expect([...RESERVED_PROJECT_SLUGS].sort()).toEqual(inMigration.sort())
   })

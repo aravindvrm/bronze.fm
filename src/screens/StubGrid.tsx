@@ -8,7 +8,7 @@ import { artUrl } from '@/lib/art'
 import { ScreenHeader } from '@/components/ScreenHeader'
 
 /**
- * Merch and Events — Creator-level sections (PLAN.md §8.2).
+ * Store and Events — Creator-level sections (PLAN.md §8.2).
  *
  * Both are stubs: the rows exist so the routes and layout are real, but
  * nothing is purchasable or ticketed yet, and every card says so.

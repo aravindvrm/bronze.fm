@@ -33,7 +33,7 @@ function rng(seed: string) {
  */
 const NEUTRAL = ['#0c0c0c', '#1c1c1c', '#2b2b2b', '#3a3a3a', '#4c4c4c', '#636363', '#8a8a8a', '#b4b4b4']
 
-export type ArtVariant = 'cover' | 'item' | 'video' | 'merch' | 'event'
+export type ArtVariant = 'cover' | 'item' | 'video' | 'store' | 'event'
 
 export function artSvg(seed: string, variant: ArtVariant = 'item', size = 800): string {
   const r = rng(seed + variant)

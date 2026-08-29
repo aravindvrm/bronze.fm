@@ -14,13 +14,13 @@ export const stubs: StubItem[] = [
   { id: 'vid_2', kind: 'video', title: 'Summer Flame', subtitle: 'Visualizer', seed: 'summer-flame', projectSlug: 'bronze' },
   { id: 'vid_3', kind: 'video', title: 'In the Studio', subtitle: 'Behind the scenes', seed: 'studio', projectSlug: 'bronze' },
 
-  // Release merch.
-  { id: 'mch_1', kind: 'merch', title: 'Bronze Tee', subtitle: '$35', seed: 'tee', projectSlug: 'bronze' },
-  { id: 'mch_2', kind: 'merch', title: 'Bronze Vinyl', subtitle: '$42', seed: 'vinyl', projectSlug: 'bronze' },
-  { id: 'mch_3', kind: 'merch', title: 'Tour Poster', subtitle: '$20', seed: 'poster', projectSlug: 'bronze' },
-  // Creator-wide merch, not tied to any record.
-  { id: 'mch_4', kind: 'merch', title: 'Alloy Hoodie', subtitle: '$78', seed: 'hoodie' },
-  { id: 'mch_5', kind: 'merch', title: 'Logo Cap', subtitle: '$28', seed: 'cap' },
+  // Release store items.
+  { id: 'mch_1', kind: 'store', title: 'Bronze Tee', subtitle: '$35', seed: 'tee', projectSlug: 'bronze' },
+  { id: 'mch_2', kind: 'store', title: 'Bronze Vinyl', subtitle: '$42', seed: 'vinyl', projectSlug: 'bronze' },
+  { id: 'mch_3', kind: 'store', title: 'Tour Poster', subtitle: '$20', seed: 'poster', projectSlug: 'bronze' },
+  // Creator-wide store items, not tied to any record.
+  { id: 'mch_4', kind: 'store', title: 'Alloy Hoodie', subtitle: '$78', seed: 'hoodie' },
+  { id: 'mch_5', kind: 'store', title: 'Logo Cap', subtitle: '$28', seed: 'cap' },
 
   // The Bronze tour.
   { id: 'evt_1', kind: 'event', title: 'Brooklyn, NY', subtitle: 'Elsewhere · Oct 14', seed: 'bk', projectSlug: 'bronze' },
