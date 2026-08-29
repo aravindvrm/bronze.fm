@@ -209,7 +209,13 @@ export function Feed() {
               <p className="text-sm text-parchment/40">Nothing matches the filter.</p>
             )}
 
-            <div className="flex flex-col gap-2.5" data-testid="feed-rows">
+            {/* Rules between rows rather than a card each. The cards were
+                doing no work the list itself does not already do — every row
+                is the same shape — and a stack of filled rectangles competes
+                with the cover art, which is the one thing here that should
+                carry colour. `divide-y` puts the rule only BETWEEN rows, so
+                the list has no stray edge above the first or below the last. */}
+            <div className="flex flex-col divide-y divide-parchment/15" data-testid="feed-rows">
               {shownFeed.map(({ content, project }, i) => {
                 const Icon = TYPE_ICON[content.type]
                 return (
@@ -224,7 +230,11 @@ export function Feed() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 * i, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     whileTap={{ scale: 0.99 }}
-                    className="flex items-center gap-3 border border-parchment/25 bg-ink/40 p-2.5 text-left transition hover:border-parchment/25"
+                    // Negative inline margin plus matching padding: the tint
+                    // on hover reaches the page margin, so it reads as the
+                    // row lighting up rather than a floating band inset from
+                    // the text it belongs to.
+                    className="-mx-2 flex items-center gap-3 px-2 py-3 text-left transition hover:bg-parchment/[0.04]"
                   >
                     <img
                       src={coverUrl(project, 200)}
