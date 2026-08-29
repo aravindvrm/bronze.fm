@@ -76,8 +76,21 @@ export function ScrubBar({ compact = false }: { compact?: boolean }) {
           />
         </div>
         {!compact && (
+          /*
+           * Always visible, never hover-gated.
+           *
+           * This handle used to be `opacity-0` until `group-hover`, which
+           * meant it did not exist on touch at all — there is no hover on a
+           * phone, so the bar looked like a progress readout rather than
+           * something you could grab, which is exactly what it is.
+           *
+           * `pointer-events-none` is load-bearing: the track above owns the
+           * pointer capture that makes the drag work, and a handle that
+           * swallowed the pointerdown would break dragging from the one spot
+           * a user is most likely to press.
+           */
           <div
-            className="pointer-events-none absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-parchment opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+            className="pointer-events-none absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gilt shadow-[0_1px_4px_rgba(0,0,0,0.35)] transition-transform group-hover:scale-125 group-active:scale-125"
             style={{ left: `${pct}%` }}
           />
         )}
