@@ -170,7 +170,10 @@
   --color-patina: #1a0f07;
   --color-umber: #3d2614;
   --color-antique: #6b4423;
-  --color-bronze: #539fe0;
+  /* Darkened from the original #539fe0 pick: that value contrasts white at
+     only ~2.84:1, below WCAG AA's 4.5:1 floor for normal text. This holds
+     the same ~210° hue and lands at ~4.62:1. */
+  --color-bronze: #3878b8;
   --color-brass: #d9a05b;
   /* One accent, not two: collapsed onto bronze rather than kept as a second,
      lighter gold. Every existing text-gilt/border-gilt/bg-gilt call site

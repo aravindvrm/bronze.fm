@@ -71,7 +71,7 @@ const RINGS: RingSpec[] = [
     duration: 6,
     band: [58, 63],
     gradient:
-      'conic-gradient(from 0deg, rgba(83,159,224,0) 0deg, #539fe0 20deg, #eaf5ff 60deg, #bcdcf5 100deg, #539fe0 150deg, rgba(83,159,224,0.35) 210deg, rgba(83,159,224,0.08) 280deg, rgba(83,159,224,0) 340deg, rgba(83,159,224,0) 360deg)',
+      'conic-gradient(from 0deg, rgba(56,120,184,0) 0deg, #3878b8 20deg, #eaf5ff 60deg, #bcdcf5 100deg, #3878b8 150deg, rgba(56,120,184,0.35) 210deg, rgba(56,120,184,0.08) 280deg, rgba(56,120,184,0) 340deg, rgba(56,120,184,0) 360deg)',
   },
   {
     size: 'min(64vw,21.5rem)',
@@ -187,7 +187,7 @@ function AccretionDisc({ still }: { still: boolean }) {
         className="absolute size-[140%] opacity-60"
         style={{
           background:
-            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(83,159,224,0.28) 0%, rgba(83,159,224,0.08) 45%, rgba(83,159,224,0) 70%)',
+            'radial-gradient(ellipse 46% 30% at 50% 50%, rgba(56,120,184,0.28) 0%, rgba(56,120,184,0.08) 45%, rgba(56,120,184,0) 70%)',
         }}
       />
 
@@ -210,7 +210,7 @@ function AccretionDisc({ still }: { still: boolean }) {
         className="absolute size-[min(30vw,10rem)] rounded-full"
         style={{
           boxShadow:
-            '0 0 2px 2px rgba(225,240,253,1), 0 0 40px 12px rgba(83,159,224,0.5), inset 0 0 18px 3px rgba(0,0,0,1)',
+            '0 0 2px 2px rgba(225,240,253,1), 0 0 40px 12px rgba(56,120,184,0.5), inset 0 0 18px 3px rgba(0,0,0,1)',
           background: '#000',
         }}
       />
