@@ -102,7 +102,7 @@ export function AppHeader({
   return (
     <>
       <header
-        className="sticky top-0 z-40 border-b border-parchment/15 bg-void/85 backdrop-blur-xl"
+        className="sticky top-0 z-40 bg-void/85 backdrop-blur-xl"
         style={{ paddingTop: 'var(--safe-t)' }}
       >
         <div className="relative mx-auto flex h-14 max-w-[var(--app-w)] items-center px-4 sm:px-8">

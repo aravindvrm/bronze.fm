@@ -102,6 +102,27 @@ test.describe('app header', () => {
     await expect(page).toHaveURL(/\/$/)
   })
 
+  /*
+   * The header must stay put on EVERY screen. It was silently not sticking
+   * on the profile: that screen wrapped its content in `overflow-hidden`
+   * (left over from a blurred cover wash it no longer has), and an ancestor
+   * that clips overflow also becomes the containing block for
+   * `position: sticky` — so the bar scrolled away there and nowhere else.
+   */
+  test('stays pinned to the top while the page scrolls', async ({ page }) => {
+    for (const go of [gotoFeed, gotoCreator]) {
+      await go(page)
+      const header = page.locator('header').first()
+      const topBefore = (await header.boundingBox())!.y
+
+      await page.mouse.move(195, 450)
+      await page.mouse.wheel(0, 600)
+      await page.waitForTimeout(400)
+
+      expect((await header.boundingBox())!.y).toBeCloseTo(topBefore, 0)
+    }
+  })
+
   // The drawer must arrive from the edge its button lives on.
   test('the drawer opens from the right edge', async ({ page }) => {
     await gotoFeed(page)

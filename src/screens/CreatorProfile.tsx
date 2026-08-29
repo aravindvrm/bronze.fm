@@ -123,8 +123,15 @@ export function CreatorProfile() {
    * no feed above it, so Back would point at a page that does not exist on
    * that host. The header falls back to the menu on the left there.
    */
+  /*
+   * No `overflow-hidden` here. It was clipping the blurred cover wash this
+   * screen used to run behind its content, and that wash is long gone — but
+   * an ancestor that clips overflow also becomes the containing block for
+   * `position: sticky`, so it was quietly stopping the header from sticking
+   * on this screen while it stuck everywhere else.
+   */
   return (
-    <div className="relative min-h-full overflow-hidden">
+    <div className="relative min-h-full">
       <AppHeader backTo={isDedicatedHost() ? undefined : '/'} />
 
       <div
