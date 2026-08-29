@@ -265,9 +265,18 @@ export function Splash() {
       {visible && (
         <motion.div
           onClick={enter}
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: still ? 0 : 0.6, ease: 'easeOut' }}
+          /*
+           * Wiped away right to left rather than faded.
+           *
+           * A fade dissolves two screens through each other; a wipe pulls one
+           * off to reveal the other, which is what actually happens here —
+           * the app was behind the splash the whole time. Same `clip-path`
+           * technique the search bar opens with, run in the opposite
+           * direction, so the two reads as one motion language.
+           */
+          initial={{ clipPath: 'inset(0 0% 0 0)' }}
+          exit={{ clipPath: still ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)' }}
+          transition={{ duration: still ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="fixed inset-0 z-[60] grid cursor-pointer place-items-center overflow-hidden bg-void"
         >
           <div className="flex flex-col items-center">
