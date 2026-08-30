@@ -6,7 +6,7 @@ import { CONTENT_TYPE_SEGMENT, type Content } from '@/content/types'
 import { creatorPath, projectPath } from '@/lib/tenant'
 import { coverUrl } from '@/lib/cover'
 import { formatTotal } from '@/lib/format'
-import { ScreenHeader } from '@/components/ScreenHeader'
+import { AppHeader } from '@/components/AppHeader'
 import { MusicIcon, ReadIcon, VideosIcon } from '@/components/Icons'
 
 /**
@@ -53,7 +53,9 @@ export function ProjectHub() {
 
   return (
     <div className="min-h-full">
-      <ScreenHeader title={project.title} titleOf="content" to={creatorPath(creator.slug)} />
+      {/* The hero below already sets the project's title, at the size it
+          deserves — the bar was printing it a second time in miniature. */}
+      <AppHeader backTo={creatorPath(creator.slug)} />
 
       <div
         className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"

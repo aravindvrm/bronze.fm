@@ -1,7 +1,7 @@
 import type { StubKind } from '@/content/types'
 import { useCreator } from '@/content/CreatorContext'
 import { creatorPath } from '@/lib/tenant'
-import { ScreenHeader } from '@/components/ScreenHeader'
+import { AppHeader } from '@/components/AppHeader'
 import { StubTiles } from '@/components/StubTiles'
 
 /**
@@ -28,13 +28,14 @@ export function StubGrid({
 
   return (
     <div className="min-h-full">
-      <ScreenHeader title={title} to={creatorPath(creator.slug)} />
+      <AppHeader backTo={creatorPath(creator.slug)} />
 
       <div
         className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
         style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
       >
-        <p className="mb-6 text-xs leading-relaxed text-parchment/40">{blurb}</p>
+        <h1 className="font-display text-3xl leading-tight text-parchment sm:text-4xl">{title}</h1>
+        <p className="mb-6 mt-3 text-xs leading-relaxed text-parchment/40">{blurb}</p>
         <StubTiles kind={kind} emptyLabel={`${creator.name} has nothing here yet.`} />
       </div>
     </div>

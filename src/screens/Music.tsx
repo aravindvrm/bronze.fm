@@ -3,7 +3,7 @@ import { usePlayer } from '@/audio/playerStore'
 import { useProject } from '@/content/ProjectContext'
 import { artUrl } from '@/lib/art'
 import { formatTime } from '@/lib/format'
-import { ScreenHeader } from '@/components/ScreenHeader'
+import { AppHeader } from '@/components/AppHeader'
 import { OfflineControl } from '@/components/OfflineControl'
 import { useCreator } from '@/content/CreatorContext'
 import { projectPath } from '@/lib/tenant'
@@ -28,15 +28,15 @@ export function Music() {
 
   return (
     <div className="min-h-full">
-      <ScreenHeader
-        title={content.title}
-        titleOf="content"
-        to={projectPath(creator.slug, project.slug)}
-        width="narrow"
-      />
+      <AppHeader backTo={projectPath(creator.slug, project.slug)} />
 
       <div className="mx-auto max-w-3xl px-5 pb-2 sm:px-6">
-        <OfflineControl content={content} />
+        {/* The release's name, in the page rather than the bar: it can wrap
+            here instead of truncating at a phone's width. */}
+        <h1 className="text-3xl leading-tight text-parchment sm:text-4xl">{content.title}</h1>
+        <div className="mt-5">
+          <OfflineControl content={content} />
+        </div>
       </div>
 
       {/* Narrower than the grids above: a track row is title on the left and a

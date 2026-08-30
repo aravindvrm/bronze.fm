@@ -54,9 +54,12 @@ test.describe('animation', () => {
 
     await page.getByRole('button', { name: 'Show track list' }).click()
 
+    // By test id, not by class. This used to look up `[class*="z-10"]` and
+    // took whichever element matched first — which stopped being the panel
+    // the moment a header control on the page carried the same utility.
     const queueY = async () =>
       page.evaluate(() => {
-        const el = document.querySelector('[class*="z-10"]')
+        const el = document.querySelector('[data-testid="queue-panel"]')
         return el ? Math.round(el.getBoundingClientRect().y) : null
       })
     await expect.poll(queueY, { timeout: 5000 }).toBe(0)

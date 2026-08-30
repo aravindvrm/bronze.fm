@@ -25,6 +25,7 @@ export function QueuePanel() {
       animate={{ y: '0%' }}
       exit={{ y: '100%' }}
       transition={{ type: 'spring', stiffness: 340, damping: 38 }}
+      data-testid="queue-panel"
       className="absolute inset-0 z-10 flex flex-col bg-ink/95 backdrop-blur-2xl"
     >
       <header
