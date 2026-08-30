@@ -79,23 +79,6 @@ export function Reader() {
 
   return (
     <div className="relative min-h-full">
-      {/*
-        A veil over the ambient field, for this screen only.
-        
-        Everywhere else the drifting net is atmosphere behind short blocks of
-        text. Here it sits behind thousands of words of continuous prose,
-        where anything moving in the margins is something the eye keeps
-        returning to. Long-form reading is the one place in the app that wants
-        a still, plain ground.
-        
-        Not opaque: at 94% the field is still faintly there, so the reader
-        belongs to the same app rather than looking like a separate document
-        viewer. `fixed` so it holds while the article scrolls, and -z-10 to
-        sit above the field (also -z-10, earlier in paint order) while staying
-        behind every word.
-      */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-void/94" aria-hidden />
-
       <ScreenHeader
         title={content?.title ?? project.title}
         titleOf="content"

@@ -90,21 +90,23 @@ test.describe('splash', () => {
   })
 
   /*
-   * The splash carries the same drifting field as the app, over its own
-   * ground rather than showing through to it.
+   * The drifting field belongs to the splash and to nowhere else.
    *
-   * Asserted because the failure mode is silent and total: ParticlesProvider
-   * keeps its loaded state in module globals and REFUSES a second provider
-   * whose init callback is a different function, throwing during render and
-   * blanking the whole app. Two canvases with their own container ids is the
-   * cheapest proof both instances mounted.
+   * Both halves are asserted. The canvas is worth pinning because its
+   * failure mode is silent — a mis-keyed option or a provider that refuses
+   * to mount leaves a blank white screen rather than an error. And the app
+   * behind it is deliberately plain: the field was moved off it because
+   * movement behind everything you read is a distraction, so a second
+   * canvas reappearing anywhere is a regression, not a bonus.
    */
-  test('carries the ambient field, without stealing the app\u2019s canvas', async ({ page }) => {
+  test('is the only place the drifting field appears', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('img', { name: 'bronze.fm' })).toBeVisible()
-
     await expect(page.locator('#splash-field canvas')).toHaveCount(1)
-    await expect(page.locator('#app-field canvas')).toHaveCount(1)
+
+    await page.locator('.z-\\[60\\]').click()
+    await expect(page.getByRole('heading', { name: 'Featured Creators' })).toBeVisible()
+    await expect(page.locator('canvas')).toHaveCount(0)
   })
 
   /*

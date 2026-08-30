@@ -6,24 +6,25 @@ import { loadLinksPreset } from '@tsparticles/preset-links'
 import type { ISourceOptions } from '@tsparticles/engine'
 
 /**
- * The app's background, everywhere — mounted once at the App root, `fixed`
- * behind the routed content. Replaces the drawn dot-grid: that read as a
- * repeating pattern rather than the organic drifting node network it was
- * meant to evoke, and getting the real thing by hand — particles wandering,
- * links forming and breaking as neighbours drift in and out of range,
- * fading cleanly at the edges — is exactly the well-trodden ground
- * tsParticles' `links` preset already covers, at ~387k weekly downloads and
- * actively maintained, rather than a hand-rolled canvas loop reinventing it
- * worse.
+ * The drifting node network behind the splash.
  *
- * `@tsparticles/slim` rather than the full engine: this only ever needs the
- * links preset, and slim is the trimmed build meant for exactly that.
+ * It used to sit behind the whole app. It does not any more: movement in the
+ * margins of every screen is something the eye keeps returning to, and this
+ * is a reading surface. On the splash there is nothing to distract FROM —
+ * one mark, one line, and a tap — so the field is the screen's texture
+ * rather than a competing one, and it can be drawn far stronger than it ever
+ * could behind a feed.
+ *
+ * Particles wandering, links forming and breaking as neighbours drift in and
+ * out of range, fading cleanly at the edges: that is exactly the well-trodden
+ * ground tsParticles' `links` preset covers, rather than a hand-rolled canvas
+ * loop reinventing it worse. `@tsparticles/slim` rather than the full engine,
+ * since the links preset is all this ever needs.
  *
  * Colour comes from `--color-ambient`, which follows the accent by default,
- * so retheming the app rethemes the field behind it. It is drawn at 10-32%
- * opacity, which is what keeps it atmosphere rather than a second accent
- * competing with the one that marks state, or with real cover art.
+ * so retheming the app rethemes this too.
  */
+
 
 /**
  * Resolves a theme token to a literal colour.
@@ -51,15 +52,14 @@ function resolveToken(token: string): string {
 }
 
 /**
- * Loads the engine, once for the whole app.
+ * Loads the engine, once.
  *
- * Module-level rather than written inline at the call site, and this is
+ * Module-level rather than written inline at the call site, and that is
  * load-bearing rather than tidiness: ParticlesProvider keeps its "engine
- * loaded" state in module globals, and a second provider mounting with a
- * DIFFERENT init function throws outright — "init callback must be stable
- * across the app lifecycle". Two providers sharing this one identity is
- * exactly the case it allows, which is what lets the splash carry its own
- * canvas alongside the global field.
+ * loaded" state in module globals and throws outright on a provider whose
+ * init is a different function — "init callback must be stable across the
+ * app lifecycle". One shared identity is what keeps a second instance legal
+ * should this ever be mounted twice again.
  */
 const initEngine = async (engine: Parameters<typeof loadSlim>[0]) => {
   await loadSlim(engine)
@@ -67,16 +67,11 @@ const initEngine = async (engine: Parameters<typeof loadSlim>[0]) => {
 }
 
 /**
- * The drifting net itself, without a ground or a position of its own.
+ * The net itself, with no ground and no position of its own — it fills
+ * whichever positioned box it is dropped into.
  *
- * Extracted so the splash can carry the same field as the app behind it. The
- * splash sits above the routed content and must stay opaque — going
- * transparent would reveal the feed rather than the background — so it needs
- * its own copy over its own ground rather than a hole punched through to the
- * global one.
- *
- * `id` must differ per instance: tsParticles keys its containers by it, and
- * two canvases sharing a name leaves one of them blank.
+ * `id` must be unique per instance: tsParticles keys its containers by it,
+ * and two canvases sharing a name leaves one of them blank.
  */
 export function ParticleCanvas({ id }: { id: string }) {
   const reduceMotion = useReducedMotion()
@@ -127,14 +122,29 @@ export function ParticleCanvas({ id }: { id: string }) {
          * alone, which is why it read as barely there.
          */
         paint: { color: { value: ambient } },
-        size: { value: { min: 1, max: 2 } },
-        opacity: { value: { min: 0.12, max: 0.32 } },
-        move: { enable: !reduceMotion, speed: 0.35, direction: 'none', random: true, outModes: 'out' },
+        size: { value: { min: 1, max: 2.5 } },
+        /*
+         * Far stronger than the old app-wide values (dots 0.12-0.32, links
+         * 0.1). Those were set to keep the field from competing with cover
+         * art and with the accent wherever it marks state — constraints that
+         * simply do not exist on a screen holding one wordmark and one line.
+         * Here the net is meant to be seen.
+         */
+        opacity: { value: { min: 0.35, max: 0.75 } },
+        /*
+         * A drift, not a motion graphic. Slower than it looks like it needs
+         * to be: this sits behind everything the app asks you to read, and
+         * peripheral movement is what pulls the eye off the text — the links
+         * make it worse, since a whole triangle snaps into existence when two
+         * dots cross the threshold. At 0.35 that was constant; at 0.12 the
+         * shapes take long enough to form that they read as ambient.
+         */
+        move: { enable: !reduceMotion, speed: 0.12, direction: 'none', random: true, outModes: 'out' },
         links: {
           enable: true,
           distance: 110,
           color: ambient,
-          opacity: 0.1,
+          opacity: 0.32,
           width: 1,
         },
       },
@@ -151,20 +161,3 @@ export function ParticleCanvas({ id }: { id: string }) {
   )
 }
 
-/**
- * The app's background, mounted once at the App root and sitting behind the
- * routed content.
- *
- * No vertical overlay: there used to be one calming the foot of the screen
- * behind the docked player, but any such gradient veils one end toward the
- * page ground and leaves the other bare, which reads — correctly — as the
- * field being darker at the top. The mini player carries its own translucent
- * ground and never needed it.
- */
-export function ParticleField() {
-  return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-void">
-      <ParticleCanvas id="app-field" />
-    </div>
-  )
-}

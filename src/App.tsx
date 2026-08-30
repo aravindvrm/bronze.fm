@@ -8,7 +8,6 @@ import { CreatorProvider, useCreator } from '@/content/CreatorContext'
 import { ProjectProvider } from '@/content/ProjectContext'
 import { contentTypeFromSegment, type Creator, type Project } from '@/content/types'
 import { HANDLE_PREFIX, defaultCreatorSlug, isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
-import { ParticleField } from '@/components/ParticleField'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { InstallBanner } from '@/components/InstallBanner'
@@ -168,8 +167,6 @@ export default function App() {
 
   return (
     <AudioProvider>
-      <ParticleField />
-
       {/*
         No AnimatePresence around the routes. `mode="wait"` couples navigation
         to an exit animation completing — every nav stalls behind it, and an
