@@ -10,13 +10,16 @@ import { projectPath } from '@/lib/tenant'
 import { AppHeader } from '@/components/AppHeader'
 import { ReaderRail, type Chapter } from '@/components/ReaderRail'
 import { ReaderIndex } from '@/components/ReaderIndex'
+import { ReaderCoach } from '@/components/ReaderCoach'
 import { PAGE_GAP, usePagination } from '@/lib/usePagination'
 import { useImmersion } from '@/lib/immersion'
 import {
   DEFAULT_SCALE_INDEX,
   SCALES,
+  coachSeen,
   loadPosition,
   loadScaleIndex,
+  markCoached,
   savePosition,
   saveScaleIndex,
 } from '@/lib/readerPrefs'
@@ -43,6 +46,25 @@ import {
 
 /** Rough average reading pace, in words per minute. */
 const WPM = 230
+
+/**
+ * Width of each gesture margin, as a fraction of the page.
+ *
+ * The same number decides where a tap turns a page, where a vertical drag
+ * sets the text size, and where the coaching overlay draws its bands — so it
+ * is written once and passed to the overlay rather than guessed at twice.
+ */
+const EDGE = 0.22
+
+/**
+ * Vertical travel, in pixels, for one step of text size.
+ *
+ * There are only four steps, so a drag that changed size continuously would
+ * spend most of its length doing nothing and then jump. This is tuned so a
+ * comfortable thumb swipe moves exactly one — and a long drag can still walk
+ * through the range without lifting.
+ */
+const SIZE_STEP_PX = 80
 
 /**
  * Drops the paper's own title page, which the reader prints for itself.
@@ -302,6 +324,8 @@ export function Reader() {
    * the reader's thumb.
    */
   const [chrome, setChrome] = useState(true)
+  /** The gesture explainer, shown the first time anyone opens a paper. */
+  const [coaching, setCoaching] = useState(false)
 
   /*
    * The docked player is mounted at the App root so playback survives
@@ -317,6 +341,12 @@ export function Reader() {
   const innerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => setScaleIndex(loadScaleIndex()), [])
+  useEffect(() => setCoaching(!coachSeen()), [])
+
+  const dismissCoach = useCallback(() => {
+    setCoaching(false)
+    markCoached()
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -412,10 +442,18 @@ export function Reader() {
   }, [query, blocks, blockPages])
 
   // ── Input ───────────────────────────────────────────────────────────────
-  const cycleType = useCallback(() => {
+  /*
+   * One step up or down the size ladder, clamped rather than wrapped.
+   *
+   * The old control cycled — press past the largest and you were back at the
+   * smallest — which is the only sane behaviour for a single button and
+   * exactly the wrong one for a gesture. Swiping up should never make the
+   * text suddenly tiny.
+   */
+  const step = useCallback((delta: number) => {
     setScaleIndex((i) => {
-      const next = (i + 1) % SCALES.length
-      saveScaleIndex(next)
+      const next = Math.max(0, Math.min(SCALES.length - 1, i + delta))
+      if (next !== i) saveScaleIndex(next)
       return next
     })
   }, [])
@@ -440,16 +478,39 @@ export function Reader() {
   }, [turn])
 
   /*
-   * Swipe, and tap-the-edge.
+   * One pointer handler for every gesture the page offers.
    *
-   * One pointer handler for both: a gesture that travels far enough is a
-   * swipe, one that barely moves is a tap, and where it landed decides the
-   * direction. A text selection suppresses both — dragging across a sentence
-   * to select it must not also turn the page.
+   *   horizontal, anywhere      swipe to turn
+   *   tap in a margin           turn a page
+   *   tap in the middle         the bar comes back
+   *   vertical, in a margin     text size, the way a video player does volume
+   *
+   * The margins do double duty because they are the two places a thumb
+   * naturally rests and the two places no words are being read. A vertical
+   * drag in the MIDDLE is deliberately inert: that is where the text is, and
+   * resizing it out from under a sentence someone is reading is the one thing
+   * this must not do.
+   *
+   * A text selection suppresses everything — dragging across a sentence to
+   * select it must not also turn the page.
    */
-  const down = useRef<{ x: number; y: number } | null>(null)
+  const down = useRef<{ x: number; y: number; margin: boolean } | null>(null)
+  const sized = useRef(false)
+  const stepFrom = useRef(0)
+
+  const zoneOf = (e: React.PointerEvent) => {
+    const box = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - box.left
+    const edge = box.width * EDGE
+    if (x < edge) return { margin: true, side: -1 as const }
+    if (x > box.width - edge) return { margin: true, side: 1 as const }
+    return { margin: false, side: 0 as const }
+  }
+
   const onPointerDown = (e: React.PointerEvent) => {
-    down.current = { x: e.clientX, y: e.clientY }
+    down.current = { x: e.clientX, y: e.clientY, margin: zoneOf(e).margin }
+    sized.current = false
+    stepFrom.current = e.clientY
     /*
      * Capture the pointer for the whole gesture.
      *
@@ -461,11 +522,29 @@ export function Reader() {
      */
     e.currentTarget.setPointerCapture(e.pointerId)
   }
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    const start = down.current
+    if (!start || !start.margin) return
+    const dx = e.clientX - start.x
+    const dy = e.clientY - start.y
+    // Committed to vertical only once it clearly is: a swipe that wanders is
+    // still a page turn until it stops being one.
+    if (Math.abs(dy) < 20 || Math.abs(dy) < Math.abs(dx)) return
+
+    const travelled = e.clientY - stepFrom.current
+    if (Math.abs(travelled) < SIZE_STEP_PX) return
+    // Up is bigger, matching every brightness and volume gesture there is.
+    step(travelled < 0 ? 1 : -1)
+    stepFrom.current = e.clientY
+    sized.current = true
+  }
+
   const onPointerUp = (e: React.PointerEvent) => {
     const start = down.current
     down.current = null
     if (!start) return
-    // A drag that selected text was someone selecting text, not turning a page.
+    if (sized.current) return
     if (window.getSelection()?.toString()) return
 
     const dx = e.clientX - start.x
@@ -477,12 +556,12 @@ export function Reader() {
     }
     if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
       const box = e.currentTarget.getBoundingClientRect()
-      const zone = box.width * 0.22
       const x = e.clientX - box.left
-      if (x < zone) {
+      const edge = box.width * EDGE
+      if (x < edge) {
         setChrome(false)
         turn(-1)
-      } else if (x > box.width - zone) {
+      } else if (x > box.width - edge) {
         setChrome(false)
         turn(1)
       } else {
@@ -532,12 +611,19 @@ export function Reader() {
       <div
         data-testid="reader-page"
         onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerCancel}
-        // Vertical panning and pinch-zoom stay with the browser; horizontal
-        // movement is ours. Without this the platform can take a sideways
-        // drag for its own back-navigation gesture and the swipe never lands.
-        style={{ touchAction: 'pan-y pinch-zoom' }}
+        /*
+         * Every direction is ours; only pinch-zoom stays with the browser.
+         *
+         * This was `pan-y pinch-zoom`, which reads as harmless on a surface
+         * that never scrolls — but `pan-y` is a promise the browser may take
+         * vertical movement for panning, and once it does it stops sending
+         * pointermove at all. The text-size gesture fired not once. There is
+         * nothing to pan here: the page is fixed and paged.
+         */
+        style={{ touchAction: 'pinch-zoom' }}
         className="relative flex-1 overflow-hidden px-5 sm:px-6"
       >
         <div
@@ -597,6 +683,8 @@ export function Reader() {
         </div>
       )}
 
+      <ReaderCoach open={coaching} margin={EDGE} onDismiss={dismissCoach} />
+
       <ReaderIndex
         open={indexOpen}
         minutesLeft={minutesLeft}
@@ -618,7 +706,6 @@ export function Reader() {
           chapter={section}
           onSeek={goToPage}
           onOpenContents={() => setIndexOpen(true)}
-          onCycleType={cycleType}
         />
       </div>
     </div>

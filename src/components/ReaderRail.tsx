@@ -25,6 +25,12 @@ export interface Chapter {
  * and they also cost roughly a third of the characters that fit — the wrong
  * trade for the one string here that is content.
  *
+ * There is no text-size control here any more. At the size a bar like this
+ * allows, two stacked A's were a target barely wider than a finger is
+ * accurate — the kind of button you press twice by accident and once on
+ * purpose. Text size moved to a vertical swipe in the page margins, and its
+ * old slot went to the chapter name, which needed every pixel of it.
+ *
  * The rail is the paged equivalent of a scrollbar. Paging removes the real
  * one, and a paper this long needs some way to see where you are and to move
  * a long way at once — so the track carries a tick for every chapter, fills
@@ -42,7 +48,6 @@ export function ReaderRail({
   chapter,
   onSeek,
   onOpenContents,
-  onCycleType,
 }: {
   page: number
   pages: number
@@ -51,7 +56,6 @@ export function ReaderRail({
   chapter: string
   onSeek: (page: number) => void
   onOpenContents: () => void
-  onCycleType: () => void
 }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const last = Math.max(1, pages - 1)
@@ -85,20 +89,9 @@ export function ReaderRail({
     <div className="mx-auto w-full max-w-3xl px-5 pb-3 sm:px-6">
       <div className="mb-1.5 flex items-center gap-3 font-mono text-[10px] text-parchment/45">
         <button
-          onClick={onCycleType}
-          className="-m-1 shrink-0 p-1 transition hover:text-parchment"
-          aria-label="Change text size"
-        >
-          {/* Not an icon: two glyphs at two sizes say "type size" without a
-              legend, and the app's own typeface draws them. */}
-          <span className="text-[11px]">A</span>
-          <span className="text-[14px]">A</span>
-        </button>
-
-        <button
           onClick={onOpenContents}
           aria-label="Contents"
-          className="flex min-w-0 flex-1 items-center justify-center gap-1.5 transition hover:text-parchment"
+          className="flex min-w-0 flex-1 items-center gap-1.5 text-left transition hover:text-parchment"
         >
           <ContentsIcon className="size-3 shrink-0" />
           <span className="truncate">{chapter}</span>

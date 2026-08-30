@@ -122,3 +122,54 @@ export async function playTrack(page: Page, index: number) {
   }, [index, 'bronze'] as const)
   await waitPlaying(page)
 }
+
+/**
+ * The reader, with the gesture overlay out of the way.
+ *
+ * A paged reader has no visible controls, so the first open explains the
+ * gestures over the page — which means every test that touches the page has
+ * to get past it first. Dismissed by pre-setting the same flag the app
+ * writes, rather than by tapping: a tap is itself a gesture, and a test that
+ * had to perform one to reach the gestures would be testing the overlay in
+ * every case.
+ */
+export async function gotoReader(page: Page, opts: { coach?: boolean } = {}) {
+  if (!opts.coach) {
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem('bronze:reader-coached', '1')
+      } catch {
+        // Private mode: the overlay shows, and the test that cares says so.
+      }
+    })
+  }
+  await page.goto('/@dean/atonomos/read')
+  await page.getByRole('slider', { name: 'Page' }).waitFor({ timeout: 10_000 })
+}
+
+/**
+ * A touch drag through the real input pipeline.
+ *
+ * Synthetic PointerEvents prove a handler is wired and nothing else — they
+ * skip hit testing, pointer capture and the platform's own gesture
+ * arbitration, which is where a swipe actually goes wrong.
+ */
+export async function touchDrag(
+  page: Page,
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  steps = 8,
+) {
+  const cdp = await page.context().newCDPSession(page)
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [from] })
+  for (let i = 1; i <= steps; i++) {
+    await cdp.send('Input.dispatchTouchEvent', {
+      type: 'touchMove',
+      touchPoints: [
+        { x: from.x + ((to.x - from.x) * i) / steps, y: from.y + ((to.y - from.y) * i) / steps },
+      ],
+    })
+  }
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  await cdp.detach()
+}

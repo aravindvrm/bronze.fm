@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { act, gotoCreator, playTrack, snapshot } from './helpers'
+import { act, gotoCreator, gotoReader, playTrack, snapshot, touchDrag } from './helpers'
 
 test.describe('pinned content', () => {
   test('lists the creator’s curation in order', async ({ page }) => {
@@ -157,7 +157,7 @@ test.describe('splash', () => {
 
 test.describe('reader', () => {
   test('renders the paper as semantic blocks, not a blob', async ({ page }) => {
-    await page.goto('/@dean/atonomos/read')
+    await gotoReader(page)
     const article = page.locator('article')
     await expect(article.getByRole('heading', { name: 'Introduction' })).toBeVisible()
 
@@ -177,7 +177,7 @@ test.describe('reader', () => {
    * neither a type change nor a reload.
    */
   test('turns pages, and the rail says where you are', async ({ page }) => {
-    await page.goto('/@dean/atonomos/read')
+    await gotoReader(page)
     const rail = page.getByRole('slider', { name: 'Page' })
     await expect(rail).toHaveAttribute('aria-valuenow', '1')
     const pages = Number(await rail.getAttribute('aria-valuemax'))
@@ -190,7 +190,7 @@ test.describe('reader', () => {
   })
 
   test('the contents list carries every heading, with live page numbers', async ({ page }) => {
-    await page.goto('/@dean/atonomos/read')
+    await gotoReader(page)
     await page.getByRole('button', { name: 'Contents' }).click()
 
     const entries = page.locator('nav[aria-label="Contents"] li')
@@ -217,28 +217,13 @@ test.describe('reader', () => {
    * pointerup somewhere else and the turn never fires.
    */
   test('turns pages on a swipe', async ({ page }) => {
-    await page.goto('/@dean/atonomos/read')
+    await gotoReader(page)
     const rail = page.getByRole('slider', { name: 'Page' })
     await expect(rail).toHaveAttribute('aria-valuenow', '1')
 
-    const cdp = await page.context().newCDPSession(page)
-    const swipe = async (from: number, to: number) => {
-      await cdp.send('Input.dispatchTouchEvent', {
-        type: 'touchStart',
-        touchPoints: [{ x: from, y: 400 }],
-      })
-      for (let i = 1; i <= 5; i++) {
-        await cdp.send('Input.dispatchTouchEvent', {
-          type: 'touchMove',
-          touchPoints: [{ x: from + ((to - from) * i) / 5, y: 400 }],
-        })
-      }
-      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
-    }
-
-    await swipe(300, 80)
+    await touchDrag(page, { x: 300, y: 400 }, { x: 80, y: 400 })
     await expect(rail).toHaveAttribute('aria-valuenow', '2')
-    await swipe(80, 300)
+    await touchDrag(page, { x: 80, y: 400 }, { x: 300, y: 400 })
     await expect(rail).toHaveAttribute('aria-valuenow', '1')
   })
 
@@ -250,7 +235,7 @@ test.describe('reader', () => {
    * exists to avoid.
    */
   test('the top bar gets out of the way, without moving the page', async ({ page }) => {
-    await page.goto('/@dean/atonomos/read')
+    await gotoReader(page)
     const bar = page.locator('header').locator('..')
     const heightOf = async () => (await bar.boundingBox())?.height
     const before = await heightOf()
@@ -287,8 +272,7 @@ test.describe('reader', () => {
     // Queue from inside the reader, not before navigating to it: the store
     // lives in memory, so a `goto` would empty the queue and unmount the very
     // bar under test.
-    await page.goto('/@dean/atonomos/read')
-    await page.getByRole('slider', { name: 'Page' }).waitFor()
+    await gotoReader(page)
     await playTrack(page, 1)
     // playFrom opens the full player; the docked bar is what shows once it is
     // collapsed, which is the state anyone browsing while listening is in.
@@ -311,6 +295,52 @@ test.describe('reader', () => {
   })
 
   /*
+   * Text size by gesture, and the margin that is NOT a page turn.
+   *
+   * The margins carry two gestures: a tap turns a page, a vertical drag
+   * resizes. Asserting both from the same band is the point — they have to
+   * coexist, and the second assertion is the one that matters, because a
+   * vertical drag in the middle of the page must do nothing at all. That is
+   * where the words are, and resizing them out from under a sentence someone
+   * is reading is the failure worth pinning down.
+   */
+  test('sets text size from a margin, and leaves the middle alone', async ({ page }) => {
+    await gotoReader(page)
+    const flow = page.locator('[data-block="0"]').locator('..')
+    const size = async () => flow.evaluate((el) => getComputedStyle(el).fontSize)
+
+    const start = await size()
+    await touchDrag(page, { x: 24, y: 620 }, { x: 24, y: 480 })
+    const bigger = await size()
+    expect(parseFloat(bigger)).toBeGreaterThan(parseFloat(start))
+
+    await touchDrag(page, { x: 366, y: 480 }, { x: 366, y: 620 })
+    expect(await size()).toBe(start)
+
+    // The middle is text, not a control.
+    await touchDrag(page, { x: 195, y: 620 }, { x: 195, y: 460 })
+    expect(await size()).toBe(start)
+  })
+
+  /*
+   * The gestures explain themselves once, then never again — a persisted
+   * flag, not a per-session one, because this is something you learn rather
+   * than something you are reminded of.
+   */
+  test('explains its gestures the first time, and only the first time', async ({ page }) => {
+    await gotoReader(page, { coach: true })
+    const coach = page.getByRole('note', { name: 'How to use the reader' })
+    await expect(coach).toBeVisible()
+
+    await page.getByTestId('reader-page').click({ position: { x: 195, y: 300 } })
+    await expect(coach).toBeHidden()
+
+    await page.reload()
+    await page.getByRole('slider', { name: 'Page' }).waitFor()
+    await expect(coach).toBeHidden()
+  })
+
+  /*
    * Position is stored as a BLOCK, never a page number, which is what lets it
    * survive a reflow. Asserted through a type-size change because that is the
    * cheapest reflow to trigger and the one that caught the original bug: the
@@ -318,16 +348,21 @@ test.describe('reader', () => {
    * size mid-paper threw the reader back toward the start.
    */
   test('keeps your place across a type-size change', async ({ page }) => {
-    await page.goto('/@dean/atonomos/read')
+    await gotoReader(page)
     const rail = page.getByRole('slider', { name: 'Page' })
 
     await page.getByRole('button', { name: 'Contents' }).click()
     await page.locator('nav[aria-label="Contents"] li').nth(7).getByRole('button').click()
+    // The sheet animates out; a drag started while it is still there lands on
+    // the sheet rather than on the page margin.
+    await expect(page.locator('nav[aria-label="Contents"]')).toBeHidden()
     const before = Number(await rail.getAttribute('aria-valuenow'))
     const pagesBefore = Number(await rail.getAttribute('aria-valuemax'))
     expect(before).toBeGreaterThan(5)
 
-    await page.getByRole('button', { name: 'Change text size' }).click()
+    // Text size is a vertical drag in a page margin now, not a button. Up is
+    // bigger, the way every brightness and volume gesture works.
+    await touchDrag(page, { x: 24, y: 600 }, { x: 24, y: 470 })
     await expect.poll(async () => Number(await rail.getAttribute('aria-valuemax'))).toBeGreaterThan(
       pagesBefore,
     )

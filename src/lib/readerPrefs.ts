@@ -13,6 +13,7 @@
 
 const POSITION_KEY = 'bronze:reader-position'
 const SCALE_KEY = 'bronze:reader-scale'
+const COACH_KEY = 'bronze:reader-coached'
 
 /**
  * Type sizes, as multipliers on the reader's base measure.
@@ -84,4 +85,19 @@ export function loadPosition(contentId: string): number {
 
 export function savePosition(contentId: string, block: number): void {
   write(POSITION_KEY, JSON.stringify({ ...loadAll(), [contentId]: block }))
+}
+
+/**
+ * Whether the gestures have been explained already.
+ *
+ * localStorage, not sessionStorage: this is a thing you learn once, not once
+ * per visit. Shown again after clearing site data, which is the same as
+ * arriving new.
+ */
+export function coachSeen(): boolean {
+  return read(COACH_KEY) !== null
+}
+
+export function markCoached(): void {
+  write(COACH_KEY, '1')
 }
