@@ -104,17 +104,60 @@ export interface ContentItem {
 }
 
 /**
+ * A run of text carrying its own emphasis.
+ *
+ * Paragraphs are sequences of these rather than plain strings, because a
+ * plain string cannot hold a link. The flags combine — a word can be bold
+ * inside a link — so this is deliberately flat rather than a tree: nesting
+ * would buy correctness the reader has no way to render differently, at the
+ * cost of a recursive type every importer would have to build.
+ *
+ * `href` is the only field that leaves the document, so it is the only one
+ * that needs checking. Importers must reject anything but http, https and
+ * mailto — a `javascript:` URL in an imported file is script execution on a
+ * click, and the block model exists precisely so nothing arrives as markup.
+ */
+export interface Span {
+  text: string
+  strong?: boolean
+  em?: boolean
+  code?: boolean
+  href?: string
+}
+
+/** A table cell: its spans, and whether it spans columns. */
+export interface Cell {
+  spans: Span[]
+  span?: number
+}
+
+/**
  * A block of a document, in reading order.
  *
- * Deliberately a small closed set rather than stored HTML: the source is a
- * Word export, and mapping it to semantic blocks lets the reader inherit the
- * app's own typography instead of carrying Word's. It also means nothing
- * arrives as markup that would have to be sanitised before rendering.
+ * Deliberately a closed set rather than stored HTML. Mapping a source
+ * document to semantic blocks lets the reader inherit the app's own
+ * typography instead of carrying Word's or the web's, it reflows at any type
+ * size, and — the part that matters most — nothing arrives as markup, so
+ * there is no untrusted HTML to sanitise at render time. Widening the set is
+ * how the reader gains a format; the render path never grows a `dangerously`
+ * anything.
+ *
+ * `h` keeps a plain string. Headings are what the contents sheet, the
+ * chapter rail and the current-section readout are all built from, and every
+ * one of those wants text it can measure and truncate, not a span tree.
  */
 export type DocBlock =
   | { kind: 'h'; level: 1 | 2 | 3; text: string }
-  | { kind: 'p'; text: string }
-  | { kind: 'ul'; items: string[] }
+  | { kind: 'p'; spans: Span[] }
+  | { kind: 'ul'; items: Span[][] }
+  /** `start` carries a list that does not begin at one. */
+  | { kind: 'ol'; items: Span[][]; start?: number }
+  | { kind: 'quote'; spans: Span[] }
+  /** Preformatted, so it keeps its own line breaks and never reflows. */
+  | { kind: 'code'; text: string; lang?: string }
+  | { kind: 'table'; head?: Cell[]; rows: Cell[][] }
+  | { kind: 'figure'; src: string; alt: string; caption?: Span[] }
+  | { kind: 'rule' }
 
 /**
  * One typed interface onto a Project. Music holds ordered items; video holds

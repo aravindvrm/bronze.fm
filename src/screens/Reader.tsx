@@ -4,7 +4,8 @@ import { content as adapter } from '@/content/adapter'
 import { useCreator } from '@/content/CreatorContext'
 import { useProject } from '@/content/ProjectContext'
 import { usePlayer } from '@/audio/playerStore'
-import type { Content, DocBlock } from '@/content/types'
+import type { Content, DocBlock, Span } from '@/content/types'
+import { blockText, countWords } from '@/content/blocks'
 import { projectPath } from '@/lib/tenant'
 import { AppHeader } from '@/components/AppHeader'
 import { ReaderRail, type Chapter } from '@/components/ReaderRail'
@@ -70,62 +71,213 @@ function stripTitlePage(blocks: DocBlock[], title: string): DocBlock[] {
   return i ? blocks.slice(i) : blocks
 }
 
-function blockText(block: DocBlock): string {
-  return block.kind === 'ul' ? block.items.join(' ') : block.text
+/**
+ * A run of text, with whatever emphasis it carries.
+ *
+ * A link is an anchor and nothing more elaborate: `rel="noreferrer"` because
+ * an imported document is somebody else's writing pointing somewhere this app
+ * does not control, and `target="_blank"` because losing your place in a
+ * paper to follow a citation is a poor trade. `href` was checked for scheme
+ * at import; this is where it is used.
+ */
+function Run({ span }: { span: Span }) {
+  const classes = [
+    span.strong && 'font-semibold text-parchment',
+    span.em && 'italic',
+    span.code && 'rounded bg-parchment/[0.07] px-1 py-0.5 font-mono text-[0.85em]',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  if (span.href) {
+    return (
+      <a
+        href={span.href}
+        target="_blank"
+        rel="noreferrer"
+        className={`${classes} text-gilt underline decoration-gilt/40 underline-offset-2`}
+      >
+        {span.text}
+      </a>
+    )
+  }
+  return classes ? <span className={classes}>{span.text}</span> : <>{span.text}</>
+}
+
+function Runs({ spans }: { spans: Span[] }) {
+  return (
+    <>
+      {spans.map((span, i) => (
+        <Run key={i} span={span} />
+      ))}
+    </>
+  )
 }
 
 /**
+ * One block, in the reader's own typography.
+ *
  * `break-inside: avoid` on headings, and `break-after: avoid` so a heading
  * never ends up alone at the foot of a page with its section overleaf. The
  * orphan and widow counts stop a paragraph leaving a single line behind.
  * These are the one thing paged text needs that scrolled text does not.
+ *
+ * Figures, tables and code get `break-inside: avoid` for a different reason:
+ * a table split down a column boundary is unreadable in a way a split
+ * paragraph is not, so they move whole to the next page even at the cost of
+ * white space.
  */
 function Block({ block, index }: { block: DocBlock; index: number }) {
   const avoid = { breakInside: 'avoid', breakAfter: 'avoid' } as const
+  const whole = { breakInside: 'avoid' } as const
 
-  if (block.kind === 'h') {
-    if (block.level === 1) {
+  switch (block.kind) {
+    case 'h': {
+      if (block.level === 1) {
+        return (
+          <h2 data-block={index} style={avoid} className="mb-3 mt-8 text-[1.7em] leading-tight text-parchment first:mt-0">
+            {block.text}
+          </h2>
+        )
+      }
+      if (block.level === 2) {
+        return (
+          <h3 data-block={index} style={avoid} className="mb-2 mt-7 text-[1.32em] leading-snug text-parchment">
+            {block.text}
+          </h3>
+        )
+      }
       return (
-        <h2 data-block={index} style={avoid} className="mb-3 mt-8 text-[1.7em] leading-tight text-parchment first:mt-0">
+        <h4
+          data-block={index}
+          style={avoid}
+          className="mb-1.5 mt-6 font-display text-[0.95em] uppercase tracking-[0.12em] text-gilt/80"
+        >
           {block.text}
-        </h2>
+        </h4>
       )
     }
-    if (block.level === 2) {
+
+    case 'ul':
       return (
-        <h3 data-block={index} style={avoid} className="mb-2 mt-7 text-[1.32em] leading-snug text-parchment">
-          {block.text}
-        </h3>
+        <ul data-block={index} className="mt-3 list-disc space-y-2 pl-5 marker:text-gilt/50">
+          {block.items.map((spans, i) => (
+            <li key={i} className="leading-[1.75] text-parchment/75">
+              <Runs spans={spans} />
+            </li>
+          ))}
+        </ul>
       )
-    }
-    return (
-      <h4
-        data-block={index}
-        style={avoid}
-        className="mb-1.5 mt-6 font-display text-[0.95em] uppercase tracking-[0.12em] text-gilt/80"
-      >
-        {block.text}
-      </h4>
-    )
-  }
 
-  if (block.kind === 'ul') {
-    return (
-      <ul data-block={index} className="mt-3 list-disc space-y-2 pl-5 marker:text-gilt/50">
-        {block.items.map((item, i) => (
-          <li key={i} className="leading-[1.75] text-parchment/75">
-            {item}
-          </li>
-        ))}
-      </ul>
-    )
-  }
+    case 'ol':
+      return (
+        <ol
+          data-block={index}
+          start={block.start}
+          className="mt-3 list-decimal space-y-2 pl-6 marker:font-mono marker:text-[0.85em] marker:text-gilt/60"
+        >
+          {block.items.map((spans, i) => (
+            <li key={i} className="leading-[1.75] text-parchment/75">
+              <Runs spans={spans} />
+            </li>
+          ))}
+        </ol>
+      )
 
-  return (
-    <p data-block={index} style={{ orphans: 2, widows: 2 }} className="mt-3 leading-[1.75] text-parchment/75">
-      {block.text}
-    </p>
-  )
+    case 'quote':
+      return (
+        <blockquote
+          data-block={index}
+          className="mt-4 border-l-2 border-gilt/50 pl-4 italic leading-[1.75] text-parchment/65"
+        >
+          <Runs spans={block.spans} />
+        </blockquote>
+      )
+
+    case 'code':
+      return (
+        <pre
+          data-block={index}
+          style={whole}
+          // Code is the one thing here that must NOT reflow — its line breaks
+          // are content. It scrolls sideways within the page rather than
+          // wrapping, which would silently change what it says.
+          className="mt-4 overflow-x-auto bg-parchment/[0.05] p-3 font-mono text-[0.8em] leading-[1.6] text-parchment/80"
+        >
+          <code>{block.text}</code>
+        </pre>
+      )
+
+    case 'table':
+      return (
+        <div data-block={index} style={whole} className="mt-4 overflow-x-auto">
+          <table className="w-full border-collapse text-[0.85em]">
+            {block.head && (
+              <thead>
+                <tr>
+                  {block.head.map((cell, i) => (
+                    <th
+                      key={i}
+                      colSpan={cell.span}
+                      className="border-b border-parchment/25 py-2 pr-3 text-left font-semibold text-parchment"
+                    >
+                      <Runs spans={cell.spans} />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {block.rows.map((row, i) => (
+                <tr key={i}>
+                  {row.map((cell, j) => (
+                    <td
+                      key={j}
+                      colSpan={cell.span}
+                      className="border-b border-parchment/10 py-2 pr-3 align-top leading-[1.6] text-parchment/75"
+                    >
+                      <Runs spans={cell.spans} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+
+    case 'figure':
+      return (
+        <figure data-block={index} style={whole} className="mt-5">
+          {/*
+            Capped well under the page height, because a figure taller than
+            the column cannot be paginated at all — the browser would give it
+            a page of its own and clip whatever did not fit.
+          */}
+          <img
+            src={block.src}
+            alt={block.alt}
+            className="max-h-[45%] w-full object-contain"
+            loading="lazy"
+          />
+          {block.caption && (
+            <figcaption className="mt-2 font-mono text-[0.7em] leading-relaxed text-parchment/45">
+              <Runs spans={block.caption} />
+            </figcaption>
+          )}
+        </figure>
+      )
+
+    case 'rule':
+      return <hr data-block={index} className="my-8 border-parchment/20" />
+
+    case 'p':
+      return (
+        <p data-block={index} style={{ orphans: 2, widows: 2 }} className="mt-3 leading-[1.75] text-parchment/75">
+          <Runs spans={block.spans} />
+        </p>
+      )
+  }
 }
 
 export function Reader() {
@@ -235,10 +387,7 @@ export function Reader() {
   }, [chapters, page])
 
   // ── Progress ────────────────────────────────────────────────────────────
-  const totalWords = useMemo(
-    () => blocks.reduce((n, b) => n + blockText(b).split(/\s+/).length, 0),
-    [blocks],
-  )
+  const totalWords = useMemo(() => countWords(blocks), [blocks])
   const minutesLeft = pages > 1 ? Math.ceil((totalWords * (1 - page / (pages - 1))) / WPM) : 0
 
   // ── Search ──────────────────────────────────────────────────────────────

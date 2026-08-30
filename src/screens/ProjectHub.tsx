@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCreator } from '@/content/CreatorContext'
 import { useProject } from '@/content/ProjectContext'
 import { CONTENT_TYPE_SEGMENT, type Content } from '@/content/types'
+import { countWords } from '@/content/blocks'
 import { creatorPath, projectPath } from '@/lib/tenant'
 import { coverUrl } from '@/lib/cover'
 import { formatTotal } from '@/lib/format'
@@ -34,12 +35,10 @@ function subtitle(content: Content): string {
     // Prefer the carried count: fixture content deliberately arrives without
     // its body (see the adapter), while Supabase content brings the body and
     // no count. Either path yields a read time.
-    const words =
-      content.wordCount ??
-      (content.document ?? []).reduce(
-        (n, b) => n + (b.kind === 'ul' ? b.items.join(' ') : b.text).split(/\s+/).length,
-        0,
-      )
+    // Counted by the shared helper rather than here: this used to pick fields
+    // off the block union inline, which meant every kind added to the model
+    // was silently worth zero words.
+    const words = content.wordCount ?? countWords(content.document ?? [])
     // ~230wpm is the usual silent-reading estimate for prose of this register.
     return words ? `${Math.max(1, Math.round(words / 230))} min read` : 'Coming soon'
   }
