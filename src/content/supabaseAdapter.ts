@@ -1,5 +1,6 @@
 import { getSupabase } from '@/lib/supabaseClient'
 import type { Content, ContentAdapter, ContentType, Creator, Credit, DocBlock, Pin, Project, StubKind, StubItem } from '@/content/types'
+import { normaliseBlocks } from '@/content/blocks'
 
 /**
  * Reads Content through Supabase instead of local fixtures.
@@ -174,7 +175,10 @@ function toContent(row: ContentRow, ownerSlug: string, projectSlug: string): Con
     totalDurationMs,
     items,
     credits,
-    document: row.document ?? undefined,
+    // jsonb, so its shape is whatever was written last — normalised here
+    // rather than asserted, because a build that ships ahead of its
+    // migration reads rows this renderer has never seen.
+    document: row.document ? normaliseBlocks(row.document) : undefined,
     createdAt: row.created_at,
   }
 }

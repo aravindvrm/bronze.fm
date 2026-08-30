@@ -5,7 +5,7 @@ import { useCreator } from '@/content/CreatorContext'
 import { useProject } from '@/content/ProjectContext'
 import { usePlayer } from '@/audio/playerStore'
 import type { Content, DocBlock, Span } from '@/content/types'
-import { blockText, countWords } from '@/content/blocks'
+import { blockText, countWords, normaliseBlocks } from '@/content/blocks'
 import { projectPath } from '@/lib/tenant'
 import { AppHeader } from '@/components/AppHeader'
 import { ReaderRail, type Chapter } from '@/components/ReaderRail'
@@ -361,8 +361,16 @@ export function Reader() {
   }, [creator.slug, project.slug])
 
   const title = content?.title ?? project.title
+  /*
+   * Normalised again here, not only at the adapter.
+   *
+   * Belt and braces on purpose: this is the one component that dereferences
+   * block fields, and it is the one whose failure takes the whole app down
+   * with it. A second pass over already-clean data costs one array walk on
+   * load.
+   */
   const blocks = useMemo(
-    () => stripTitlePage(content?.document ?? [], title),
+    () => stripTitlePage(normaliseBlocks(content?.document ?? []), title),
     [content?.document, title],
   )
 

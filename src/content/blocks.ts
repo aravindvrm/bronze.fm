@@ -1,4 +1,4 @@
-import type { DocBlock, Span } from '@/content/types'
+import type { Cell, DocBlock, Span } from '@/content/types'
 
 /**
  * Everything that reads a document's WORDS rather than rendering them.
@@ -61,4 +61,111 @@ export function safeHref(href: string): string | undefined {
   // Protocol-relative and rooted paths carry no scheme to abuse.
   if (trimmed.startsWith('/') || trimmed.startsWith('#')) return trimmed
   return SAFE_SCHEME.test(trimmed) ? trimmed : undefined
+}
+
+/**
+ * Makes an arbitrary lump of JSON into blocks this app can render.
+ *
+ * `content.document` is a jsonb column. Whatever is in it becomes DocBlock[]
+ * by assertion alone — TypeScript is checking a shape at compile time that
+ * the database is free to contradict at run time, and the two drift the
+ * moment a build ships ahead of a migration. That is not hypothetical: when
+ * paragraphs gained spans, a deployment reading un-migrated rows got
+ * `{kind: 'p', text}` where the renderer expected `spans`, and `spans.map`
+ * threw during render. React unmounts the whole tree on a render error, so a
+ * single stale paragraph blanked the entire app — permanently, since no
+ * client-side navigation could remount it.
+ *
+ * So every document is normalised on the way in:
+ *
+ *   - the pre-spans shape is upgraded rather than rejected, because it says
+ *     exactly what the new one says and there is no reason to lose a paper
+ *     over it;
+ *   - anything still unrecognisable is DROPPED. A missing paragraph is a
+ *     small, local, visible loss; a thrown error is a blank app.
+ *
+ * Total by construction: every branch returns, so a block kind added to the
+ * model without a case here is a type error rather than a silent gap.
+ */
+export function normaliseBlocks(input: unknown): DocBlock[] {
+  if (!Array.isArray(input)) return []
+  return input.flatMap((raw): DocBlock[] => {
+    if (!raw || typeof raw !== 'object') return []
+    const block = raw as Record<string, unknown>
+
+    // The pre-spans shape: a plain string where spans now go.
+    const spans = (value: unknown): Span[] | null => {
+      if (typeof value === 'string') return value ? [{ text: value }] : null
+      if (!Array.isArray(value)) return null
+      const out = value.filter(
+        (s): s is Span => !!s && typeof s === 'object' && typeof (s as Span).text === 'string',
+      )
+      return out.length ? out : null
+    }
+    const items = (value: unknown): Span[][] | null => {
+      if (!Array.isArray(value)) return null
+      const out = value.map(spans).filter((s): s is Span[] => s !== null)
+      return out.length ? out : null
+    }
+
+    switch (block.kind) {
+      case 'h': {
+        const level = block.level === 2 ? 2 : block.level === 3 ? 3 : 1
+        return typeof block.text === 'string' && block.text ? [{ kind: 'h', level, text: block.text }] : []
+      }
+      case 'p': {
+        const s = spans(block.spans ?? block.text)
+        return s ? [{ kind: 'p', spans: s }] : []
+      }
+      case 'quote': {
+        const s = spans(block.spans ?? block.text)
+        return s ? [{ kind: 'quote', spans: s }] : []
+      }
+      case 'ul': {
+        const list = items(block.items)
+        return list ? [{ kind: 'ul', items: list }] : []
+      }
+      case 'ol': {
+        const list = items(block.items)
+        if (!list) return []
+        const start = typeof block.start === 'number' ? block.start : undefined
+        return [start ? { kind: 'ol', items: list, start } : { kind: 'ol', items: list }]
+      }
+      case 'code': {
+        if (typeof block.text !== 'string') return []
+        const lang = typeof block.lang === 'string' ? block.lang : undefined
+        return [lang ? { kind: 'code', text: block.text, lang } : { kind: 'code', text: block.text }]
+      }
+      case 'table': {
+        const cells = (value: unknown): Cell[] | null => {
+          if (!Array.isArray(value)) return null
+          const out = value.flatMap((cell): Cell[] => {
+            const s = spans((cell as Record<string, unknown>)?.spans) ?? []
+            const n = (cell as Record<string, unknown>)?.span
+            return [typeof n === 'number' && n > 1 ? { spans: s, span: n } : { spans: s }]
+          })
+          return out.length ? out : null
+        }
+        const rows = Array.isArray(block.rows)
+          ? block.rows.map(cells).filter((r): r is Cell[] => r !== null)
+          : []
+        const head = cells(block.head)
+        if (!rows.length && !head) return []
+        return [head ? { kind: 'table', head, rows } : { kind: 'table', rows }]
+      }
+      case 'figure': {
+        if (typeof block.src !== 'string' || !block.src) return []
+        const src = safeHref(block.src)
+        // A figure whose source is not a usable URL is not a figure.
+        if (!src) return []
+        const alt = typeof block.alt === 'string' ? block.alt : ''
+        const caption = spans(block.caption)
+        return [caption ? { kind: 'figure', src, alt, caption } : { kind: 'figure', src, alt }]
+      }
+      case 'rule':
+        return [{ kind: 'rule' }]
+      default:
+        return []
+    }
+  })
 }
