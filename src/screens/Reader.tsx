@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { content as adapter } from '@/content/adapter'
 import { useCreator } from '@/content/CreatorContext'
 import { useProject } from '@/content/ProjectContext'
@@ -130,12 +131,24 @@ export function Reader() {
   const creator = useCreator()
   const project = useProject()
   const hasQueue = usePlayer((s) => s.queue.length > 0)
+  const reduceMotion = useReducedMotion()
 
   const [content, setContent] = useState<Content | null>(null)
   const [loaded, setLoaded] = useState(false)
   const [scaleIndex, setScaleIndex] = useState(DEFAULT_SCALE_INDEX)
   const [indexOpen, setIndexOpen] = useState(false)
   const [query, setQuery] = useState('')
+  /*
+   * The top bar, once you are actually reading.
+   *
+   * It goes on the first page turn and comes back on a tap in the middle of
+   * the page — the dead zone between the two edges that turn pages, so the
+   * three gestures never collide. It is CLIPPED rather than unmounted, and
+   * its box keeps its height either way: collapsing it would grow the text
+   * column, repaginate the paper mid-read, and renumber every page under
+   * the reader's thumb.
+   */
+  const [chrome, setChrome] = useState(true)
 
   const outerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
@@ -253,10 +266,12 @@ export function Reader() {
       if (e.target instanceof HTMLInputElement) return
       if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
         e.preventDefault()
+        setChrome(false)
         turn(1)
       }
       if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
         e.preventDefault()
+        setChrome(false)
         turn(-1)
       }
     }
@@ -275,25 +290,49 @@ export function Reader() {
   const down = useRef<{ x: number; y: number } | null>(null)
   const onPointerDown = (e: React.PointerEvent) => {
     down.current = { x: e.clientX, y: e.clientY }
+    /*
+     * Capture the pointer for the whole gesture.
+     *
+     * Without it a swipe that ends over a child element — which is most of
+     * them, since the page is wall-to-wall text — delivers its pointerup to
+     * that child, and the handler here never sees where the finger let go.
+     * Capture also means `pointercancel` reliably arrives if the browser
+     * decides to claim the gesture for itself.
+     */
+    e.currentTarget.setPointerCapture(e.pointerId)
   }
   const onPointerUp = (e: React.PointerEvent) => {
     const start = down.current
     down.current = null
     if (!start) return
+    // A drag that selected text was someone selecting text, not turning a page.
     if (window.getSelection()?.toString()) return
 
     const dx = e.clientX - start.x
     const dy = e.clientY - start.y
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      setChrome(false)
       turn(dx < 0 ? 1 : -1)
       return
     }
     if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-      const width = e.currentTarget.getBoundingClientRect().width
-      const zone = width * 0.22
-      if (e.clientX < zone) turn(-1)
-      else if (e.clientX > width - zone) turn(1)
+      const box = e.currentTarget.getBoundingClientRect()
+      const zone = box.width * 0.22
+      const x = e.clientX - box.left
+      if (x < zone) {
+        setChrome(false)
+        turn(-1)
+      } else if (x > box.width - zone) {
+        setChrome(false)
+        turn(1)
+      } else {
+        // The middle of the page is the only thing that brings the bar back.
+        setChrome((on) => !on)
+      }
     }
+  }
+  const onPointerCancel = () => {
+    down.current = null
   }
 
   const scale = SCALES[scaleIndex]
@@ -303,11 +342,26 @@ export function Reader() {
     // never scrolls, so the screen owns its own height rather than growing
     // inside the app's scroller.
     <div className="fixed inset-0 z-30 flex flex-col bg-void">
-      <AppHeader
-        backTo={projectPath(creator.slug, project.slug)}
-        query={query}
-        onQueryChange={setQuery}
-      />
+      {/*
+        A vertical wipe, not a slide or a fade. `clip-path` leaves the box
+        exactly where it is — nothing below it moves, so the text column
+        keeps its height and the paper is never repaginated by the chrome
+        coming and going. Focus brings it back, so a keyboard user is never
+        left tabbing into a bar they cannot see.
+      */}
+      <motion.div
+        onFocusCapture={() => setChrome(true)}
+        animate={{ clipPath: chrome ? 'inset(0 0 0% 0)' : 'inset(0 0 100% 0)' }}
+        initial={false}
+        transition={{ duration: reduceMotion ? 0 : 0.28, ease: [0.16, 1, 0.3, 1] }}
+        className="shrink-0"
+      >
+        <AppHeader
+          backTo={projectPath(creator.slug, project.slug)}
+          query={query}
+          onQueryChange={setQuery}
+        />
+      </motion.div>
 
       {/*
         The measured box carries no padding of its own: `clientWidth`
@@ -316,8 +370,14 @@ export function Reader() {
         break a gutter early.
       */}
       <div
+        data-testid="reader-page"
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
+        // Vertical panning and pinch-zoom stay with the browser; horizontal
+        // movement is ours. Without this the platform can take a sideways
+        // drag for its own back-navigation gesture and the swipe never lands.
+        style={{ touchAction: 'pan-y pinch-zoom' }}
         className="relative flex-1 overflow-hidden px-5 sm:px-6"
       >
         <div

@@ -206,6 +206,74 @@ test.describe('reader', () => {
   })
 
   /*
+   * Swipe, through the real input pipeline.
+   *
+   * Dispatched over CDP rather than as synthetic PointerEvents, because a
+   * synthetic event proves only that the handler is wired — it skips hit
+   * testing, pointer capture and the platform's own gesture arbitration,
+   * which is where a swipe actually goes wrong. The handler captures the
+   * pointer for exactly that reason: without it, a swipe ending over a child
+   * element (which is most of a wall-to-wall page of text) delivers its
+   * pointerup somewhere else and the turn never fires.
+   */
+  test('turns pages on a swipe', async ({ page }) => {
+    await page.goto('/@dean/atonomos/read')
+    const rail = page.getByRole('slider', { name: 'Page' })
+    await expect(rail).toHaveAttribute('aria-valuenow', '1')
+
+    const cdp = await page.context().newCDPSession(page)
+    const swipe = async (from: number, to: number) => {
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart',
+        touchPoints: [{ x: from, y: 400 }],
+      })
+      for (let i = 1; i <= 5; i++) {
+        await cdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove',
+          touchPoints: [{ x: from + ((to - from) * i) / 5, y: 400 }],
+        })
+      }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    }
+
+    await swipe(300, 80)
+    await expect(rail).toHaveAttribute('aria-valuenow', '2')
+    await swipe(80, 300)
+    await expect(rail).toHaveAttribute('aria-valuenow', '1')
+  })
+
+  /*
+   * The bar leaves once you are reading and comes back on a tap in the
+   * middle. It is clipped, never unmounted, and its box keeps its height —
+   * asserted here because collapsing it would grow the text column and
+   * repaginate the paper under the reader, which is the failure this design
+   * exists to avoid.
+   */
+  test('the top bar gets out of the way, without moving the page', async ({ page }) => {
+    await page.goto('/@dean/atonomos/read')
+    const bar = page.locator('header').locator('..')
+    const heightOf = async () => (await bar.boundingBox())?.height
+    const before = await heightOf()
+
+    await page.keyboard.press('ArrowRight')
+    await expect.poll(async () => bar.evaluate((el) => getComputedStyle(el).clipPath)).toContain(
+      '100%',
+    )
+    expect(await heightOf()).toBe(before)
+
+    // The middle of the page is the only gesture that brings it back — the
+    // edges are page turns.
+    // The page surface, not the article: the article spans every column, so
+    // its box is thousands of pixels wide and a position inside it lands
+    // somewhere off screen.
+    await page.getByTestId('reader-page').click({ position: { x: 180, y: 300 } })
+    await expect
+      .poll(async () => bar.evaluate((el) => getComputedStyle(el).clipPath))
+      .not.toContain('100%')
+    expect(await heightOf()).toBe(before)
+  })
+
+  /*
    * Position is stored as a BLOCK, never a page number, which is what lets it
    * survive a reflow. Asserted through a type-size change because that is the
    * cheapest reflow to trigger and the one that caught the original bug: the
