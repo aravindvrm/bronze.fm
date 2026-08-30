@@ -54,6 +54,7 @@ export function AppHeader({
   query,
   onQueryChange,
   backTo,
+  label,
 }: {
   /** Present only on screens that actually have something to search. */
   query?: string
@@ -65,6 +66,13 @@ export function AppHeader({
    * — there is nothing above it to return to.
    */
   backTo?: string
+  /**
+   * A line under the wordmark saying where in the screen you are — the
+   * reader's current section, as the pages turn. Only a screen with somewhere
+   * to be *inside* it has any use for this; everywhere else the wordmark
+   * alone is the answer.
+   */
+  label?: string
 }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
@@ -112,39 +120,56 @@ export function AppHeader({
         {/* px-5 to match every screen's content column, so the controls land
             on the same margins as the page beneath them. */}
         <div className="relative mx-auto flex h-14 max-w-[var(--app-w)] items-center px-5 sm:px-8">
-          {/* Left slot: whatever this screen offers. Back wins where both
-              apply, since leaving is the more urgent of the two. */}
-          {backTo ? (
-            <button
-              onClick={() => navigate(backTo)}
-              aria-label="Back"
-              className="relative z-10 -ml-2 p-2 text-parchment transition hover:text-gilt"
-            >
-              <BackIcon className="size-6" />
-            </button>
-          ) : searchable ? (
-            <button
-              onClick={() => setSearchOpen(true)}
-              aria-label="Search"
-              aria-expanded={searchOpen}
-              className="relative z-10 -ml-2 p-2 text-parchment transition hover:text-gilt"
-            >
-              <SearchIcon className="size-6" />
-            </button>
-          ) : (
-            // Holds the slot so the wordmark's neighbours stay balanced on a
-            // screen that offers neither.
-            <span className="size-10" aria-hidden />
-          )}
+          {/*
+            Left slot: whatever this screen offers, and it can be both. Back
+            used to win outright, which silently cost the reader its search —
+            a screen you can leave AND search inside had no way to reach the
+            field. The menu stays alone on the right either way.
+          */}
+          <div className="relative z-10 -ml-2 flex items-center">
+            {backTo && (
+              <button
+                onClick={() => navigate(backTo)}
+                aria-label="Back"
+                className="p-2 text-parchment transition hover:text-gilt"
+              >
+                <BackIcon className="size-6" />
+              </button>
+            )}
+            {searchable && (
+              <button
+                onClick={() => setSearchOpen(true)}
+                aria-label="Search"
+                aria-expanded={searchOpen}
+                className="p-2 text-parchment transition hover:text-gilt"
+              >
+                <SearchIcon className="size-6" />
+              </button>
+            )}
+            {!backTo && !searchable && (
+              // Holds the slot so the wordmark's neighbours stay balanced on
+              // a screen that offers neither.
+              <span className="size-10" aria-hidden />
+            )}
+          </div>
 
           {/* Centred against the bar, not against the gap between controls. */}
-          <button
-            onClick={() => navigate('/')}
-            aria-label="bronze.fm home"
-            className="absolute inset-x-0 mx-auto w-fit"
-          >
-            <Wordmark className="text-sm" />
-          </button>
+          <div className="absolute inset-x-0 mx-auto flex w-fit max-w-[60%] flex-col items-center">
+            <button onClick={() => navigate('/')} aria-label="bronze.fm home">
+              <Wordmark className="text-sm" />
+            </button>
+            {label && (
+              /* aria-hidden: it is a position readout that changes on every
+                 page turn, and announcing it would talk over the text the
+                 reader is actually there for. */
+              <span
+                aria-hidden
+                className="mt-0.5 max-w-full truncate font-mono text-[9px] uppercase tracking-[0.18em] text-parchment/45"
+              >
+                {label}
+              </span>
+            )}
+          </div>
 
           {/* Right slot: the menu, on every screen without exception. */}
           <button

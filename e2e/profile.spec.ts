@@ -168,6 +168,72 @@ test.describe('reader', () => {
     expect(await article.locator('ul').count()).toBeGreaterThan(0)
   })
 
+  /*
+   * The paged reader, end to end.
+   *
+   * Every one of these covers a bug that shipped during the build and would
+   * have been invisible to a smoke test: page turns that moved the wrong
+   * way, an index that skipped half the paper, and a position that survived
+   * neither a type change nor a reload.
+   */
+  test('turns pages, and the rail says where you are', async ({ page }) => {
+    await page.goto('/@dean/atonomos/read')
+    const rail = page.getByRole('slider', { name: 'Page' })
+    await expect(rail).toHaveAttribute('aria-valuenow', '1')
+    const pages = Number(await rail.getAttribute('aria-valuemax'))
+    expect(pages).toBeGreaterThan(20)
+
+    await page.keyboard.press('ArrowRight')
+    await expect(rail).toHaveAttribute('aria-valuenow', '2')
+    await page.keyboard.press('ArrowLeft')
+    await expect(rail).toHaveAttribute('aria-valuenow', '1')
+  })
+
+  test('the contents list carries every heading, with live page numbers', async ({ page }) => {
+    await page.goto('/@dean/atonomos/read')
+    await page.getByRole('button', { name: 'Contents' }).click()
+
+    const entries = page.locator('nav[aria-label="Contents"] li')
+    // Sections AND subsections: filtering to the top level left six entries
+    // for a paper with twelve headings.
+    await expect(entries).toHaveCount(12)
+
+    await entries.nth(7).getByRole('button').click()
+    await expect(page.getByRole('slider', { name: 'Page' })).not.toHaveAttribute(
+      'aria-valuenow',
+      '1',
+    )
+  })
+
+  /*
+   * Position is stored as a BLOCK, never a page number, which is what lets it
+   * survive a reflow. Asserted through a type-size change because that is the
+   * cheapest reflow to trigger and the one that caught the original bug: the
+   * page mapping subtracted the current page's offset twice, so changing the
+   * size mid-paper threw the reader back toward the start.
+   */
+  test('keeps your place across a type-size change', async ({ page }) => {
+    await page.goto('/@dean/atonomos/read')
+    const rail = page.getByRole('slider', { name: 'Page' })
+
+    await page.getByRole('button', { name: 'Contents' }).click()
+    await page.locator('nav[aria-label="Contents"] li').nth(7).getByRole('button').click()
+    const before = Number(await rail.getAttribute('aria-valuenow'))
+    const pagesBefore = Number(await rail.getAttribute('aria-valuemax'))
+    expect(before).toBeGreaterThan(5)
+
+    await page.getByRole('button', { name: 'Change text size' }).click()
+    await expect.poll(async () => Number(await rail.getAttribute('aria-valuemax'))).toBeGreaterThan(
+      pagesBefore,
+    )
+
+    // Same place in the paper, renumbered — not the same page number.
+    const after = Number(await rail.getAttribute('aria-valuenow'))
+    const pagesAfter = Number(await rail.getAttribute('aria-valuemax'))
+    const drift = Math.abs(after / pagesAfter - before / pagesBefore)
+    expect(drift).toBeLessThan(0.05)
+  })
+
   test('the hub advertises a read time once the paper has text', async ({ page }) => {
     await page.goto('/@dean/atonomos')
     await expect(page.getByRole('button', { name: /^Read/ })).toContainText(/min read/)
