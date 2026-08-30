@@ -24,6 +24,11 @@ import { useEffect } from 'react'
  * Dismissed by any touch, and by a timer, and by using any of the gestures it
  * describes. Someone who already knows how a reader works should not have to
  * find the dismiss.
+ *
+ * Shown once, but reachable again: "Gestures" in the contents sheet re-opens
+ * it. A one-shot explanation that cannot be summoned back is a poor deal when
+ * it is the only account of how the screen works — miss it and there is
+ * nothing left to ask.
  */
 export function ReaderCoach({
   open,
@@ -39,8 +44,10 @@ export function ReaderCoach({
 
   useEffect(() => {
     if (!open) return
-    // Long enough to read twice, short enough not to be in the way.
-    const timer = window.setTimeout(onDismiss, 5200)
+    // Long enough to read twice without hurrying. It used to be 5.2s, which
+    // is easy to miss entirely if you started reading the page instead — and
+    // missing it used to mean never seeing it again.
+    const timer = window.setTimeout(onDismiss, 7000)
     return () => window.clearTimeout(timer)
   }, [open, onDismiss])
 

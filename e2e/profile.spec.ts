@@ -353,6 +353,17 @@ test.describe('reader', () => {
     await page.reload()
     await page.getByRole('slider', { name: 'Page' }).waitFor()
     await expect(coach).toBeHidden()
+
+    /*
+     * ...but it can be asked for again. A one-shot explanation that cannot be
+     * summoned back is a poor deal when it is the only account of how the
+     * screen works: miss the five seconds it is up and there is nothing left
+     * to ask. That is exactly what happened in use.
+     */
+    await page.getByRole('button', { name: 'Contents' }).click()
+    await page.getByRole('button', { name: 'Gestures' }).click()
+    await expect(coach).toBeVisible()
+    await expect(page.locator('nav[aria-label="Contents"]')).toBeHidden()
   })
 
   /*

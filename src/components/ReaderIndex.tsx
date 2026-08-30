@@ -21,6 +21,7 @@ export function ReaderIndex({
   chapters,
   currentBlock,
   onSelect,
+  onShowGestures,
   onClose,
 }: {
   open: boolean
@@ -30,6 +31,8 @@ export function ReaderIndex({
   /** The block the reader is currently on, for marking where they are. */
   currentBlock: number
   onSelect: (block: number) => void
+  /** Re-opens the gesture overlay, which is otherwise shown only once. */
+  onShowGestures: () => void
   onClose: () => void
 }) {
   const reduceMotion = useReducedMotion()
@@ -79,13 +82,29 @@ export function ReaderIndex({
                     </span>
                   )}
                 </h2>
-                <button
-                  onClick={onClose}
-                  aria-label="Close contents"
-                  className="-mr-2 p-2 text-parchment/60 transition hover:text-parchment"
-                >
-                  <CloseIcon className="size-5" />
-                </button>
+                <div className="flex items-center gap-1">
+                  {/*
+                    The gesture overlay is shown once and then never again,
+                    which made the only explanation of how this screen works
+                    unrecoverable — miss it and there is nothing to ask. This
+                    is where you ask. In the contents sheet rather than on the
+                    rail because it is a thing you want twice in a lifetime,
+                    and the rail has no pixels to spare.
+                  */}
+                  <button
+                    onClick={onShowGestures}
+                    className="p-2 font-mono text-[10px] uppercase tracking-[0.2em] text-parchment/45 transition hover:text-parchment"
+                  >
+                    Gestures
+                  </button>
+                  <button
+                    onClick={onClose}
+                    aria-label="Close contents"
+                    className="-mr-2 p-2 text-parchment/60 transition hover:text-parchment"
+                  >
+                    <CloseIcon className="size-5" />
+                  </button>
+                </div>
               </div>
 
               <ul className="mt-2">
