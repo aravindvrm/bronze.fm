@@ -95,19 +95,19 @@ test.describe('splash', () => {
   })
 
   /*
-   * The textured field belongs to the splash and to nowhere else.
+   * The splash is type on white, and nothing else.
    *
-   * Both halves are asserted. The canvas is worth pinning because its
-   * failure mode is silent — a colour that fails to resolve or a context
-   * that fails to open leaves a blank white screen rather than an error.
-   * And the app behind it is deliberately plain: the field came off it
-   * because texture behind everything you read is a distraction, so a
-   * canvas reappearing anywhere is a regression, not a bonus.
+   * It carried a live particle field, then a halftone-and-grain canvas that
+   * animated, then the same canvas frozen. Each went for its own reason; the
+   * animated one cost 46ms of input lag on a throttled CPU, on the one screen
+   * whose whole job is to accept a tap. What is asserted here is the absence:
+   * no canvas anywhere, on the splash or behind the app, because every
+   * version of that background has been a cost paid before a word is read.
    */
-  test('is the only place the textured field appears', async ({ page }) => {
+  test('carries no background canvas, on the splash or behind it', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('img', { name: 'bronze.fm' })).toBeVisible()
-    await expect(page.locator('[data-testid="splash-field"]')).toHaveCount(1)
+    await expect(page.locator('canvas')).toHaveCount(0)
 
     await page.locator('.z-\\[60\\]').click()
     await expect(page.getByRole('heading', { name: 'Featured Creators' })).toBeVisible()

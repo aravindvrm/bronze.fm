@@ -81,18 +81,16 @@
  * Surfaces, type and placeholder artwork are pure neutrals, so contrast and
  * weight carry the hierarchy and the accent is the single thing in the
  * interface that is a colour. That is what makes it read as deliberate: it
- * marks state and identity — active row, play, a live link, the wordmark —
- * and the ambient field, which is drawn faint enough not to spend it.
+ * marks state and identity: the active row, play, a live link, the wordmark.
  */
 @theme {
   /* ═══════════════════════════════════════════════════════════════════
-     THE PALETTE — five values. Change these and the whole app follows.
+     THE PALETTE — four values. Change these and the whole app follows.
 
        --color-void        the page ground
        --color-ink         a raised surface sitting on that ground
        --color-parchment   everything written on the ground
        --color-gilt        THE accent, and the only colour in the app
-       --color-ambient     the halftone screen on the splash
 
      The names are historical and describe roles, not hues: this is a
      light theme, so `void` is white and `parchment` is near-black. Read
@@ -112,11 +110,6 @@
      decoration. Anything swapped in here wants checking against both
      --color-void and --color-on-accent. */
   --color-gilt: #c92c10;
-  /* The splash's halftone and grain, and nothing else — the field was
-     behind every screen until texture under the reading surfaces proved
-     distracting. Follows the accent by default, so one change themes the
-     splash too; set it independently for a complementary screen instead. */
-  --color-ambient: var(--color-gilt);
 
   /* ── On the accent ──────────────────────────────────────────────────
      What sits ON --color-gilt: the search bar's text, the drawer's

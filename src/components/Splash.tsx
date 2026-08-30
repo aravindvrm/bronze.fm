@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { GrainField } from '@/components/GrainField'
 
 const SEEN_KEY = 'bronze:splash-seen'
 
@@ -280,9 +279,6 @@ export function Splash() {
           transition={{ duration: still ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="fixed inset-0 z-[60] grid cursor-pointer place-items-center overflow-hidden bg-void"
         >
-          {/* Halftone and grain, over the splash's own opaque ground. */}
-          <GrainField />
-
           <div className="relative flex flex-col items-center">
             <Wordmark still={still} />
             <Tagline still={still} />
