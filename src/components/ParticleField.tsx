@@ -117,7 +117,16 @@ export function ParticleCanvas({ id }: { id: string }) {
          */
         number: { value: 90, density: { enable: false } },
         shape: { type: 'circle' },
-        color: { value: ambient },
+        /*
+         * `paint.color`, NOT `color`.
+         *
+         * The engine renamed it in v4, and `IParticlesOptions` carries an
+         * index signature — so a stray `color` key type-checks, loads
+         * silently, and leaves the dots on their default #fff. On a white
+         * ground that is invisible: the field was reduced to its links
+         * alone, which is why it read as barely there.
+         */
+        paint: { color: { value: ambient } },
         size: { value: { min: 1, max: 2 } },
         opacity: { value: { min: 0.12, max: 0.32 } },
         move: { enable: !reduceMotion, speed: 0.35, direction: 'none', random: true, outModes: 'out' },
