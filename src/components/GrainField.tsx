@@ -160,11 +160,17 @@ export function GrainField() {
            * repeat in step, so the texture breathes without ever showing a
            * period. Weighted low so neither term can carve a diagonal band
            * across the screen, which is what an evenly-weighted pair did.
+           *
+           * The rates were ~4x slower to begin with, which measured as real
+           * movement and looked like none: over the few seconds anyone sees
+           * this screen, the swell was lost under the grain's own flicker.
+           * Fast enough now to read as breathing, still far too slow to
+           * pull the eye off the mark.
            */
           const field =
             0.66 +
-            0.16 * Math.sin(nx * 3.4 + t * 0.09) * Math.cos(ny * 2.6 - t * 0.07) +
-            0.1 * Math.sin((nx + ny) * 4.4 - t * 0.05)
+            0.16 * Math.sin(nx * 3.4 + t * 0.4) * Math.cos(ny * 2.6 - t * 0.31) +
+            0.1 * Math.sin((nx + ny) * 4.4 - t * 0.23)
 
           // Clears the middle of the screen for the wordmark. Elliptical
           // rather than round because the viewport is tall.
