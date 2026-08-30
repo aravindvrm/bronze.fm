@@ -50,7 +50,35 @@ function resolveToken(token: string): string {
   return resolved || 'transparent'
 }
 
-export function ParticleField() {
+/**
+ * Loads the engine, once for the whole app.
+ *
+ * Module-level rather than written inline at the call site, and this is
+ * load-bearing rather than tidiness: ParticlesProvider keeps its "engine
+ * loaded" state in module globals, and a second provider mounting with a
+ * DIFFERENT init function throws outright — "init callback must be stable
+ * across the app lifecycle". Two providers sharing this one identity is
+ * exactly the case it allows, which is what lets the splash carry its own
+ * canvas alongside the global field.
+ */
+const initEngine = async (engine: Parameters<typeof loadSlim>[0]) => {
+  await loadSlim(engine)
+  await loadLinksPreset(engine)
+}
+
+/**
+ * The drifting net itself, without a ground or a position of its own.
+ *
+ * Extracted so the splash can carry the same field as the app behind it. The
+ * splash sits above the routed content and must stay opaque — going
+ * transparent would reveal the feed rather than the background — so it needs
+ * its own copy over its own ground rather than a hole punched through to the
+ * global one.
+ *
+ * `id` must differ per instance: tsParticles keys its containers by it, and
+ * two canvases sharing a name leaves one of them blank.
+ */
+export function ParticleCanvas({ id }: { id: string }) {
   const reduceMotion = useReducedMotion()
   // Read once on mount: the palette is a build-time constant today, and
   // re-reading per render would touch the DOM on every frame the app draws.
@@ -106,27 +134,28 @@ export function ParticleField() {
   )
 
   return (
+    <div className="absolute inset-0" style={{ mask: fadeMask, WebkitMask: fadeMask }}>
+      <ParticlesProvider init={initEngine}>
+        <Particles id={id} options={options} className="size-full" />
+      </ParticlesProvider>
+    </div>
+  )
+}
+
+/**
+ * The app's background, mounted once at the App root and sitting behind the
+ * routed content.
+ *
+ * No vertical overlay: there used to be one calming the foot of the screen
+ * behind the docked player, but any such gradient veils one end toward the
+ * page ground and leaves the other bare, which reads — correctly — as the
+ * field being darker at the top. The mini player carries its own translucent
+ * ground and never needed it.
+ */
+export function ParticleField() {
+  return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-void">
-      <div className="absolute inset-0" style={{ mask: fadeMask, WebkitMask: fadeMask }}>
-        <ParticlesProvider
-          init={async (engine) => {
-            await loadSlim(engine)
-            await loadLinksPreset(engine)
-          }}
-        >
-          <Particles id="app-field" options={options} className="size-full" />
-        </ParticlesProvider>
-      </div>
-      {/*
-        No vertical overlay at all.
-        
-        There used to be one here to calm the foot of the screen behind the
-        docked player. Any such gradient veils one end toward the page ground
-        and leaves the other bare, which is read — correctly — as the field
-        being darker at the top. Softening it from opaque to 45% only made
-        the imbalance subtler, not absent. The mini player already carries
-        its own translucent ground, so it never needed this.
-      */}
+      <ParticleCanvas id="app-field" />
     </div>
   )
 }

@@ -90,6 +90,24 @@ test.describe('splash', () => {
   })
 
   /*
+   * The splash carries the same drifting field as the app, over its own
+   * ground rather than showing through to it.
+   *
+   * Asserted because the failure mode is silent and total: ParticlesProvider
+   * keeps its loaded state in module globals and REFUSES a second provider
+   * whose init callback is a different function, throwing during render and
+   * blanking the whole app. Two canvases with their own container ids is the
+   * cheapest proof both instances mounted.
+   */
+  test('carries the ambient field, without stealing the app\u2019s canvas', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('img', { name: 'bronze.fm' })).toBeVisible()
+
+    await expect(page.locator('#splash-field canvas')).toHaveCount(1)
+    await expect(page.locator('#app-field canvas')).toHaveCount(1)
+  })
+
+  /*
    * The tagline types itself out. Assistive technology gets the finished
    * sentence from a visually-hidden copy rather than a line that changes on
    * every keystroke, so this asserts the accessible text is whole from the

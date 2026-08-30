@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { ParticleCanvas } from '@/components/ParticleField'
 
 const SEEN_KEY = 'bronze:splash-seen'
 
@@ -279,7 +280,18 @@ export function Splash() {
           transition={{ duration: still ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="fixed inset-0 z-[60] grid cursor-pointer place-items-center overflow-hidden bg-void"
         >
-          <div className="flex flex-col items-center">
+          {/*
+            The same drifting field the app carries, over the splash's own
+            ground rather than showing through to it. The splash sits above
+            the routed content, so a transparent background here would reveal
+            the feed, not the backdrop — it needs its own copy.
+
+            Its own instance id: tsParticles keys containers by id, and the
+            global field is still mounted underneath while this is up.
+          */}
+          <ParticleCanvas id="splash-field" />
+
+          <div className="relative flex flex-col items-center">
             <Wordmark still={still} />
             <Tagline still={still} />
           </div>
