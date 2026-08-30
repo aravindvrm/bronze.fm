@@ -124,13 +124,17 @@ export function ParticleCanvas({ id }: { id: string }) {
         paint: { color: { value: ambient } },
         size: { value: { min: 1, max: 2.5 } },
         /*
-         * Far stronger than the old app-wide values (dots 0.12-0.32, links
-         * 0.1). Those were set to keep the field from competing with cover
-         * art and with the accent wherever it marks state — constraints that
-         * simply do not exist on a screen holding one wordmark and one line.
-         * Here the net is meant to be seen.
+         * Stronger than the old app-wide values (dots 0.12-0.32, links 0.1),
+         * which were set to keep the field clear of cover art and of the
+         * accent wherever it marks state — constraints that do not exist on
+         * a screen holding one wordmark and one line.
+         *
+         * But only stronger, not loud. The first pass ran to 0.75 and the
+         * net crowded the mark it is supposed to sit behind: on a field this
+         * dense, opacity reads as weight, and the links compound it wherever
+         * dots cluster. Visible at a glance, still plainly the background.
          */
-        opacity: { value: { min: 0.35, max: 0.75 } },
+        opacity: { value: { min: 0.22, max: 0.48 } },
         /*
          * A drift, not a motion graphic. Slower than it looks like it needs
          * to be: this sits behind everything the app asks you to read, and
@@ -144,7 +148,7 @@ export function ParticleCanvas({ id }: { id: string }) {
           enable: true,
           distance: 110,
           color: ambient,
-          opacity: 0.32,
+          opacity: 0.18,
           width: 1,
         },
       },
