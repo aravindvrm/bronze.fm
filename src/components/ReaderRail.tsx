@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import { ContentsIcon } from '@/components/Icons'
 
 export interface Chapter {
   /** Index into the document's block array. */
@@ -10,7 +11,19 @@ export interface Chapter {
 }
 
 /**
- * The reader's chrome: contents, type size, and the chapter rail.
+ * The reader's chrome: where you are, and the chapter rail.
+ *
+ * The chapter name IS the way into the contents — tap it and the list opens
+ * at the section you are in. That is what Kobo and Apple Books both do, and
+ * it is what makes the name affordable at all: a separate CONTENTS label
+ * beside it costs about eighty pixels of a three-hundred-and-fifty pixel bar,
+ * which is exactly the room a long chapter title needs. The list glyph in
+ * front of it says the name is a door rather than a caption.
+ *
+ * Set in normal case without the tracking the rest of the app's mono labels
+ * carry. Uppercase and letter-spacing are what make a label read as chrome,
+ * and they also cost roughly a third of the characters that fit — the wrong
+ * trade for the one string here that is content.
  *
  * The rail is the paged equivalent of a scrollbar. Paging removes the real
  * one, and a paper this long needs some way to see where you are and to move
@@ -26,7 +39,7 @@ export function ReaderRail({
   page,
   pages,
   chapters,
-  minutesLeft,
+  chapter,
   onSeek,
   onOpenContents,
   onCycleType,
@@ -34,7 +47,8 @@ export function ReaderRail({
   page: number
   pages: number
   chapters: Chapter[]
-  minutesLeft: number
+  /** The section the reader is currently inside. */
+  chapter: string
   onSeek: (page: number) => void
   onOpenContents: () => void
   onCycleType: () => void
@@ -69,28 +83,30 @@ export function ReaderRail({
 
   return (
     <div className="mx-auto w-full max-w-3xl px-5 pb-3 sm:px-6">
-      <div className="mb-1.5 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/45">
-        <button
-          onClick={onOpenContents}
-          className="-m-1 p-1 transition hover:text-parchment"
-          aria-label="Contents"
-        >
-          Contents
-        </button>
-        <span aria-live="polite">
-          {page + 1} / {pages}
-          {minutesLeft > 0 && ` · ${minutesLeft} min left`}
-        </span>
+      <div className="mb-1.5 flex items-center gap-3 font-mono text-[10px] text-parchment/45">
         <button
           onClick={onCycleType}
-          className="-m-1 p-1 transition hover:text-parchment"
+          className="-m-1 shrink-0 p-1 transition hover:text-parchment"
           aria-label="Change text size"
         >
-          {/* Not an icon: two glyphs at two sizes say "type size" without
-              needing a legend, and the app's own typeface draws them. */}
-          <span className="text-[11px] normal-case tracking-normal">A</span>
-          <span className="text-[14px] normal-case tracking-normal">A</span>
+          {/* Not an icon: two glyphs at two sizes say "type size" without a
+              legend, and the app's own typeface draws them. */}
+          <span className="text-[11px]">A</span>
+          <span className="text-[14px]">A</span>
         </button>
+
+        <button
+          onClick={onOpenContents}
+          aria-label="Contents"
+          className="flex min-w-0 flex-1 items-center justify-center gap-1.5 transition hover:text-parchment"
+        >
+          <ContentsIcon className="size-3 shrink-0" />
+          <span className="truncate">{chapter}</span>
+        </button>
+
+        <span className="shrink-0 tabular-nums" aria-live="polite">
+          {page + 1}/{pages}
+        </span>
       </div>
 
       <div

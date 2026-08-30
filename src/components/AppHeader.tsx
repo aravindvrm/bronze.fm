@@ -54,7 +54,6 @@ export function AppHeader({
   query,
   onQueryChange,
   backTo,
-  label,
 }: {
   /** Present only on screens that actually have something to search. */
   query?: string
@@ -66,13 +65,6 @@ export function AppHeader({
    * — there is nothing above it to return to.
    */
   backTo?: string
-  /**
-   * A line under the wordmark saying where in the screen you are — the
-   * reader's current section, as the pages turn. Only a screen with somewhere
-   * to be *inside* it has any use for this; everywhere else the wordmark
-   * alone is the answer.
-   */
-  label?: string
 }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
@@ -154,22 +146,16 @@ export function AppHeader({
           </div>
 
           {/* Centred against the bar, not against the gap between controls. */}
-          <div className="absolute inset-x-0 mx-auto flex w-fit max-w-[60%] flex-col items-center">
-            <button onClick={() => navigate('/')} aria-label="bronze.fm home">
-              <Wordmark className="text-sm" />
-            </button>
-            {label && (
-              /* aria-hidden: it is a position readout that changes on every
-                 page turn, and announcing it would talk over the text the
-                 reader is actually there for. */
-              <span
-                aria-hidden
-                className="mt-0.5 max-w-full truncate font-mono text-[9px] uppercase tracking-[0.18em] text-parchment/45"
-              >
-                {label}
-              </span>
-            )}
-          </div>
+          {/* The wordmark alone. A reader's chapter title briefly lived under
+              it and crowded the bar — where you are inside a screen belongs
+              to that screen's own chrome, not to the app's. */}
+          <button
+            onClick={() => navigate('/')}
+            aria-label="bronze.fm home"
+            className="absolute inset-x-0 mx-auto w-fit"
+          >
+            <Wordmark className="text-sm" />
+          </button>
 
           {/* Right slot: the menu, on every screen without exception. */}
           <button

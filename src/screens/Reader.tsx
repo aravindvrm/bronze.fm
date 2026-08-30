@@ -305,7 +305,6 @@ export function Reader() {
     <div className="fixed inset-0 z-30 flex flex-col bg-void">
       <AppHeader
         backTo={projectPath(creator.slug, project.slug)}
-        label={section}
         query={query}
         onQueryChange={setQuery}
       />
@@ -380,6 +379,7 @@ export function Reader() {
 
       <ReaderIndex
         open={indexOpen}
+        minutesLeft={minutesLeft}
         chapters={chapters}
         currentBlock={anchorBlock}
         onSelect={(block) => {
@@ -395,7 +395,7 @@ export function Reader() {
           page={page}
           pages={pages}
           chapters={chapters}
-          minutesLeft={minutesLeft}
+          chapter={section}
           onSeek={goToPage}
           onOpenContents={() => setIndexOpen(true)}
           onCycleType={cycleType}

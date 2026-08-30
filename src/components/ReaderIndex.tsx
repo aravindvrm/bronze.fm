@@ -17,12 +17,15 @@ import { CloseIcon } from '@/components/Icons'
  */
 export function ReaderIndex({
   open,
+  minutesLeft,
   chapters,
   currentBlock,
   onSelect,
   onClose,
 }: {
   open: boolean
+  /** Shown here rather than on the rail, where a chapter name needs the room. */
+  minutesLeft: number
   chapters: Chapter[]
   /** The block the reader is currently on, for marking where they are. */
   currentBlock: number
@@ -70,6 +73,11 @@ export function ReaderIndex({
               <div className="flex items-center justify-between">
                 <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-parchment/45">
                   Contents
+                  {minutesLeft > 0 && (
+                    <span className="ml-3 normal-case tracking-normal text-parchment/35">
+                      {minutesLeft} min left
+                    </span>
+                  )}
                 </h2>
                 <button
                   onClick={onClose}
