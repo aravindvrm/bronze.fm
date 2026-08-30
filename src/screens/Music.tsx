@@ -90,7 +90,7 @@ export function Music() {
 
                 <span className="min-w-0 flex-1">
                   <span
-                    className={`block truncate text-sm ${active ? 'text-gilt' : 'text-parchment'}`}
+                    className={`block truncate text-sm ${active ? 'text-ember' : 'text-parchment'}`}
                   >
                     {item.title}
                   </span>

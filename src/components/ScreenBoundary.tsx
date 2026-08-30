@@ -42,7 +42,7 @@ export class ScreenBoundary extends Component<
 
     return (
       <div className="mx-auto flex max-w-md flex-col items-start gap-4 px-5 py-16 sm:px-8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-gilt">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ember">
           This screen stopped
         </p>
         <h1 className="text-2xl leading-snug text-parchment">

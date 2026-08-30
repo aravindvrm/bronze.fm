@@ -25,6 +25,12 @@ export function Wordmark({
    * Both directions are the same two colours, so the pairing keeps its
    * 5.45:1 either way round.
    */
+  /**
+   * Swaps the block: the accent becomes the letters and the block goes
+   * white. `gilt` rather than `ember` for those letters, because they are
+   * judged against that white block and not against the page — which is the
+   * whole distinction between the two accent tokens.
+   */
   inverted?: boolean
 }) {
   return (

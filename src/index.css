@@ -85,16 +85,21 @@
  */
 @theme {
   /* ═══════════════════════════════════════════════════════════════════
-     THE PALETTE — four values. Change these and the whole app follows.
+     THE PALETTE — five values. Change these and the whole app follows.
 
        --color-void        the page ground
        --color-ink         a raised surface sitting on that ground
        --color-parchment   everything written on the ground
-       --color-gilt        THE accent, and the only colour in the app
+       --color-gilt        THE accent, as a FILL
+       --color-ember       THE accent, as TEXT on the ground
 
-     The names are historical and describe roles, not hues: this is a
-     light theme, so `void` is white and `parchment` is near-black. Read
-     them as background / surface / foreground / accent.
+     The names describe roles, not hues, which is what makes a second
+     theme tractable: `void` is the ground and `parchment` is what is
+     written on it, whichever is the lighter of the two.
+
+     This block is the LIGHT theme. The dark one overrides these same
+     names below and changes nothing else — one hundred and fifty uses of
+     `parchment` follow it for free.
 
      Nothing outside this block may hard-code a colour. A unit test
      enforces that (src/lib/__tests__/theme.test.ts) — it fails the build
@@ -110,6 +115,24 @@
      decoration. Anything swapped in here wants checking against both
      --color-void and --color-on-accent. */
   --color-gilt: #c92c10;
+
+  /* ── The accent, when it has to be READ ─────────────────────────────
+     Identical to --color-gilt here, and deliberately a separate token
+     anyway, because the two part company on a dark ground.
+
+     A FILL only has to be told apart from the page: 3:1, which #c92c10
+     manages against a dark ground at 3.44:1, and white on it stays at
+     5.45:1 because that pairing never touches the page. TEXT in the
+     accent is judged against the ground itself, and there 3.44:1 is
+     under AA's 4.5:1 — so the dark theme lifts this one and leaves the
+     fill alone. That keeps the wordmark's block identical in both
+     themes, which a single lightened accent would not.
+
+     The rule is about the BACKDROP, not the property: accent text on the
+     page ground is `ember`; accent text on a fill of its own — the
+     inverted wordmark's letters on their white block — is `gilt`, because
+     that pairing never meets the page. Fills are always `gilt`. */
+  --color-ember: #c92c10;
 
   /* ── On the accent ──────────────────────────────────────────────────
      What sits ON --color-gilt: the search bar's text, the drawer's
@@ -146,6 +169,50 @@
      layouts reflow into the extra space (more grid columns, roomier
      spacing) rather than staying a narrow column with padding either side. */
   --app-w: 72rem;
+}
+
+/*
+ * ── THE DARK THEME ────────────────────────────────────────────────────
+ *
+ * The same five names, different values. Nothing else in the codebase
+ * knows this exists: every `bg-void` and `text-parchment` resolves through
+ * these variables, so the whole app turns over on one attribute.
+ *
+ * Applied by `data-theme="dark"` on <html>, never by a media query. The
+ * app has an explicit switch in its menu rather than following the system,
+ * so the attribute is the single source of truth — a media query alongside
+ * it would mean two ways for the theme to be dark and a class of bug where
+ * they disagree.
+ *
+ * Set before first paint by an inline script in index.html. A theme applied
+ * from React runs after the first frame, which is a full white flash on
+ * every cold open for anyone reading in the dark — the exact people this is
+ * for.
+ */
+:root[data-theme='dark'] {
+  /* Near-black rather than #000. Pure white on pure black haloes — the
+     text appears to bleed at the edges over a long passage — and this app's
+     whitepaper is ten thousand words. #e8e8e8 on #121212 is 15.3:1. */
+  --color-void: #121212;
+  /* A surface has to lift OFF the ground, and on a dark theme it lifts by
+     getting lighter rather than darker — the light theme's move (a grey
+     panel on white) inverted would be a black panel on near-black, which
+     is invisible. */
+  --color-ink: #1e1e1e;
+  --color-parchment: #e8e8e8;
+
+  /* The fill does not move. White on it is still 5.45:1, and that pairing
+     is judged against the red, never against the page — which is what lets
+     the wordmark's block be the same object in both themes. */
+  --color-gilt: #c92c10;
+  /* The accent as text does move: #c92c10 reads 3.44:1 on this ground,
+     under AA. This is 4.57:1 and still plainly the same red. */
+  --color-ember: #e2452a;
+
+  /* Shadows are nearly useless on a dark ground — there is no lighter
+     surface for them to fall on. Kept, and deepened, so the few places
+     that lean on them for separation still say something. */
+  --color-shade: rgb(0 0 0 / 0.66);
 }
 
 @layer base {

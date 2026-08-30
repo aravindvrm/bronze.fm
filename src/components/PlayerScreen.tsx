@@ -136,7 +136,7 @@ export function PlayerScreen() {
                   value={volume}
                   onChange={(e) => setVolume(Number(e.target.value))}
                   aria-label="Volume"
-                  className="h-1 w-full cursor-pointer appearance-none bg-parchment/20 accent-gilt"
+                  className="h-1 w-full cursor-pointer appearance-none bg-parchment/20 accent-ember"
                 />
               </div>
             )}

@@ -108,7 +108,7 @@ export function ReaderCoach({
 function Band({ side, width }: { side: 'left' | 'right'; width: string }) {
   return (
     <div
-      className={`absolute inset-y-0 flex flex-col items-center justify-center gap-2 border-gilt/25 bg-gilt/[0.06] ${
+      className={`absolute inset-y-0 flex flex-col items-center justify-center gap-2 border-ember/25 bg-gilt/[0.06] ${
         side === 'left' ? 'border-r' : 'border-l'
       }`}
       style={{ width, [side]: 0 }}
@@ -141,7 +141,7 @@ function Arrow({ direction }: { direction: 'up' | 'down' | 'left' | 'right' }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
-      className="size-5 text-gilt"
+      className="size-5 text-ember"
       style={{ rotate }}
       animate={reduceMotion ? {} : { [axis === 'y' ? 'y' : 'x']: [0, to, 0] }}
       transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}

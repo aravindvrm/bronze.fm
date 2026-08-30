@@ -69,6 +69,60 @@ describe('theme integrity', () => {
     ).toEqual([])
   })
 
+  /**
+   * The dark theme is the same names with different values, and the only
+   * way that stays true is if neither block invents a name the other lacks.
+   * A token defined in one and not the other is a screen that keeps its
+   * light-theme colour after the switch — the exact failure the token
+   * discipline exists to prevent, arriving by a new route.
+   */
+  it('defines exactly the same colour tokens in both themes', () => {
+    const css = readFileSync(join(SRC, 'index.css'), 'utf8')
+    const names = (block: string) =>
+      [...block.matchAll(/--color-([a-z-]+):/g)].map((m) => m[1]).sort()
+
+    const light = /@theme \{([\s\S]*?)\n\}/.exec(css)?.[1]
+    const dark = /\[data-theme='dark'\] \{([\s\S]*?)\n\}/.exec(css)?.[1]
+    expect(light, 'no @theme block found').toBeTruthy()
+    expect(dark, 'no dark theme block found').toBeTruthy()
+
+    /*
+     * Not every light token needs overriding — scrim and on-media are
+     * judged against artwork rather than the page, and on-accent against
+     * the accent, so all three are the same in both themes on purpose.
+     * What is asserted is that the dark block invents nothing new.
+     */
+    const invented = names(dark!).filter((n) => !names(light!).includes(n))
+    expect(invented, `dark theme defines token(s) the light theme does not:\n${invented}`).toEqual(
+      [],
+    )
+
+    // And that the ground actually differs, so a no-op dark block is caught.
+    expect(dark).toMatch(/--color-void:/)
+    expect(dark).toMatch(/--color-parchment:/)
+  })
+
+  /**
+   * The pre-paint script in index.html cannot import anything, so it carries
+   * its own copy of the storage key and of the dark ground. Both are
+   * duplicated on purpose and both silently stop working if they drift: a
+   * changed key means the theme is never restored, a changed colour means a
+   * mismatched band around the app on Android.
+   */
+  it('keeps index.html in step with the theme it has to apply', () => {
+    const html = readFileSync(join(SRC, '..', 'index.html'), 'utf8')
+    const css = readFileSync(join(SRC, 'index.css'), 'utf8')
+    const themeTs = readFileSync(join(SRC, 'lib', 'theme.ts'), 'utf8')
+
+    const key = /THEME_KEY = '([^']+)'/.exec(themeTs)?.[1]
+    expect(key, 'THEME_KEY not found in lib/theme.ts').toBeTruthy()
+    expect(html).toContain(`'${key}'`)
+
+    const darkGround = /\[data-theme='dark'\][\s\S]*?--color-void:\s*([^;]+);/.exec(css)?.[1].trim()
+    expect(darkGround, 'dark --color-void not found').toBeTruthy()
+    expect(html).toContain(darkGround!)
+  })
+
   it("never uses Tailwind's built-in black or white", () => {
     const offenders: string[] = []
     for (const file of files) {

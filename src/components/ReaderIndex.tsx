@@ -115,8 +115,8 @@ export function ReaderIndex({
                       <button
                         onClick={() => onSelect(c.block)}
                         aria-current={here ? 'true' : undefined}
-                        className={`flex w-full items-baseline gap-3 border-b border-parchment/10 py-3 text-left transition hover:text-gilt ${
-                          here ? 'text-gilt' : 'text-parchment'
+                        className={`flex w-full items-baseline gap-3 border-b border-parchment/10 py-3 text-left transition hover:text-ember ${
+                          here ? 'text-ember' : 'text-parchment'
                         } ${c.level > 2 ? 'pl-4 text-sm text-parchment/65' : 'text-[15px]'}`}
                       >
                         <span className="min-w-0 flex-1 truncate">{c.text}</span>

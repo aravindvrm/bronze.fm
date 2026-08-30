@@ -44,7 +44,7 @@ export function UpdateBanner() {
           </button>
           <button
             onClick={applyUpdate}
-            className="shrink-0 bg-gilt px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-void transition hover:opacity-90"
+            className="shrink-0 bg-gilt px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-on-accent transition hover:opacity-90"
           >
             Reload
           </button>

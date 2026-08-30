@@ -3,14 +3,17 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useScrolledPast } from '@/lib/useScrolledPast'
 import { Wordmark } from '@/components/Wordmark'
+import { useTheme } from '@/lib/theme'
 import {
   AccountIcon,
   BackIcon,
   CloseIcon,
   HomeIcon,
   MenuIcon,
+  MoonIcon,
   SearchIcon,
   SettingsIcon,
+  SunIcon,
 } from '@/components/Icons'
 
 /**
@@ -69,6 +72,8 @@ export function AppHeader({
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
+  const theme = useTheme((s) => s.theme)
+  const toggleTheme = useTheme((s) => s.toggle)
   const scrolled = useScrolledPast()
   const [searchOpen, setSearchOpen] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -123,7 +128,7 @@ export function AppHeader({
               <button
                 onClick={() => navigate(backTo)}
                 aria-label="Back"
-                className="p-2 text-parchment transition hover:text-gilt"
+                className="p-2 text-parchment transition hover:text-ember"
               >
                 <BackIcon className="size-6" />
               </button>
@@ -133,7 +138,7 @@ export function AppHeader({
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
                 aria-expanded={searchOpen}
-                className="p-2 text-parchment transition hover:text-gilt"
+                className="p-2 text-parchment transition hover:text-ember"
               >
                 <SearchIcon className="size-6" />
               </button>
@@ -162,7 +167,7 @@ export function AppHeader({
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            className="relative z-10 -mr-2 ml-auto p-2 text-parchment transition hover:text-gilt"
+            className="relative z-10 -mr-2 ml-auto p-2 text-parchment transition hover:text-ember"
           >
             <MenuIcon className="size-6" />
           </button>
@@ -295,6 +300,44 @@ export function AppHeader({
                   ),
                 )}
               </div>
+
+              {/*
+                At the foot, below the destinations and pushed there by
+                `mt-auto`: it is a setting, not a place to go, and putting it
+                in the same list would say otherwise.
+
+                A switch rather than a system/light/dark triple. The stored
+                choice is the only source of truth — see src/lib/theme.ts for
+                why nothing here consults `prefers-color-scheme`.
+
+                Both icons are always drawn, the current one lit and the other
+                dimmed, so the control shows its two states at rest rather
+                than making you press it to find out what it does.
+              */}
+              <button
+                onClick={toggleTheme}
+                role="switch"
+                aria-checked={theme === 'dark'}
+                aria-label="Dark mode"
+                className="mt-auto flex items-center gap-3 border-t border-on-accent/20 px-4 py-4 text-left text-sm text-on-accent transition hover:bg-on-accent/15"
+              >
+                <SunIcon className={`size-5 ${theme === 'light' ? '' : 'opacity-40'}`} />
+                <MoonIcon className={`size-5 ${theme === 'dark' ? '' : 'opacity-40'}`} />
+                <span className="ml-1">{theme === 'dark' ? 'Dark' : 'Light'}</span>
+                {/* The track and knob, drawn in what sits ON the accent —
+                    this whole panel is the accent, so the usual page tokens
+                    would be invisible here. */}
+                <span
+                  aria-hidden
+                  className="ml-auto flex h-5 w-9 shrink-0 items-center rounded-full bg-on-accent/25 p-0.5"
+                >
+                  <span
+                    className={`size-4 rounded-full bg-on-accent transition-transform ${
+                      theme === 'dark' ? 'translate-x-4' : ''
+                    }`}
+                  />
+                </span>
+              </button>
             </motion.nav>
           </>
         )}

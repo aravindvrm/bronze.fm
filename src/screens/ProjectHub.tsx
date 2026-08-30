@@ -67,7 +67,7 @@ export function ProjectHub() {
           className="flex items-center gap-4 border border-parchment/25 p-4 sm:gap-8 sm:p-8"
         >
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-gilt/70">{creator.name}</p>
+            <p className="text-[10px] uppercase tracking-[0.4em] text-ember/70">{creator.name}</p>
             <h1 className="mt-2 text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
               {project.title}
             </h1>
@@ -112,7 +112,7 @@ export function ProjectHub() {
                     className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 from-0% via-scrim/45 via-32% to-scrim/10 to-70%" />
-                  <meta.Icon className="absolute left-4 top-4 size-7 text-gilt drop-shadow-[0_1px_6px_var(--color-shade)]" />
+                  <meta.Icon className="absolute left-4 top-4 size-7 text-ember drop-shadow-[0_1px_6px_var(--color-shade)]" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
                     <span className="block font-display text-xl text-on-media">{meta.label}</span>
                     {sub && (

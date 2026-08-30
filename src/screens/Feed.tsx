@@ -168,7 +168,7 @@ export function Feed() {
                     alt=""
                     // Same accent ring the profile avatar carries, so a creator looks
                     // like themselves in both places.
-                    className="size-[5.5rem] rounded-full object-cover ring-2 ring-gilt/50 transition-transform duration-500 group-hover:scale-105"
+                    className="size-[5.5rem] rounded-full object-cover ring-2 ring-ember/50 transition-transform duration-500 group-hover:scale-105"
                   />
                   <span className="w-full font-mono text-[13px] leading-tight text-parchment/80">
                     {creator.name}
@@ -199,7 +199,7 @@ export function Feed() {
                         aria-pressed={active}
                         className={`border px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] transition ${
                           active
-                            ? 'border-gilt/60 bg-gilt/15 text-gilt'
+                            ? 'border-ember/60 bg-gilt/15 text-ember'
                             : 'border-parchment/20 text-parchment/40 hover:border-parchment/25 hover:text-parchment/70'
                         }`}
                       >
@@ -261,7 +261,7 @@ export function Feed() {
                         {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
                       </span>
                     </span>
-                    <Icon className="size-5 shrink-0 text-gilt/70" />
+                    <Icon className="size-5 shrink-0 text-ember/70" />
                   </motion.button>
                 )
               })}

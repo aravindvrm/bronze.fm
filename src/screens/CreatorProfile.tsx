@@ -179,7 +179,7 @@ export function CreatorProfile() {
                 // mark the avatar as the page's subject without turning it
                 // into a badge. `ring` rather than `border` so it sits
                 // outside the image box and cannot shrink the photo.
-                className="size-28 rounded-full object-cover ring-2 ring-gilt/50 sm:size-32"
+                className="size-28 rounded-full object-cover ring-2 ring-ember/50 sm:size-32"
               />
 
               {/* The largest thing on the screen, because the page is about
@@ -203,7 +203,7 @@ export function CreatorProfile() {
                     rel="noopener noreferrer"
                     title={label}
                     aria-label={`${creator.name} on ${label}`}
-                    className="grid size-9 place-items-center rounded-full border border-gilt/40 text-gilt transition hover:border-gilt hover:bg-gilt/10"
+                    className="grid size-9 place-items-center rounded-full border border-ember/40 text-ember transition hover:border-ember hover:bg-gilt/10"
                   >
                     <Icon className="size-4" />
                   </a>
@@ -239,7 +239,7 @@ export function CreatorProfile() {
                 <button
                   onClick={() => setBioExpanded((open) => !open)}
                   aria-expanded={bioExpanded}
-                  className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-gilt/80 transition hover:text-gilt"
+                  className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ember/80 transition hover:text-ember"
                 >
                   {bioExpanded ? 'Less' : 'More'}
                 </button>
@@ -279,7 +279,7 @@ export function CreatorProfile() {
                 aria-selected={active}
                 className={`-mb-px shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold transition ${
                   active
-                    ? 'border-gilt text-gilt'
+                    ? 'border-ember text-ember'
                     : 'border-transparent text-parchment/40 hover:text-parchment/70'
                 }`}
               >
@@ -328,7 +328,7 @@ export function CreatorProfile() {
                       </span>
                     )}
                   </span>
-                  <span className="shrink-0 pr-1 text-gilt/70">
+                  <span className="shrink-0 pr-1 text-ember/70">
                     {pin.itemIndex === undefined ? (
                       <ReadIcon className="size-5" />
                     ) : (

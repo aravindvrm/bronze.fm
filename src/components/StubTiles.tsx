@@ -59,7 +59,7 @@ export function StubTiles({ kind, emptyLabel }: { kind: StubKind; emptyLabel: st
 
           {/* Corner badge, not inline — on two-column cards an inline badge
               ate enough width to truncate "Bronze Tee" to "Bronz…". */}
-          <span className="absolute right-3 top-3 border border-gilt/25 bg-scrim/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-gilt/70 backdrop-blur-sm">
+          <span className="absolute right-3 top-3 border border-ember/25 bg-scrim/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-ember/70 backdrop-blur-sm">
             Soon
           </span>
 

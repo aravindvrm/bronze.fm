@@ -60,7 +60,7 @@ export function InstallBanner() {
         {state.status === 'available' && (
           <button
             onClick={() => void state.promptInstall()}
-            className="shrink-0 bg-gilt px-4 py-2 text-xs font-medium uppercase tracking-[0.1em] text-void"
+            className="shrink-0 bg-gilt px-4 py-2 text-xs font-medium uppercase tracking-[0.1em] text-on-accent"
           >
             Install
           </button>

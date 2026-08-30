@@ -32,7 +32,7 @@ function NotFound({ what, name }: { what: string; name: string }) {
   return (
     <div className="grid h-full place-items-center bg-void px-8 text-center">
       <p className="text-sm text-parchment/50">
-        No {what} called <span className="text-gilt">{name}</span>.
+        No {what} called <span className="text-ember">{name}</span>.
       </p>
     </div>
   )

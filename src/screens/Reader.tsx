@@ -123,7 +123,7 @@ function Run({ span }: { span: Span }) {
         href={span.href}
         target="_blank"
         rel="noreferrer"
-        className={`${classes} text-gilt underline decoration-gilt/40 underline-offset-2`}
+        className={`${classes} text-ember underline decoration-ember/40 underline-offset-2`}
       >
         {span.text}
       </a>
@@ -187,7 +187,7 @@ function Block({ block, index }: { block: DocBlock; index: number }) {
         <h4
           data-block={index}
           style={avoid}
-          className="mb-1.5 mt-6 font-display text-[0.95em] uppercase tracking-[0.12em] text-gilt/80"
+          className="mb-1.5 mt-6 font-display text-[0.95em] uppercase tracking-[0.12em] text-ember/80"
         >
           {block.text}
         </h4>
@@ -196,7 +196,7 @@ function Block({ block, index }: { block: DocBlock; index: number }) {
 
     case 'ul':
       return (
-        <ul data-block={index} className="mt-3 list-disc space-y-2 pl-5 marker:text-gilt/50">
+        <ul data-block={index} className="mt-3 list-disc space-y-2 pl-5 marker:text-ember/50">
           {block.items.map((spans, i) => (
             <li key={i} className="leading-[1.75] text-parchment/75">
               <Runs spans={spans} />
@@ -210,7 +210,7 @@ function Block({ block, index }: { block: DocBlock; index: number }) {
         <ol
           data-block={index}
           start={block.start}
-          className="mt-3 list-decimal space-y-2 pl-6 marker:font-mono marker:text-[0.85em] marker:text-gilt/60"
+          className="mt-3 list-decimal space-y-2 pl-6 marker:font-mono marker:text-[0.85em] marker:text-ember/60"
         >
           {block.items.map((spans, i) => (
             <li key={i} className="leading-[1.75] text-parchment/75">
@@ -224,7 +224,7 @@ function Block({ block, index }: { block: DocBlock; index: number }) {
       return (
         <blockquote
           data-block={index}
-          className="mt-4 border-l-2 border-gilt/50 pl-4 italic leading-[1.75] text-parchment/65"
+          className="mt-4 border-l-2 border-ember/50 pl-4 italic leading-[1.75] text-parchment/65"
         >
           <Runs spans={block.spans} />
         </blockquote>

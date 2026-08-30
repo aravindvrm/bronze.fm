@@ -6,9 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
     />
-    <!-- Matches --color-void in src/index.css. Static because it is read
-         before any stylesheet loads; a mismatch shows as a coloured band
-         around the app on Android. -->
+    <!-- Matches --color-void in src/index.css, and is rewritten below once
+         the stored theme is known. Static here because it is read before any
+         stylesheet loads; a mismatch shows as a coloured band around the app
+         on Android. -->
     <meta name="theme-color" content="#ffffff" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <!-- `default` gives dark glyphs on a light bar, which is what a white
@@ -19,6 +20,33 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" href="/icons/icon-192.png" />
     <title>bronze.fm</title>
+
+    <!--
+      The theme, before the first pixel.
+
+      Blocking and inline ON PURPOSE. Anything deferred — a module, React,
+      even this same script with `defer` — runs after the first frame, so a
+      visitor who chose dark gets a full white flash on every cold open.
+      That is precisely the person the setting is for, and it is the one
+      thing a dark theme must not do.
+
+      Kept deliberately tiny and dependency-free for the same reason. The
+      storage key is duplicated from src/lib/theme.ts because nothing can be
+      imported here; they are commented as a pair on both sides.
+    -->
+    <script>
+      ;(function () {
+        try {
+          var dark = localStorage.getItem('bronze:theme') === 'dark'
+          if (!dark) return
+          document.documentElement.dataset.theme = 'dark'
+          var meta = document.querySelector('meta[name="theme-color"]')
+          if (meta) meta.setAttribute('content', '#121212')
+        } catch (e) {
+          // Private mode throws on localStorage. Light is the default.
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

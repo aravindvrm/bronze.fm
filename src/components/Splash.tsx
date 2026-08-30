@@ -116,7 +116,7 @@ function Wordmark({ still }: { still: boolean }) {
           duration: still ? 0 : REVEAL,
           ease: [0.16, 1, 0.3, 1],
         }}
-        className="ml-[0.16em] bg-gilt px-[0.16em] py-[0.07em] text-void"
+        className="ml-[0.16em] bg-gilt px-[0.16em] py-[0.07em] text-on-accent"
       >
         {BADGE.map(({ char, axis, from }, i) => (
           <Letter key={char} still={still} axis={axis} from={from} index={WORD.length + i}>
@@ -238,7 +238,7 @@ function Cursor({ still }: { still: boolean }) {
           ? { duration: 0 }
           : { duration: 1, times: [0, 0.5, 0.5, 1], repeat: Infinity, ease: 'linear' }
       }
-      className="ml-[0.1em] inline-block w-[0.55em] border-b-2 border-gilt align-baseline"
+      className="ml-[0.1em] inline-block w-[0.55em] border-b-2 border-ember align-baseline"
     />
   )
 }
