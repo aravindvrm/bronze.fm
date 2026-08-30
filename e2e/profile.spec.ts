@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { gotoCreator, snapshot } from './helpers'
+import { act, gotoCreator, playTrack, snapshot } from './helpers'
 
 test.describe('pinned content', () => {
   test('lists the creator’s curation in order', async ({ page }) => {
@@ -271,6 +271,43 @@ test.describe('reader', () => {
       .poll(async () => bar.evaluate((el) => getComputedStyle(el).clipPath))
       .not.toContain('100%')
     expect(await heightOf()).toBe(before)
+  })
+
+  /*
+   * Two rails at the foot of the page is one too many.
+   *
+   * The docked player is mounted at the App ROOT so playback survives
+   * navigation, which puts it outside the reader's tree entirely — the
+   * reader cannot hide it by rendering anything, so it goes through a shared
+   * flag. This asserts both halves of that: the bar stands aside while
+   * reading, and — the part that would be a real bug — it comes back when
+   * the reader is left, rather than staying hidden across the whole app.
+   */
+  test('the docked player stands aside while reading, and returns after', async ({ page }) => {
+    // Queue from inside the reader, not before navigating to it: the store
+    // lives in memory, so a `goto` would empty the queue and unmount the very
+    // bar under test.
+    await page.goto('/@dean/atonomos/read')
+    await page.getByRole('slider', { name: 'Page' }).waitFor()
+    await playTrack(page, 1)
+    // playFrom opens the full player; the docked bar is what shows once it is
+    // collapsed, which is the state anyone browsing while listening is in.
+    await act(page, 'setExpanded', false)
+
+    const bar = page.getByTestId('mini-player')
+    await expect(bar).toBeVisible()
+
+    const clip = async () => bar.evaluate((el) => getComputedStyle(el).clipPath)
+    await expect.poll(clip).not.toContain('100%')
+
+    await page.keyboard.press('ArrowRight')
+    await expect.poll(clip).toContain('100%')
+
+    // Back out of the reader: the flag has to be lowered on the way, or the
+    // player stays hidden on every other screen.
+    await page.getByTestId('reader-page').click({ position: { x: 180, y: 300 } })
+    await page.getByRole('button', { name: 'Back' }).click()
+    await expect.poll(clip).not.toContain('100%')
   })
 
   /*

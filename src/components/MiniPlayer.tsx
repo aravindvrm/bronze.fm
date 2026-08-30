@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { usePlayer } from '@/audio/playerStore'
+import { useImmersion } from '@/lib/immersion'
 import { artUrl } from '@/lib/art'
 import { ScrubBar } from '@/components/ScrubBar'
 import { Transport } from '@/components/Transport'
@@ -13,15 +14,34 @@ export function MiniPlayer() {
   const item = usePlayer((s) => s.queue[s.index] ?? null)
   const setExpanded = usePlayer((s) => s.setExpanded)
   const isPlaying = usePlayer((s) => s.isPlaying)
+  /*
+   * Stands aside while a screen has asked for the room — the reader, once
+   * you are actually reading, where the bar was the second of two rails
+   * stacked at the foot of the page.
+   *
+   * Clipped rather than unmounted, and the clip runs DOWNWARD to mirror the
+   * reader's own bar wiping up: the two leave in opposite directions,
+   * outward from the page. Unmounting would tear down the bar's entrance
+   * animation and replay it on every return; `clip-path` also takes the
+   * element out of hit testing, so the hidden bar cannot swallow a tap meant
+   * for the page.
+   */
+  const immersed = useImmersion((s) => s.immersed)
+  const reduceMotion = useReducedMotion()
 
   if (!item) return null
 
   return (
     <motion.div
       initial={{ y: 80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      animate={{
+        y: 0,
+        opacity: 1,
+        clipPath: immersed ? 'inset(100% 0 0 0)' : 'inset(0% 0 0 0)',
+      }}
       exit={{ y: 80, opacity: 0 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+      data-testid="mini-player"
       className="fixed inset-x-0 bottom-0 z-40"
       style={{ paddingBottom: 'var(--safe-b)' }}
     >

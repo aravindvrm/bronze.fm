@@ -10,6 +10,7 @@ import { AppHeader } from '@/components/AppHeader'
 import { ReaderRail, type Chapter } from '@/components/ReaderRail'
 import { ReaderIndex } from '@/components/ReaderIndex'
 import { PAGE_GAP, usePagination } from '@/lib/usePagination'
+import { useImmersion } from '@/lib/immersion'
 import {
   DEFAULT_SCALE_INDEX,
   SCALES,
@@ -149,6 +150,16 @@ export function Reader() {
    * the reader's thumb.
    */
   const [chrome, setChrome] = useState(true)
+
+  /*
+   * The docked player is mounted at the App root so playback survives
+   * navigation, which puts it outside this tree — the flag is how it hears
+   * that the page wants the room. Lowered on the way out, or it would stay
+   * hidden on every other screen.
+   */
+  const setImmersed = useImmersion((s) => s.setImmersed)
+  useEffect(() => setImmersed(!chrome), [chrome, setImmersed])
+  useEffect(() => () => setImmersed(false), [setImmersed])
 
   const outerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
