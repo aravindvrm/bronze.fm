@@ -37,7 +37,8 @@ export const atonomos: Project = {
   ownerSlug: 'dean',
   slug: 'atonomos',
   title: 'Atonomos',
-  description: 'A whitepaper on the agentic enterprise — how organisations restructure when agents become first-class operators rather than bolted-on automation.',
+  description:
+    'A whitepaper on the agentic enterprise — how organisations restructure when agents become first-class operators rather than bolted-on automation.',
   published: true,
   contents: [atonomosWhitepaper],
 }

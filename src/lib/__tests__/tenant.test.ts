@@ -124,8 +124,16 @@ describe('reserved Project slugs', () => {
     // supabase/migrations/20260829150000_store_reserved_slug.sql hard-codes the same
     // list; drift would let a bad slug into the database.
     const inMigration = [
-      'about', 'admin', 'api', 'assets',
-      'events', 'login', 'merch', 'search', 'settings', 'store',
+      'about',
+      'admin',
+      'api',
+      'assets',
+      'events',
+      'login',
+      'merch',
+      'search',
+      'settings',
+      'store',
     ]
     expect([...RESERVED_PROJECT_SLUGS].sort()).toEqual(inMigration.sort())
   })

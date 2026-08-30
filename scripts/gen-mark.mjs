@@ -100,5 +100,7 @@ fs.mkdirSync(path.dirname(out), { recursive: true })
 await sharp(shot).trim().png().toFile(out)
 
 const { width, height } = await sharp(out).metadata()
-console.log(`✓ brand/bronzefm-mark.png — ${width}×${height} (aspect ${(width / height).toFixed(2)})`)
+console.log(
+  `✓ brand/bronzefm-mark.png — ${width}×${height} (aspect ${(width / height).toFixed(2)})`,
+)
 console.log(`  accent ${ACCENT} · ink ${INK} · on-accent ${ON_ACCENT}, all read from src/index.css`)

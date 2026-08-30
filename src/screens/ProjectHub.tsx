@@ -72,7 +72,9 @@ export function ProjectHub() {
               {project.title}
             </h1>
             {project.description && (
-              <p className="mt-3 text-sm leading-relaxed text-parchment/50">{project.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-parchment/50">
+                {project.description}
+              </p>
             )}
           </div>
 
@@ -113,7 +115,9 @@ export function ProjectHub() {
                   <meta.Icon className="absolute left-4 top-4 size-7 text-gilt drop-shadow-[0_1px_6px_var(--color-shade)]" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
                     <span className="block font-display text-xl text-on-media">{meta.label}</span>
-                    {sub && <span className="mt-0.5 block text-[11px] text-on-media/70">{sub}</span>}
+                    {sub && (
+                      <span className="mt-0.5 block text-[11px] text-on-media/70">{sub}</span>
+                    )}
                   </div>
                 </motion.button>
               )

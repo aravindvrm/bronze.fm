@@ -40,11 +40,7 @@ const files = fs
 const items = files.map((f, i) => {
   const full = path.join(audioDir, f)
   const { durationMs, channels, sampleRate, bitrate } = probe(full)
-  const hash = crypto
-    .createHash('sha256')
-    .update(fs.readFileSync(full))
-    .digest('hex')
-    .slice(0, 16)
+  const hash = crypto.createHash('sha256').update(fs.readFileSync(full)).digest('hex').slice(0, 16)
   return {
     id: `itm_${String(i + 1).padStart(2, '0')}`,
     position: i + 1,
@@ -52,9 +48,7 @@ const items = files.map((f, i) => {
     isInterlude: /\(skit\)/i.test(f),
     // Placeholder until Dean supplies real per-track credits. Interludes get
     // none; everything else is attributed to the owner.
-    credits: /\(skit\)/i.test(f)
-      ? []
-      : [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+    credits: /\(skit\)/i.test(f) ? [] : [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
     hash,
     bytes: fs.statSync(full).size,
     durationMs,
@@ -139,4 +133,6 @@ fs.writeFileSync(
   ),
 )
 console.log(`✓ ${items.length} items → ${path.relative(root, outFile)}`)
-console.log(`  total runtime ${Math.floor(totalMs / 60000)}m ${Math.round((totalMs % 60000) / 1000)}s`)
+console.log(
+  `  total runtime ${Math.floor(totalMs / 60000)}m ${Math.round((totalMs % 60000) / 1000)}s`,
+)

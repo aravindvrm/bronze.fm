@@ -31,7 +31,16 @@ function rng(seed: string) {
  * or as a bronze wash — the accent is reserved for state, not for the art
  * behind it.
  */
-const NEUTRAL = ['#0c0c0c', '#1c1c1c', '#2b2b2b', '#3a3a3a', '#4c4c4c', '#636363', '#8a8a8a', '#b4b4b4']
+const NEUTRAL = [
+  '#0c0c0c',
+  '#1c1c1c',
+  '#2b2b2b',
+  '#3a3a3a',
+  '#4c4c4c',
+  '#636363',
+  '#8a8a8a',
+  '#b4b4b4',
+]
 
 export type ArtVariant = 'cover' | 'item' | 'video' | 'store' | 'event'
 
@@ -52,7 +61,7 @@ export function artSvg(seed: string, variant: ArtVariant = 'item', size = 800): 
     const cx = r() * size
     const cy = r() * size
     const rad = size * (0.25 + r() * 0.55)
-    const op = 0.10 + r() * 0.22
+    const op = 0.1 + r() * 0.22
     const stroke = r() > 0.5 ? hot : mid
     const w = 1 + r() * (variant === 'cover' ? 40 : 18)
     bands += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(1)}" fill="none" stroke="${stroke}" stroke-width="${w.toFixed(1)}" opacity="${op.toFixed(2)}"/>`

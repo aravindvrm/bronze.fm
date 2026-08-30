@@ -89,7 +89,8 @@ function writeDocx(bodyXml, extra = {}) {
   return file
 }
 
-const run = (text, props = '') => `<w:r>${props ? `<w:rPr>${props}</w:rPr>` : ''}<w:t>${text}</w:t></w:r>`
+const run = (text, props = '') =>
+  `<w:r>${props ? `<w:rPr>${props}</w:rPr>` : ''}<w:t>${text}</w:t></w:r>`
 const para = (inner, props = '') => `<w:p>${props ? `<w:pPr>${props}</w:pPr>` : ''}${inner}</w:p>`
 
 describe('docx import', () => {
@@ -167,13 +168,11 @@ describe('docx import', () => {
       <w:num w:numId="10"><w:abstractNumId w:val="1"/></w:num>
       <w:num w:numId="20"><w:abstractNumId w:val="2"/></w:num>
     </w:numbering>`
-    const item = (text, numId) =>
-      para(run(text), `<w:numPr><w:numId w:val="${numId}"/></w:numPr>`)
+    const item = (text, numId) => para(run(text), `<w:numPr><w:numId w:val="${numId}"/></w:numPr>`)
 
-    const file = writeDocx(
-      item('First', 10) + item('Second', 10) + item('Bullet', 20),
-      { 'word/numbering.xml': numbering },
-    )
+    const file = writeDocx(item('First', 10) + item('Second', 10) + item('Bullet', 20), {
+      'word/numbering.xml': numbering,
+    })
     const { blocks } = docxToBlocks(file)
     expect(blocks.map((b) => b.kind)).toEqual(['ol', 'ul'])
     expect(blocks[0].items).toHaveLength(2)
@@ -206,9 +205,7 @@ describe('markdown and html import', () => {
   })
 
   it('reads ordered lists, quotes, rules and tables', () => {
-    const blocks = md(
-      '1. One\n2. Two\n\n> Quoted.\n\n---\n\n| A | B |\n|---|---|\n| 1 | 2 |\n',
-    )
+    const blocks = md('1. One\n2. Two\n\n> Quoted.\n\n---\n\n| A | B |\n|---|---|\n| 1 | 2 |\n')
     expect(blocks.map((b) => b.kind)).toEqual(['ol', 'quote', 'rule', 'table'])
     expect(blocks[0].items.map((i) => i[0].text)).toEqual(['One', 'Two'])
     expect(blocks[3].head.map((c) => c.spans[0].text)).toEqual(['A', 'B'])

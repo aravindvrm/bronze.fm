@@ -76,7 +76,9 @@ function collectColorNodes(shapes, out) {
 
 const data = JSON.parse(fs.readFileSync(srcPath, 'utf8'))
 if (Array.isArray(data.assets) && data.assets.some((a) => a.p || a.u)) {
-  console.error('✗ this file references embedded/raster assets — recoloring text alone will not touch those.')
+  console.error(
+    '✗ this file references embedded/raster assets — recoloring text alone will not touch those.',
+  )
   process.exit(1)
 }
 
@@ -87,7 +89,9 @@ for (const layer of data.layers ?? []) {
 
 if (refused) {
   console.error('✗ found an animated color property (color changes over time within one shape).')
-  console.error('  This script only remaps static per-shape colors. Refusing rather than half-recoloring.')
+  console.error(
+    '  This script only remaps static per-shape colors. Refusing rather than half-recoloring.',
+  )
   process.exit(1)
 }
 if (nodes.length === 0) {

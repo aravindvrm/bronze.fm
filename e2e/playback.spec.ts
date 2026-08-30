@@ -44,7 +44,9 @@ test.describe('playback', () => {
     await gotoContent(page)
     await playTrack(page, 1)
     await page.waitForFunction(() => {
-      const s = (window as never as { __player: { getState: () => { duration: number } } }).__player.getState()
+      const s = (
+        window as never as { __player: { getState: () => { duration: number } } }
+      ).__player.getState()
       return s.duration > 0
     })
     const s = await snapshot(page)
@@ -57,7 +59,9 @@ test.describe('playback', () => {
     await gotoContent(page)
     await playTrack(page, 1)
     await page.waitForFunction(() => {
-      const s = (window as never as { __player: { getState: () => { duration: number } } }).__player.getState()
+      const s = (
+        window as never as { __player: { getState: () => { duration: number } } }
+      ).__player.getState()
       return s.duration > 0
     })
 
@@ -73,15 +77,23 @@ test.describe('playback', () => {
     // Track 0 is a 13s skit; seek near its end rather than waiting it out.
     await playTrack(page, 0)
     await page.waitForFunction(() => {
-      const s = (window as never as { __player: { getState: () => { duration: number } } }).__player.getState()
+      const s = (
+        window as never as { __player: { getState: () => { duration: number } } }
+      ).__player.getState()
       return s.duration > 0
     })
     await act(page, 'seek', 12)
 
-    await page.waitForFunction(() => {
-      const s = (window as never as { __player: { getState: () => { index: number } } }).__player.getState()
-      return s.index === 1
-    }, undefined, { timeout: 15_000 })
+    await page.waitForFunction(
+      () => {
+        const s = (
+          window as never as { __player: { getState: () => { index: number } } }
+        ).__player.getState()
+        return s.index === 1
+      },
+      undefined,
+      { timeout: 15_000 },
+    )
 
     expect((await snapshot(page)).index).toBe(1)
   })

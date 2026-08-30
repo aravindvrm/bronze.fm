@@ -1,0 +1,12 @@
+dist
+dist-*
+coverage
+node_modules
+playwright-report
+test-results
+# Generated from a source document; rewritten wholesale by the importer.
+src/content/fixtures/*.document.ts
+src/content/fixtures/*.generated.ts
+# macOS AppleDouble sidecars — this repo lives on a volume with no xattr
+# support, so the OS writes a binary companion for every file.
+._*

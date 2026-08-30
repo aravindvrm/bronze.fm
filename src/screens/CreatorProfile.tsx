@@ -294,9 +294,7 @@ export function CreatorProfile() {
             a tab that opens onto nothing reads as broken. */}
         {tab === 'pinned' && (
           <section className="mt-6" data-testid="panel-pinned">
-            {pins.length === 0 && (
-              <p className="text-sm text-parchment/40">Nothing pinned yet.</p>
-            )}
+            {pins.length === 0 && <p className="text-sm text-parchment/40">Nothing pinned yet.</p>}
             {/* Ruled, not boxed — the same list language the feed uses. The
                 two carry identical rows (art, title, subtitle, action), so
                 they should not be two different objects. */}
@@ -314,14 +312,16 @@ export function CreatorProfile() {
                   className="-mx-2 flex items-center gap-3 px-2 py-3 text-left transition hover:bg-parchment/[0.04]"
                 >
                   <img
-                    src={pin.hash ? artUrl(pin.hash, 'item', 128) : artUrl(`${pin.projectSlug}-cover`, 'cover', 128)}
+                    src={
+                      pin.hash
+                        ? artUrl(pin.hash, 'item', 128)
+                        : artUrl(`${pin.projectSlug}-cover`, 'cover', 128)
+                    }
                     alt=""
                     className="size-12 shrink-0 object-cover"
                   />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm text-parchment">
-                      {pin.title}
-                    </span>
+                    <span className="block truncate text-sm text-parchment">{pin.title}</span>
                     {pin.subtitle && (
                       <span className="block truncate font-mono text-[11px] text-parchment/40">
                         {pin.subtitle}
@@ -364,9 +364,7 @@ export function CreatorProfile() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 from-0% via-scrim/45 via-32% to-transparent to-60%" />
                     <div className="absolute inset-x-0 bottom-0 p-4">
-                      <span className="block truncate text-xl text-on-media">
-                        {project.title}
-                      </span>
+                      <span className="block truncate text-xl text-on-media">{project.title}</span>
                       <span className="mt-0.5 block font-mono text-[11px] text-on-media/70">
                         {project.contents.length
                           ? project.contents.map((c) => CONTENT_TYPE_LABEL[c.type]).join(' · ')

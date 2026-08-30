@@ -36,7 +36,9 @@ const QUALITY = 82
 
 const meta = await sharp(source).metadata()
 if (meta.width !== meta.height) {
-  console.warn(`! source is ${meta.width}x${meta.height}, not square — centre-cropping to ${EDGE}px`)
+  console.warn(
+    `! source is ${meta.width}x${meta.height}, not square — centre-cropping to ${EDGE}px`,
+  )
 }
 if (meta.width < EDGE || meta.height < EDGE) {
   console.warn(`! source is smaller than ${EDGE}px; it will be upscaled and look soft`)
@@ -44,7 +46,10 @@ if (meta.width < EDGE || meta.height < EDGE) {
 
 fs.mkdirSync(outDir, { recursive: true })
 
-const master = path.join(outDir, `${slug}-original${path.extname(source).toLowerCase() === '.png' ? '.png' : '.jpg'}`)
+const master = path.join(
+  outDir,
+  `${slug}-original${path.extname(source).toLowerCase() === '.png' ? '.png' : '.jpg'}`,
+)
 fs.copyFileSync(source, master)
 
 const web = path.join(outDir, `${slug}.jpg`)

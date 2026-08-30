@@ -16,7 +16,11 @@ const playerBox = async (page: import('@playwright/test').Page) =>
     )
     if (!el) return null
     const r = el.getBoundingClientRect()
-    return { y: Math.round(r.y), height: Math.round(r.height), transform: getComputedStyle(el).transform }
+    return {
+      y: Math.round(r.y),
+      height: Math.round(r.height),
+      transform: getComputedStyle(el).transform,
+    }
   })
 
 test.describe('animation', () => {
@@ -25,9 +29,7 @@ test.describe('animation', () => {
     await playTrack(page, 1)
     await act(page, 'setExpanded', true)
 
-    await expect
-      .poll(async () => (await playerBox(page))?.y, { timeout: 5000 })
-      .toBe(0)
+    await expect.poll(async () => (await playerBox(page))?.y, { timeout: 5000 }).toBe(0)
 
     const box = await playerBox(page)
     expect(box!.height).toBe(page.viewportSize()!.height)

@@ -97,8 +97,7 @@ export function usePagination(
      */
     const body = inner.querySelector('p')
     const leading = body ? parseFloat(getComputedStyle(body).lineHeight) : 0
-    inner.style.height =
-      leading > 0 ? `${Math.floor(height / leading) * leading}px` : `${height}px`
+    inner.style.height = leading > 0 ? `${Math.floor(height / leading) * leading}px` : `${height}px`
 
     const pitch = width + PAGE_GAP
     // scrollWidth omits the trailing gap, so it is added back before dividing.

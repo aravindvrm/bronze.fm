@@ -37,13 +37,7 @@ export const CONTENT_TYPE_LABEL: Record<ContentType, string> = {
   ereader: 'Whitepaper',
 }
 
-export type CreditRole =
-  | 'artist'
-  | 'featured'
-  | 'producer'
-  | 'engineer'
-  | 'writer'
-  | 'director'
+export type CreditRole = 'artist' | 'featured' | 'producer' | 'engineer' | 'writer' | 'director'
 
 /**
  * Platforms the profile can link to. The list is closed because each entry

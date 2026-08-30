@@ -29,7 +29,9 @@ const PUBLISH = process.argv.includes('--publish')
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 if (!SUPABASE_URL || !SERVICE_KEY) {
-  console.error('✗ set VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (service role, not anon) before running.')
+  console.error(
+    '✗ set VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (service role, not anon) before running.',
+  )
   process.exit(1)
 }
 if (!fs.existsSync(audioDir)) {
@@ -146,15 +148,19 @@ async function upsertItem(contentRow, creatorRow, item, asset) {
 async function upsertContentCredits(contentRow, creatorRow) {
   for (const credit of bronze.credits) {
     if (credit.creatorSlug !== dean.slug) continue // only Creator we have rows for
-    const { error } = await sb.from('content_creators').upsert(
-      { content_id: contentRow.id, creator_id: creatorRow.id, role: credit.role },
-      { onConflict: 'content_id,creator_id,role' },
-    )
+    const { error } = await sb
+      .from('content_creators')
+      .upsert(
+        { content_id: contentRow.id, creator_id: creatorRow.id, role: credit.role },
+        { onConflict: 'content_id,creator_id,role' },
+      )
     if (error) throw new Error(`content_creators upsert failed: ${error.message}`)
   }
 }
 
-console.log(`Ingesting "${bronze.title}" (${bronze.items.length} items)${PUBLISH ? ' — publishing' : ' — staying unpublished'}`)
+console.log(
+  `Ingesting "${bronze.title}" (${bronze.items.length} items)${PUBLISH ? ' — publishing' : ' — staying unpublished'}`,
+)
 
 const creatorRow = await upsertCreator()
 const contentRow = await upsertContent(creatorRow)
@@ -164,7 +170,8 @@ let done = 0
 for (const item of bronze.items) {
   const filename = decodeURIComponent(item.url.split('/').pop())
   const localPath = path.join(audioDir, filename)
-  if (!fs.existsSync(localPath)) throw new Error(`missing local file for "${item.title}": ${filename}`)
+  if (!fs.existsSync(localPath))
+    throw new Error(`missing local file for "${item.title}": ${filename}`)
 
   const asset = await uploadAsset(creatorRow, item, localPath)
   await upsertItem(contentRow, creatorRow, item, asset)

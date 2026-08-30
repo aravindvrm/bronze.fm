@@ -14,14 +14,10 @@ const fixtureAdapter: ContentAdapter = {
     return allProjects.filter((p) => p.ownerSlug === creatorSlug)
   },
   async getProject(creatorSlug, projectSlug) {
-    return (
-      allProjects.find((p) => p.ownerSlug === creatorSlug && p.slug === projectSlug) ?? null
-    )
+    return allProjects.find((p) => p.ownerSlug === creatorSlug && p.slug === projectSlug) ?? null
   },
   async getContent(creatorSlug, projectSlug, type): Promise<Content | null> {
-    const project = allProjects.find(
-      (p) => p.ownerSlug === creatorSlug && p.slug === projectSlug,
-    )
+    const project = allProjects.find((p) => p.ownerSlug === creatorSlug && p.slug === projectSlug)
     const content = project?.contents.find((c) => c.type === type) ?? null
     if (!content) return null
 

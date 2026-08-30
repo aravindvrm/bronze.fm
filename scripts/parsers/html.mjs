@@ -28,9 +28,29 @@ export function safeHref(href) {
 const DROP = new Set(['script', 'style', 'noscript', 'head', 'template', 'iframe', 'object'])
 
 const BLOCK_TAGS = new Set([
-  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'p', 'ul', 'ol', 'blockquote', 'pre', 'table', 'figure', 'img', 'hr',
-  'div', 'section', 'article', 'main', 'body', 'header', 'footer', 'aside',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'p',
+  'ul',
+  'ol',
+  'blockquote',
+  'pre',
+  'table',
+  'figure',
+  'img',
+  'hr',
+  'div',
+  'section',
+  'article',
+  'main',
+  'body',
+  'header',
+  'footer',
+  'aside',
 ])
 
 function decodeEntities(text) {
@@ -114,13 +134,11 @@ function trimSpans(spans) {
 }
 
 function cellsOf(row) {
-  return row
-    .querySelectorAll('th, td')
-    .map((cell) => {
-      const span = Number(cell.getAttribute('colspan'))
-      const spans = trimSpans(spansOf(cell))
-      return span > 1 ? { spans, span } : { spans }
-    })
+  return row.querySelectorAll('th, td').map((cell) => {
+    const span = Number(cell.getAttribute('colspan'))
+    const spans = trimSpans(spansOf(cell))
+    return span > 1 ? { spans, span } : { spans }
+  })
 }
 
 /** One element → zero or more blocks. */
@@ -138,7 +156,10 @@ function blocksOf(node, out) {
       // Six levels collapse to three. The reader draws three, and the
       // contents sheet is unreadable past two levels of indent on a phone.
       const level = Math.min(3, Number(tag[1]))
-      const text = spansOf(node).map((s) => s.text).join('').trim()
+      const text = spansOf(node)
+        .map((s) => s.text)
+        .join('')
+        .trim()
       if (text) out.push({ kind: 'h', level, text })
       return
     }
@@ -191,8 +212,12 @@ function blocksOf(node, out) {
     case 'table': {
       const rows = node.querySelectorAll('tr')
       if (!rows.length) return
-      const headRow = node.querySelector('thead tr') ?? (rows[0].querySelector('th') ? rows[0] : null)
-      const bodyRows = rows.filter((r) => r !== headRow).map(cellsOf).filter((r) => r.length)
+      const headRow =
+        node.querySelector('thead tr') ?? (rows[0].querySelector('th') ? rows[0] : null)
+      const bodyRows = rows
+        .filter((r) => r !== headRow)
+        .map(cellsOf)
+        .filter((r) => r.length)
       const block = { kind: 'table', rows: bodyRows }
       if (headRow) block.head = cellsOf(headRow)
       if (block.rows.length || block.head) out.push(block)

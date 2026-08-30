@@ -13,7 +13,11 @@ export function Transport({ size = 'lg' }: { size?: 'sm' | 'lg' }) {
   return (
     <div className={`flex items-center justify-center ${lg ? 'gap-9' : 'gap-4'}`}>
       {lg && (
-        <button onClick={prev} aria-label="Previous track" className="text-parchment/70 transition hover:text-parchment active:scale-90">
+        <button
+          onClick={prev}
+          aria-label="Previous track"
+          className="text-parchment/70 transition hover:text-parchment active:scale-90"
+        >
           <PrevIcon className="size-7" />
         </button>
       )}
@@ -29,7 +33,9 @@ export function Transport({ size = 'lg' }: { size?: 'sm' | 'lg' }) {
         }`}
       >
         {isBuffering ? (
-          <span className={`animate-spin rounded-full border-2 border-on-accent/30 border-t-on-accent ${lg ? 'size-6' : 'size-4'}`} />
+          <span
+            className={`animate-spin rounded-full border-2 border-on-accent/30 border-t-on-accent ${lg ? 'size-6' : 'size-4'}`}
+          />
         ) : isPlaying ? (
           <PauseIcon className={lg ? 'size-7' : 'size-4'} />
         ) : (
@@ -38,12 +44,20 @@ export function Transport({ size = 'lg' }: { size?: 'sm' | 'lg' }) {
       </button>
 
       {lg && (
-        <button onClick={next} aria-label="Next track" className="text-parchment/70 transition hover:text-parchment active:scale-90">
+        <button
+          onClick={next}
+          aria-label="Next track"
+          className="text-parchment/70 transition hover:text-parchment active:scale-90"
+        >
           <NextIcon className="size-7" />
         </button>
       )}
       {!lg && (
-        <button onClick={next} aria-label="Next track" className="text-parchment/70 transition hover:text-parchment active:scale-90">
+        <button
+          onClick={next}
+          aria-label="Next track"
+          className="text-parchment/70 transition hover:text-parchment active:scale-90"
+        >
           <NextIcon className="size-5" />
         </button>
       )}

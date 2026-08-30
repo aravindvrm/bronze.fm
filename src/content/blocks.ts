@@ -111,7 +111,9 @@ export function normaliseBlocks(input: unknown): DocBlock[] {
     switch (block.kind) {
       case 'h': {
         const level = block.level === 2 ? 2 : block.level === 3 ? 3 : 1
-        return typeof block.text === 'string' && block.text ? [{ kind: 'h', level, text: block.text }] : []
+        return typeof block.text === 'string' && block.text
+          ? [{ kind: 'h', level, text: block.text }]
+          : []
       }
       case 'p': {
         const s = spans(block.spans ?? block.text)
@@ -134,7 +136,9 @@ export function normaliseBlocks(input: unknown): DocBlock[] {
       case 'code': {
         if (typeof block.text !== 'string') return []
         const lang = typeof block.lang === 'string' ? block.lang : undefined
-        return [lang ? { kind: 'code', text: block.text, lang } : { kind: 'code', text: block.text }]
+        return [
+          lang ? { kind: 'code', text: block.text, lang } : { kind: 'code', text: block.text },
+        ]
       }
       case 'table': {
         const cells = (value: unknown): Cell[] | null => {

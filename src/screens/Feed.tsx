@@ -61,10 +61,7 @@ export function Feed() {
     }
   }, [])
 
-  const creatorName = useMemo(
-    () => new Map(creators.map((c) => [c.slug, c.name])),
-    [creators],
-  )
+  const creatorName = useMemo(() => new Map(creators.map((c) => [c.slug, c.name])), [creators])
 
   /*
    * Flattened to one entry per typed interface, not per Project: a Project
@@ -76,7 +73,9 @@ export function Feed() {
     const items: FeedItem[] = projects.flatMap((project) =>
       project.contents.map((content) => ({ content, project })),
     )
-    return items.sort((a, b) => (b.content.createdAt ?? '').localeCompare(a.content.createdAt ?? ''))
+    return items.sort((a, b) =>
+      (b.content.createdAt ?? '').localeCompare(a.content.createdAt ?? ''),
+    )
   }, [projects])
 
   /*
@@ -152,7 +151,8 @@ export function Feed() {
               // the block to clip vertically as well, and the avatars carry a
               // ring drawn OUTSIDE their box plus a hover scale. Without room
               // above, the top of every circle is shaved off.
-              className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 pt-2 no-scrollbar sm:-mx-8 sm:px-8">
+              className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 pt-2 no-scrollbar sm:-mx-8 sm:px-8"
+            >
               {shownCreators.map((creator, i) => (
                 <motion.button
                   key={creator.id}
@@ -182,7 +182,9 @@ export function Feed() {
         {feedItems.length > 0 && (
           <section className="mt-10">
             <div className="mb-3.5 flex items-center justify-between gap-3">
-              <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">Feed</h2>
+              <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">
+                Feed
+              </h2>
 
               {/* A single type has nothing to filter, so the row only earns
                   its place once there is a real choice to make. */}
@@ -229,7 +231,11 @@ export function Feed() {
                     key={content.id}
                     onClick={() =>
                       navigate(
-                        projectPath(project.ownerSlug, project.slug, CONTENT_TYPE_SEGMENT[content.type]),
+                        projectPath(
+                          project.ownerSlug,
+                          project.slug,
+                          CONTENT_TYPE_SEGMENT[content.type],
+                        ),
                       )
                     }
                     initial={{ opacity: 0, y: 16 }}
@@ -248,11 +254,10 @@ export function Feed() {
                       className="size-14 shrink-0 object-cover"
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm text-parchment">
-                        {content.title}
-                      </span>
+                      <span className="block truncate text-sm text-parchment">{content.title}</span>
                       <span className="mt-0.5 block truncate font-mono text-[11px] text-parchment/40">
-                        {creatorName.get(project.ownerSlug) ?? project.ownerSlug} · {CONTENT_TYPE_LABEL[content.type]}
+                        {creatorName.get(project.ownerSlug) ?? project.ownerSlug} ·{' '}
+                        {CONTENT_TYPE_LABEL[content.type]}
                         {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
                       </span>
                     </span>

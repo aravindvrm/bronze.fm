@@ -1,5 +1,16 @@
 import { getSupabase } from '@/lib/supabaseClient'
-import type { Content, ContentAdapter, ContentType, Creator, Credit, DocBlock, Pin, Project, StubKind, StubItem } from '@/content/types'
+import type {
+  Content,
+  ContentAdapter,
+  ContentType,
+  Creator,
+  Credit,
+  DocBlock,
+  Pin,
+  Project,
+  StubKind,
+  StubItem,
+} from '@/content/types'
 import { normaliseBlocks } from '@/content/blocks'
 
 /**
@@ -59,7 +70,12 @@ interface ContentRow {
     position: number
     title: string
     is_interlude: boolean
-    assets: { storage_path: string; content_hash: string; bytes: number; duration_ms: number | null } | null
+    assets: {
+      storage_path: string
+      content_hash: string
+      bytes: number
+      duration_ms: number | null
+    } | null
   }[]
 }
 
@@ -185,7 +201,11 @@ function toContent(row: ContentRow, ownerSlug: string, projectSlug: string): Con
 
 export const supabaseAdapter: ContentAdapter = {
   async getCreator(slug) {
-    const { data, error } = await getSupabase().from('creators').select('*').eq('slug', slug).maybeSingle()
+    const { data, error } = await getSupabase()
+      .from('creators')
+      .select('*')
+      .eq('slug', slug)
+      .maybeSingle()
     if (error) throw error
     return data ? toCreator(data as CreatorRow) : null
   },

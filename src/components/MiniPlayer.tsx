@@ -68,7 +68,9 @@ export function MiniPlayer() {
               className="size-11 shrink-0 object-cover sm:size-14"
             />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-medium text-parchment">{item.title}</span>
+              <span className="block truncate text-sm font-medium text-parchment">
+                {item.title}
+              </span>
               <span className="block truncate text-xs text-parchment/45">
                 {isPlaying ? 'Now playing' : 'Paused'}
               </span>

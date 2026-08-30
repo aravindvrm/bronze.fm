@@ -57,7 +57,9 @@ function walk(dir) {
       problems.push(`secret-shaped file in build output: ${rel}`)
     }
     if (size > MAX_FILE_BYTES) {
-      problems.push(`file over ${MAX_FILE_BYTES / 1048576} MB: ${rel} (${(size / 1048576).toFixed(1)} MB)`)
+      problems.push(
+        `file over ${MAX_FILE_BYTES / 1048576} MB: ${rel} (${(size / 1048576).toFixed(1)} MB)`,
+      )
     }
   }
 }
@@ -91,7 +93,9 @@ function scanText(dir) {
 scanText(dist)
 
 if (total > MAX_TOTAL_BYTES) {
-  problems.push(`dist/ is ${(total / 1048576).toFixed(1)} MB, over the ${MAX_TOTAL_BYTES / 1048576} MB budget`)
+  problems.push(
+    `dist/ is ${(total / 1048576).toFixed(1)} MB, over the ${MAX_TOTAL_BYTES / 1048576} MB budget`,
+  )
 }
 
 // A duplicate URL in the service worker's precache manifest makes
@@ -121,7 +125,9 @@ if (fs.existsSync(swPath)) {
     )
   }
   if (!/"revision"/.test(swSource)) {
-    problems.push('sw.js contains no precache entries — the shell will not be cached and the app cannot open offline')
+    problems.push(
+      'sw.js contains no precache entries — the shell will not be cached and the app cannot open offline',
+    )
   }
 
   const manifestMatch = swSource.match(/\[\{"revision"[^;]*?\]\.map\(\w+=>\w+\.url\)/)
@@ -179,7 +185,9 @@ const summary = `${count} files, ${(total / 1048576).toFixed(2)} MB`
 if (problems.length) {
   console.error(`✗ dist/ check failed (${summary})\n`)
   for (const p of problems) console.error(`  · ${p}`)
-  console.error('\nNothing under public/ may reference the master audio — the build copies public/ into dist/.')
+  console.error(
+    '\nNothing under public/ may reference the master audio — the build copies public/ into dist/.',
+  )
   process.exit(1)
 }
 

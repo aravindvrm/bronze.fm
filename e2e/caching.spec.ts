@@ -26,7 +26,10 @@ test.describe('service worker media caching', () => {
       const url = location.origin + '/media/audio/__e2e__.mp3'
       const body = new Uint8Array(1000).map((_, i) => (i * 7) % 256)
       const cache = await caches.open(cacheName)
-      await cache.put(url, new Response(body.slice(), { status: 200, headers: { 'Content-Type': 'audio/mpeg' } }))
+      await cache.put(
+        url,
+        new Response(body.slice(), { status: 200, headers: { 'Content-Type': 'audio/mpeg' } }),
+      )
 
       const window_ = await fetch(url, { headers: { Range: 'bytes=100-199' } })
       const wBytes = new Uint8Array(await window_.arrayBuffer())
@@ -95,7 +98,13 @@ test.describe('service worker media caching', () => {
 
       const ranged = await fetch(url, { headers: { Range: 'bytes=0-99' } })
       await cache.delete(url)
-      return { ok, status, size, rangeStatus: ranged.status, cr: ranged.headers.get('Content-Range') }
+      return {
+        ok,
+        status,
+        size,
+        rangeStatus: ranged.status,
+        cr: ranged.headers.get('Content-Range'),
+      }
     }, MEDIA_CACHE)
 
     expect(result.ok).toBe(true)

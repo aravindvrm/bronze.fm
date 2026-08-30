@@ -63,8 +63,10 @@ describe('theme integrity', () => {
         if (hit) offenders.push(`${file.replace(SRC, 'src')}:${i + 1}  ${hit[0]}`)
       }
     }
-    expect(offenders, `hard-coded colour(s) — add a token to index.css instead:\n${offenders.join('\n')}`)
-      .toEqual([])
+    expect(
+      offenders,
+      `hard-coded colour(s) — add a token to index.css instead:\n${offenders.join('\n')}`,
+    ).toEqual([])
   })
 
   it("never uses Tailwind's built-in black or white", () => {
@@ -89,9 +91,7 @@ describe('theme tokens', () => {
   const theme = css.slice(css.indexOf('@theme {'), css.indexOf('\n}', css.indexOf('@theme {')))
 
   it('declares every colour the app asks for', () => {
-    const declared = new Set(
-      [...theme.matchAll(/--color-([a-z-]+):/g)].map((m) => m[1]),
-    )
+    const declared = new Set([...theme.matchAll(/--color-([a-z-]+):/g)].map((m) => m[1]))
     const used = new Set<string>()
     for (const file of files) {
       for (const m of code(file).matchAll(

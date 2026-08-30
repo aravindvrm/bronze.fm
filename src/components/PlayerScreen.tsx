@@ -54,14 +54,27 @@ export function PlayerScreen() {
 
       <div
         className="relative mx-auto flex h-full max-w-[var(--app-w)] flex-col px-6 sm:px-10"
-        style={{ paddingTop: 'calc(var(--safe-t) + 0.75rem)', paddingBottom: 'calc(var(--safe-b) + 1.5rem)' }}
+        style={{
+          paddingTop: 'calc(var(--safe-t) + 0.75rem)',
+          paddingBottom: 'calc(var(--safe-b) + 1.5rem)',
+        }}
       >
         <header className="flex shrink-0 items-center justify-between">
-          <button onClick={() => setExpanded(false)} aria-label="Close player" className="text-parchment/70 transition hover:text-parchment">
+          <button
+            onClick={() => setExpanded(false)}
+            aria-label="Close player"
+            className="text-parchment/70 transition hover:text-parchment"
+          >
             <ChevronDown />
           </button>
-          <div className="text-[10px] uppercase tracking-[0.22em] text-parchment/40">{content?.title}</div>
-          <button onClick={() => setQueueOpen(true)} aria-label="Show track list" className="text-parchment/70 transition hover:text-parchment">
+          <div className="text-[10px] uppercase tracking-[0.22em] text-parchment/40">
+            {content?.title}
+          </div>
+          <button
+            onClick={() => setQueueOpen(true)}
+            aria-label="Show track list"
+            className="text-parchment/70 transition hover:text-parchment"
+          >
             <QueueIcon />
           </button>
         </header>
@@ -71,7 +84,10 @@ export function PlayerScreen() {
         <div className="flex min-h-0 flex-1 flex-col sm:flex-row sm:items-center sm:gap-12">
           {/* Gesture surface: horizontal changes track, vertical is volume where
               supported and navigation where it is not. */}
-          <div className="flex min-h-0 flex-1 items-center justify-center py-6 sm:flex-none sm:basis-[45%]" {...gestures}>
+          <div
+            className="flex min-h-0 flex-1 items-center justify-center py-6 sm:flex-none sm:basis-[45%]"
+            {...gestures}
+          >
             <motion.img
               src={art}
               alt={`${item.title} artwork`}
@@ -89,7 +105,10 @@ export function PlayerScreen() {
                 <p className="mt-1 truncate text-sm text-parchment/50">
                   {primary}
                   {feats.length > 0 && (
-                    <span className="text-parchment/35"> · feat. {feats.map((f) => f.name).join(', ')}</span>
+                    <span className="text-parchment/35">
+                      {' '}
+                      · feat. {feats.map((f) => f.name).join(', ')}
+                    </span>
                   )}
                 </p>
               </div>

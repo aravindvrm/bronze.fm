@@ -21,7 +21,14 @@ test.describe('pinned content', () => {
     const url = page.url()
 
     await page.getByRole('button', { name: /Summer Flame/ }).click()
-    await page.waitForFunction(() => (window as never as { __player: { getState: () => { isPlaying: boolean } } }).__player.getState().isPlaying, undefined, { timeout: 10_000 })
+    await page.waitForFunction(
+      () =>
+        (
+          window as never as { __player: { getState: () => { isPlaying: boolean } } }
+        ).__player.getState().isPlaying,
+      undefined,
+      { timeout: 10_000 },
+    )
 
     expect(page.url()).toBe(url)
     const state = await snapshot(page)
@@ -81,9 +88,7 @@ test.describe('splash', () => {
     await expect
       .poll(async () =>
         mark.evaluate((el) =>
-          [...el.querySelectorAll('span')].every(
-            (s) => getComputedStyle(s).opacity === '1',
-          ),
+          [...el.querySelectorAll('span')].every((s) => getComputedStyle(s).opacity === '1'),
         ),
       )
       .toBe(true)
@@ -121,9 +126,8 @@ test.describe('splash', () => {
     await expect(line).toContainText('Create. Share. Thrive.')
     await expect
       .poll(async () =>
-        line.evaluate(
-          (el) =>
-            el.querySelector('span[aria-hidden] > span:last-child')?.textContent?.trim(),
+        line.evaluate((el) =>
+          el.querySelector('span[aria-hidden] > span:last-child')?.textContent?.trim(),
         ),
       )
       .toBe('Create. Share. Thrive.')
@@ -241,9 +245,9 @@ test.describe('reader', () => {
     const before = await heightOf()
 
     await page.keyboard.press('ArrowRight')
-    await expect.poll(async () => bar.evaluate((el) => getComputedStyle(el).clipPath)).toContain(
-      '100%',
-    )
+    await expect
+      .poll(async () => bar.evaluate((el) => getComputedStyle(el).clipPath))
+      .toContain('100%')
     expect(await heightOf()).toBe(before)
 
     // The middle of the page is the only gesture that brings it back — the
@@ -389,9 +393,9 @@ test.describe('reader', () => {
     // Text size is a vertical drag in the middle of the page now, not a
     // button. Up is bigger, the way every brightness gesture works.
     await touchDrag(page, { x: 195, y: 600 }, { x: 195, y: 470 })
-    await expect.poll(async () => Number(await rail.getAttribute('aria-valuemax'))).toBeGreaterThan(
-      pagesBefore,
-    )
+    await expect
+      .poll(async () => Number(await rail.getAttribute('aria-valuemax')))
+      .toBeGreaterThan(pagesBefore)
 
     // Same place in the paper, renumbered — not the same page number.
     const after = Number(await rail.getAttribute('aria-valuenow'))
@@ -427,7 +431,10 @@ test.describe('creator identity', () => {
   test('has no blurred cover wash behind the profile', async ({ page }) => {
     await gotoCreator(page)
     const blurred = await page.evaluate(
-      () => [...document.querySelectorAll('*')].filter((el) => getComputedStyle(el).filter.includes('blur')).length,
+      () =>
+        [...document.querySelectorAll('*')].filter((el) =>
+          getComputedStyle(el).filter.includes('blur'),
+        ).length,
     )
     expect(blurred).toBe(0)
   })

@@ -34,7 +34,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       _sync({ position: a.currentTime })
     }
     const onEnded = () => next()
-    const onError = () => _sync({ isPlaying: false, isBuffering: false, error: 'Could not load audio' })
+    const onError = () =>
+      _sync({ isPlaying: false, isBuffering: false, error: 'Could not load audio' })
 
     a.addEventListener('play', onPlay)
     a.addEventListener('pause', onPause)

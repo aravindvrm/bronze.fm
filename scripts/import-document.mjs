@@ -38,7 +38,9 @@ const source = args.find((a) => !a.startsWith('--'))
 const slug = args.includes('--slug') ? args[args.indexOf('--slug') + 1] : 'atonomos'
 
 if (!source || !fs.existsSync(source)) {
-  console.error('✗ usage: node scripts/import-document.mjs <file.docx|.md|.html|.txt> [--slug atonomos]')
+  console.error(
+    '✗ usage: node scripts/import-document.mjs <file.docx|.md|.html|.txt> [--slug atonomos]',
+  )
   process.exit(1)
 }
 

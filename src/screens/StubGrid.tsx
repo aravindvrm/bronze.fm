@@ -15,15 +15,7 @@ import { StubTiles } from '@/components/StubTiles'
  * a header with a way back, and the blurb — for someone arriving on the URL
  * directly rather than through the profile.
  */
-export function StubGrid({
-  kind,
-  title,
-  blurb,
-}: {
-  kind: StubKind
-  title: string
-  blurb: string
-}) {
+export function StubGrid({ kind, title, blurb }: { kind: StubKind; title: string; blurb: string }) {
   const creator = useCreator()
 
   return (

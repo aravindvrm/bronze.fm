@@ -63,7 +63,11 @@ export function QueuePanel() {
                 }`}
               >
                 <span className="relative shrink-0">
-                  <img src={artUrl(item.hash, 'item', 128)} alt="" className="size-11 object-cover" />
+                  <img
+                    src={artUrl(item.hash, 'item', 128)}
+                    alt=""
+                    className="size-11 object-cover"
+                  />
                   {active && isPlaying && (
                     <span className="absolute inset-0 grid place-items-center bg-void/55">
                       <span className="flex items-end gap-[2px]">
@@ -72,7 +76,12 @@ export function QueuePanel() {
                             key={b}
                             className="w-[2px] bg-gilt"
                             animate={{ height: [4, 11, 6, 13, 4] }}
-                            transition={{ duration: 1.1, repeat: Infinity, delay: b * 0.16, ease: 'easeInOut' }}
+                            transition={{
+                              duration: 1.1,
+                              repeat: Infinity,
+                              delay: b * 0.16,
+                              ease: 'easeInOut',
+                            }}
                           />
                         ))}
                       </span>
@@ -81,7 +90,9 @@ export function QueuePanel() {
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <span className={`block truncate text-sm ${active ? 'text-gilt' : 'text-parchment'}`}>
+                  <span
+                    className={`block truncate text-sm ${active ? 'text-gilt' : 'text-parchment'}`}
+                  >
                     {item.title}
                   </span>
                   <span className="mt-0.5 block truncate text-[11px] text-parchment/40">

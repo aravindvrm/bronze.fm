@@ -123,7 +123,8 @@ function runsOf(xml) {
     const props = /<w:rPr>[\s\S]*?<\/w:rPr>/.exec(run)?.[0] ?? ''
     // `<w:b/>` sets bold; `<w:b w:val="0"/>` explicitly clears it, which a
     // naive presence check would read as bold.
-    const on = (tag) => new RegExp(`<w:${tag}(?:\\s[^>]*)?/>`).test(props) &&
+    const on = (tag) =>
+      new RegExp(`<w:${tag}(?:\\s[^>]*)?/>`).test(props) &&
       !new RegExp(`<w:${tag}[^>]*w:val="(?:0|false)"`).test(props)
 
     const withBreaks = run.replace(/<w:tab[^>]*\/>/g, ' ').replace(/<w:br[^>]*\/>/g, ' ')
@@ -144,12 +145,7 @@ function merge(spans) {
   const out = []
   for (const span of spans) {
     const last = out[out.length - 1]
-    if (
-      last &&
-      last.strong === span.strong &&
-      last.em === span.em &&
-      last.href === span.href
-    ) {
+    if (last && last.strong === span.strong && last.em === span.em && last.href === span.href) {
       last.text += span.text
     } else {
       out.push({ ...span })
@@ -243,7 +239,9 @@ export function docxToBlocks(file) {
         // Word marks a repeating header row with tblHeader; failing that, the
         // first row is treated as one only when the table has more than one.
         const headed = /<w:tblHeader[^>]*\/>/.test(part.xml) || rows.length > 1
-        raw.push(headed ? { kind: 'table', head: rows[0], rows: rows.slice(1) } : { kind: 'table', rows })
+        raw.push(
+          headed ? { kind: 'table', head: rows[0], rows: rows.slice(1) } : { kind: 'table', rows },
+        )
       }
       continue
     }
@@ -259,7 +257,10 @@ export function docxToBlocks(file) {
         raw.push({
           kind: 'h',
           level: Math.min(Number(heading[1]), 3),
-          text: spans.map((s) => s.text).join('').trim(),
+          text: spans
+            .map((s) => s.text)
+            .join('')
+            .trim(),
         })
         continue
       }

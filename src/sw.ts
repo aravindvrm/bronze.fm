@@ -1,5 +1,7 @@
 /// <reference lib="webworker" />
-declare const self: ServiceWorkerGlobalScope & { __WB_MANIFEST: { url: string; revision?: string | null }[] }
+declare const self: ServiceWorkerGlobalScope & {
+  __WB_MANIFEST: { url: string; revision?: string | null }[]
+}
 
 /**
  * bronze.fm service worker.
@@ -96,9 +98,7 @@ self.addEventListener('activate', (event) => {
        */
       const wanted = shellPaths()
       const shell = await caches.open(SHELL_CACHE)
-      const stale = (await shell.keys()).filter(
-        (req) => !wanted.has(new URL(req.url).pathname),
-      )
+      const stale = (await shell.keys()).filter((req) => !wanted.has(new URL(req.url).pathname))
       await Promise.all(stale.map((req) => shell.delete(req)))
 
       await self.clients.claim()

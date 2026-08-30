@@ -112,7 +112,10 @@ describe('planSync', () => {
 
 describe('cacheOne', () => {
   it('stores a complete 200', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('audio', { status: 200 })))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('audio', { status: 200 })),
+    )
     const ok = await cacheOne({ id: 'a', url: '/a.mp3', hash: 'h', bytes: 5 })
     expect(ok).toBe(true)
     expect(await cache.match('/a.mp3')).toBeTruthy()
@@ -121,7 +124,10 @@ describe('cacheOne', () => {
   it('refuses to store a 206', async () => {
     // Caching a partial would poison every later seek: the worker treats cache
     // entries as whole files.
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('par', { status: 206 })))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('par', { status: 206 })),
+    )
     expect(await cacheOne({ id: 'a', url: '/a.mp3', hash: 'h', bytes: 5 })).toBe(false)
     expect(await cache.match('/a.mp3')).toBeFalsy()
   })
@@ -134,9 +140,12 @@ describe('cacheOne', () => {
   })
 
   it('survives a network failure without throwing', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => {
-      throw new Error('offline')
-    }))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('offline')
+      }),
+    )
     expect(await cacheOne({ id: 'a', url: '/a.mp3', hash: 'h', bytes: 5 })).toBe(false)
   })
 
@@ -151,7 +160,10 @@ describe('cacheOne', () => {
 
 describe('runSync', () => {
   it('reports progress and caches what is missing', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('audio', { status: 200 })))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('audio', { status: 200 })),
+    )
     const entries = manifestFor(content([item(1, 'a'), item(2, 'b'), item(3, 'c')]))
     const seen: number[] = []
     const res = await runSync(entries, (done) => seen.push(done))
@@ -161,10 +173,13 @@ describe('runSync', () => {
 
   it('counts failures without aborting the run', async () => {
     let n = 0
-    vi.stubGlobal('fetch', vi.fn(async () => {
-      n++
-      return new Response('a', { status: n === 2 ? 500 : 200 })
-    }))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        n++
+        return new Response('a', { status: n === 2 ? 500 : 200 })
+      }),
+    )
     const entries = manifestFor(content([item(1, 'a'), item(2, 'b'), item(3, 'c')]))
     expect(await runSync(entries)).toEqual({ cached: 2, failed: 1 })
   })
