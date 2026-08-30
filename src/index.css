@@ -82,7 +82,7 @@
        --color-ink         a raised surface sitting on that ground
        --color-parchment   everything written on the ground
        --color-gilt        THE accent, and the only colour in the app
-       --color-ambient     the drifting field on the splash
+       --color-ambient     the halftone screen on the splash
 
      The names are historical and describe roles, not hues: this is a
      light theme, so `void` is white and `parchment` is near-black. Read
@@ -102,10 +102,10 @@
      decoration. Anything swapped in here wants checking against both
      --color-void and --color-on-accent. */
   --color-gilt: #c92c10;
-  /* The splash's drifting net, and nothing else — it was behind every
-     screen until movement under the reading surfaces proved distracting.
-     Follows the accent by default, so one change themes the splash too;
-     set it independently for a complementary field instead. */
+  /* The splash's halftone and grain, and nothing else — the field was
+     behind every screen until texture under the reading surfaces proved
+     distracting. Follows the accent by default, so one change themes the
+     splash too; set it independently for a complementary screen instead. */
   --color-ambient: var(--color-gilt);
 
   /* ── On the accent ──────────────────────────────────────────────────

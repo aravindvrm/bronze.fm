@@ -90,19 +90,19 @@ test.describe('splash', () => {
   })
 
   /*
-   * The drifting field belongs to the splash and to nowhere else.
+   * The textured field belongs to the splash and to nowhere else.
    *
    * Both halves are asserted. The canvas is worth pinning because its
-   * failure mode is silent — a mis-keyed option or a provider that refuses
-   * to mount leaves a blank white screen rather than an error. And the app
-   * behind it is deliberately plain: the field was moved off it because
-   * movement behind everything you read is a distraction, so a second
+   * failure mode is silent — a colour that fails to resolve or a context
+   * that fails to open leaves a blank white screen rather than an error.
+   * And the app behind it is deliberately plain: the field came off it
+   * because texture behind everything you read is a distraction, so a
    * canvas reappearing anywhere is a regression, not a bonus.
    */
-  test('is the only place the drifting field appears', async ({ page }) => {
+  test('is the only place the textured field appears', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('img', { name: 'bronze.fm' })).toBeVisible()
-    await expect(page.locator('#splash-field canvas')).toHaveCount(1)
+    await expect(page.locator('[data-testid="splash-field"]')).toHaveCount(1)
 
     await page.locator('.z-\\[60\\]').click()
     await expect(page.getByRole('heading', { name: 'Featured Creators' })).toBeVisible()
