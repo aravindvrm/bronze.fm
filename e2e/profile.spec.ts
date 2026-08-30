@@ -304,22 +304,37 @@ test.describe('reader', () => {
    * where the words are, and resizing them out from under a sentence someone
    * is reading is the failure worth pinning down.
    */
-  test('sets text size from a margin, and leaves the middle alone', async ({ page }) => {
+  test('sets text size from the middle, and leaves the margins to turning', async ({ page }) => {
     await gotoReader(page)
     const flow = page.locator('[data-block="0"]').locator('..')
     const size = async () => flow.evaluate((el) => getComputedStyle(el).fontSize)
+    const rail = page.getByRole('slider', { name: 'Page' })
 
     const start = await size()
-    await touchDrag(page, { x: 24, y: 620 }, { x: 24, y: 480 })
+    await touchDrag(page, { x: 195, y: 620 }, { x: 195, y: 480 })
     const bigger = await size()
     expect(parseFloat(bigger)).toBeGreaterThan(parseFloat(start))
 
-    await touchDrag(page, { x: 366, y: 480 }, { x: 366, y: 620 })
+    await touchDrag(page, { x: 195, y: 480 }, { x: 195, y: 620 })
     expect(await size()).toBe(start)
 
-    // The middle is text, not a control.
-    await touchDrag(page, { x: 195, y: 620 }, { x: 195, y: 460 })
-    expect(await size()).toBe(start)
+    /*
+     * ONE step per gesture, however far the finger goes. Stepping again every
+     * 80px meant an ordinary swipe moved two rungs at once, which is most of
+     * what made the control feel like it was lurching.
+     */
+    const far = { x: 195, y: 700 }
+    await touchDrag(page, far, { x: 195, y: 300 }, 16)
+    const afterLong = await size()
+    await touchDrag(page, { x: 195, y: 620 }, { x: 195, y: 480 })
+    expect(parseFloat(await size())).toBeGreaterThan(parseFloat(afterLong))
+
+    // The margins turn pages; a vertical drag there is not a size control.
+    const sizeNow = await size()
+    const pageNow = await rail.getAttribute('aria-valuenow')
+    await touchDrag(page, { x: 24, y: 620 }, { x: 24, y: 460 })
+    expect(await size()).toBe(sizeNow)
+    expect(await rail.getAttribute('aria-valuenow')).toBe(pageNow)
   })
 
   /*
@@ -360,9 +375,9 @@ test.describe('reader', () => {
     const pagesBefore = Number(await rail.getAttribute('aria-valuemax'))
     expect(before).toBeGreaterThan(5)
 
-    // Text size is a vertical drag in a page margin now, not a button. Up is
-    // bigger, the way every brightness and volume gesture works.
-    await touchDrag(page, { x: 24, y: 600 }, { x: 24, y: 470 })
+    // Text size is a vertical drag in the middle of the page now, not a
+    // button. Up is bigger, the way every brightness gesture works.
+    await touchDrag(page, { x: 195, y: 600 }, { x: 195, y: 470 })
     await expect.poll(async () => Number(await rail.getAttribute('aria-valuemax'))).toBeGreaterThan(
       pagesBefore,
     )

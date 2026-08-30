@@ -16,6 +16,11 @@ import { useEffect } from 'react'
  * moves those numbers has to move them here too, which is why they arrive as
  * a prop rather than being written twice.
  *
+ * Margins turn pages; the middle sets the text size. Size lived in the
+ * margins first and competed with the page turns for the same strip of
+ * screen — separating them by position rather than by direction is a much
+ * easier distinction for a thumb to make.
+ *
  * Dismissed by any touch, and by a timer, and by using any of the gestures it
  * describes. Someone who already knows how a reader works should not have to
  * find the dismiss.
@@ -61,7 +66,7 @@ export function ReaderCoach({
           role="note"
           aria-label="How to use the reader"
         >
-          {/* The two margin bands, drawn where they actually are. */}
+          {/* The two page-turn margins, drawn where they actually are. */}
           <Band side="left" width={zone} />
           <Band side="right" width={zone} />
 
@@ -69,15 +74,15 @@ export function ReaderCoach({
             className="absolute inset-y-0 flex flex-col items-center justify-center gap-2 text-center"
             style={{ left: zone, right: zone }}
           >
-            <div className="flex items-center gap-4 text-parchment/70">
-              <Arrow direction="left" />
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em]">Turn</span>
-              <Arrow direction="right" />
-            </div>
-            <p className="mt-1 max-w-[15rem] px-2 font-mono text-[10px] leading-relaxed text-parchment/45">
-              Swipe, or tap an edge.
+            <Arrow direction="up" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-parchment/70">
+              Text size
+            </span>
+            <Arrow direction="down" />
+            <p className="mt-3 max-w-[15rem] px-2 font-mono text-[10px] leading-relaxed text-parchment/45">
+              Swipe up or down here.
               <br />
-              Tap the middle for the bar.
+              Tap for the bar.
             </p>
           </div>
 
@@ -101,13 +106,10 @@ function Band({ side, width }: { side: 'left' | 'right'; width: string }) {
       }`}
       style={{ width, [side]: 0 }}
     >
-      <Arrow direction="up" />
+      <Arrow direction={side === 'left' ? 'left' : 'right'} />
       <span className="font-mono text-[9px] uppercase leading-tight tracking-[0.15em] text-parchment/55">
-        Text
-        <br />
-        size
+        Turn
       </span>
-      <Arrow direction="down" />
     </div>
   )
 }

@@ -22,8 +22,12 @@ const COACH_KEY = 'bronze:reader-coached'
  * name, and every change repaginates the whole paper. The default is index 1
  * rather than the smallest, so the control has somewhere to go in both
  * directions.
+ *
+ * The steps used to be 0.9 / 1 / 1.15 / 1.32 — about 15% apart, which read as
+ * a lurch rather than an adjustment. ~11% still crosses the whole useful
+ * range in three moves while letting a single step feel like a correction.
  */
-export const SCALES = [0.9, 1, 1.15, 1.32] as const
+export const SCALES = [0.9, 1, 1.11, 1.24] as const
 export const DEFAULT_SCALE_INDEX = 1
 
 function read(key: string): string | null {
