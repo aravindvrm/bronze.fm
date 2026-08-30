@@ -263,45 +263,73 @@ export function Splash() {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.div
-          onClick={enter}
-          /*
-           * Wiped away right to left rather than faded.
-           *
-           * A fade dissolves two screens through each other; a wipe pulls one
-           * off to reveal the other, which is what actually happens here —
-           * the app was behind the splash the whole time. Same `clip-path`
-           * technique the search bar opens with, run in the opposite
-           * direction, so the two reads as one motion language.
-           */
-          initial={{ clipPath: 'inset(0 0% 0 0)' }}
-          exit={{ clipPath: still ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)' }}
-          transition={{ duration: still ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 z-[60] grid cursor-pointer place-items-center overflow-hidden bg-void"
-        >
-          <div className="relative flex flex-col items-center">
-            <Wordmark still={still} />
-            <Tagline still={still} />
-          </div>
+        <motion.div key="splash" onClick={enter} className="fixed inset-0 z-[60] cursor-pointer">
+          <motion.div
+            /*
+             * Wiped away right to left rather than faded.
+             *
+             * A fade dissolves two screens through each other; a wipe pulls
+             * one off to reveal the other, which is what actually happens
+             * here — the app was behind the splash the whole time. Same
+             * `clip-path` technique the search bar opens with, run in the
+             * opposite direction, so the two read as one motion language.
+             */
+            initial={{ clipPath: 'inset(0 0% 0 0)' }}
+            exit={{ clipPath: still ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)' }}
+            transition={{ duration: still ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 grid place-items-center overflow-hidden bg-void"
+          >
+            <div className="relative flex flex-col items-center">
+              <Wordmark still={still} />
+              <Tagline still={still} />
+            </div>
 
-          {/* Breathing rather than static, so it registers as a live prompt
+            {/* Breathing rather than static, so it registers as a live prompt
               rather than a caption. Held back until the mark has assembled:
               arriving mid-reveal, it would compete with the one thing this
               screen exists to show. */}
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: still ? 0.6 : [0, 0.75, 0.35, 0.75] }}
-            transition={{
-              delay: still ? 0 : SETTLED,
-              duration: still ? 0 : 3.2,
-              repeat: still ? 0 : Infinity,
-              repeatType: 'reverse',
-            }}
-            className="absolute inset-x-0 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-parchment/50"
-            style={{ bottom: 'calc(var(--safe-b) + 4.5rem)' }}
-          >
-            Tap to enter
-          </motion.span>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: still ? 0.6 : [0, 0.75, 0.35, 0.75] }}
+              transition={{
+                delay: still ? 0 : SETTLED,
+                duration: still ? 0 : 3.2,
+                repeat: still ? 0 : Infinity,
+                repeatType: 'reverse',
+              }}
+              className="absolute inset-x-0 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-parchment/50"
+              style={{ bottom: 'calc(var(--safe-b) + 4.5rem)' }}
+            >
+              Tap to enter
+            </motion.span>
+          </motion.div>
+
+          {/*
+            The wiping edge, made visible.
+            
+            White sliding off white is not a transition anyone can see: the
+            splash and the feed behind it are the same ground, so the wipe had
+            nothing to read against and simply looked like a pause. This is
+            the edge itself — a rule in the accent that sits on the splash's
+            right the whole time it is up, and travels the width of the screen
+            as the wipe passes.
+            
+            A SIBLING of the clipped panel, not a child. `clip-path` removes
+            the rightmost pixels first, so a border on the panel's own edge is
+            the first thing it eats — the rule has to ride the edge from
+            outside it.
+            
+            It tracks the clip exactly rather than approximately. The clip's
+            visible right edge sits at width × (1 − p); this starts flush with
+            the right edge and translates −100vw, putting its own right edge at
+            width − p × width. The same number, so they cannot drift apart.
+          */}
+          <motion.div
+            aria-hidden
+            exit={still ? undefined : { x: '-100vw' }}
+            transition={{ duration: still ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-y-0 right-0 w-[3px] bg-gilt"
+          />
         </motion.div>
       )}
     </AnimatePresence>
