@@ -178,7 +178,11 @@ export function GrainField() {
           const radius = coverage * PITCH * 0.46
           if (radius < 0.18) continue
 
-          ctx.globalAlpha = Math.min(0.5, coverage * 0.62)
+          // Roughly half the first pass, which sat at 0.62/0.5. A halftone
+          // gets its weight from coverage as much as from ink: the dots
+          // nearly touch at this pitch, so alpha that reads as restrained on
+          // one dot reads as a solid wash across a few thousand.
+          ctx.globalAlpha = Math.min(0.3, coverage * 0.34)
           ctx.fillStyle = `rgb(${r} ${g} ${b})`
           ctx.beginPath()
           ctx.arc(x, y, radius, 0, Math.PI * 2)
