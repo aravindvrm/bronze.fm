@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { useReducedMotion } from 'framer-motion'
 
 /**
  * The splash's backdrop: a halftone screen under film grain.
@@ -37,13 +36,25 @@ const COS = Math.cos(ANGLE)
 const SIN = Math.sin(ANGLE)
 /** Edge of one square of pre-generated noise, in device pixels. */
 const GRAIN_TILE = 128
-/**
- * Film runs at 24; grain sampled much above ~15 stops reading as grain and
- * starts to shimmer. It also sets the halftone's cadence, which is fine —
- * the field moves slowly enough that the step is invisible.
- */
-const FPS = 15
 
+/**
+ * The moment in the wave this is a picture of.
+ *
+ * The field is drawn ONCE. It used to animate — first as a slow drift, then
+ * as travelling ripples — and the ripples were the version that actually read
+ * as movement. They also cost too much: on a CPU throttled 4x, a tap waited
+ * 46ms to be handled, and at 6x the worst wait was 149ms. That is the wrong
+ * failure on a screen whose entire job is "tap to enter", and no frame rate
+ * fixed it — the expense is compositing a full-screen translucent grain layer
+ * over ten thousand painted arcs, every frame, whichever way either is drawn.
+ *
+ * So it is a print now, which is what a halftone has always been. The wave
+ * maths stays because it composes better than what came before — arcs of
+ * larger and smaller dots rather than a flat gradient — it is simply frozen
+ * at one instant. This constant is that instant, chosen for its ring
+ * structure and for nothing else.
+ */
+const SEED = 3.1
 /**
  * Resolves a theme token to concrete channel values.
  *
@@ -72,9 +83,12 @@ function smoothstep(a: number, b: number, x: number): number {
   return t * t * (3 - 2 * t)
 }
 
+/*
+ * No reduced-motion branch, because nothing moves. It used to need one; a
+ * still image is already what that setting asks for.
+ */
 export function GrainField() {
   const ref = useRef<HTMLCanvasElement>(null)
-  const reduceMotion = useReducedMotion()
 
   useEffect(() => {
     const canvas = ref.current
@@ -137,6 +151,22 @@ export function GrainField() {
        */
       const reach = Math.hypot(width, height)
       const t = time / 1000
+      // Aspect, so a ring is a circle rather than an ellipse on a tall phone.
+      const aspect = height / width
+
+      /*
+       * Both sources wander, slowly and on periods that do not divide into
+       * each other. A ripple from a fixed point reads as a tap on a pond and
+       * then as a loop; a source that drifts never quite repeats.
+       */
+      const c1x = 0.5 + 0.16 * Math.sin(t * 0.13)
+      const c1y = 0.34 + 0.1 * Math.cos(t * 0.11)
+      const c2x = 0.5 + 0.22 * Math.cos(t * 0.09)
+      const c2y = 0.72 + 0.12 * Math.sin(t * 0.07)
+      // Hoisted: the phase advances per FRAME, not per dot.
+      const phase1 = t * 2.3
+      const phase2 = t * -1.5
+
       for (let y = -reach; y < reach; y += PITCH) {
         for (let x = -reach; x < reach; x += PITCH) {
           /*
@@ -154,29 +184,46 @@ export function GrainField() {
           const ny = sy / height
 
           /*
-           * The "image" the screen is reproducing. Mostly a constant — the
-           * composition comes from the centre clearing below, not from here
-           * — with two slow sine terms riding on top at scales that never
-           * repeat in step, so the texture breathes without ever showing a
-           * period. Weighted low so neither term can carve a diagonal band
-           * across the screen, which is what an evenly-weighted pair did.
+           * The "image" the screen is reproducing: two travelling waves.
            *
-           * The rates were ~4x slower to begin with, which measured as real
-           * movement and looked like none: over the few seconds anyone sees
-           * this screen, the swell was lost under the grain's own flicker.
-           * Fast enough now to read as breathing, still far too slow to
-           * pull the eye off the mark.
+           * `sin(distance * k - t * speed)` is a ring expanding from a point
+           * — the phase at any dot depends on how far it is from the source,
+           * so successive rings of dots swell and shrink in turn and the
+           * pattern reads as a ripple crossing the screen. Two sources at
+           * different wavelengths, running in opposite directions, so the
+           * rings interfere rather than marching in step.
+           *
+           * This replaces a pair of slow sine PRODUCTS, which technically
+           * moved and visibly did not: they deformed the field in place
+           * rather than sending anything across it, and at the rate needed to
+           * keep it calm the change was lost under the grain.
+           *
+           * Written out rather than factored into a `ripple()` helper, and
+           * with `sqrt` rather than `Math.hypot`. This is the inside of a
+           * loop that runs ten thousand times a frame at 24fps: a helper
+           * declared here allocates a closure per dot, and hypot carries
+           * overflow-safety nobody needs for two numbers under 2. Measured at
+           * 6x CPU throttle, the tidy version cost 42 long tasks in three
+           * seconds, worst 76ms.
+           *
+           * Distances are aspect-corrected — y is scaled into units of screen
+           * WIDTH — or the rings come out as ellipses on a tall phone.
            */
+          const r1x = nx - c1x
+          const r1y = (ny - c1y) * aspect
+          const r2x = nx - c2x
+          const r2y = (ny - c2y) * aspect
           const field =
-            0.66 +
-            0.16 * Math.sin(nx * 3.4 + t * 0.4) * Math.cos(ny * 2.6 - t * 0.31) +
-            0.1 * Math.sin((nx + ny) * 4.4 - t * 0.23)
+            0.58 +
+            0.26 *
+              (0.62 * Math.sin(Math.sqrt(r1x * r1x + r1y * r1y) * 26 - phase1) +
+                0.38 * Math.sin(Math.sqrt(r2x * r2x + r2y * r2y) * 17 - phase2))
 
           // Clears the middle of the screen for the wordmark. Elliptical
           // rather than round because the viewport is tall.
           const dx = nx - 0.5
           const dy = (ny - 0.5) * 0.62
-          const open = smoothstep(0.14, 0.5, Math.hypot(dx, dy))
+          const open = smoothstep(0.14, 0.5, Math.sqrt(dx * dx + dy * dy))
 
           const coverage = field * open
           if (coverage <= 0.02) continue
@@ -212,31 +259,13 @@ export function GrainField() {
 
     const observer = new ResizeObserver(() => {
       resize()
-      draw(0)
+      draw(SEED)
     })
     observer.observe(canvas)
 
-    // Reduced motion gets the texture, held still. The point of the setting
-    // is the movement, not the picture — a printed page does not animate.
-    if (reduceMotion) {
-      draw(0)
-      return () => observer.disconnect()
-    }
-
-    let raf = 0
-    let last = 0
-    const loop = (time: number) => {
-      raf = requestAnimationFrame(loop)
-      if (time - last < 1000 / FPS) return
-      last = time
-      draw(time)
-    }
-    raf = requestAnimationFrame(loop)
-    return () => {
-      cancelAnimationFrame(raf)
-      observer.disconnect()
-    }
-  }, [reduceMotion])
+    draw(SEED)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <canvas

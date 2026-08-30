@@ -19,6 +19,9 @@
     }
   ],
   "rewrites": [
-    { "source": "/((?!icons|assets|avatars|manifest.webmanifest|robots.txt|sw.js).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!icons|assets|avatars|manifest.webmanifest|robots.txt|sw.js).*)",
+      "destination": "/index.html"
+    }
   ]
 }

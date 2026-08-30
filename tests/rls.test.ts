@@ -102,7 +102,10 @@ describe.skipIf(!enabled)('RLS', () => {
         content_id: '00000000-0000-0000-0000-000000000001',
       },
     ],
-    ['events', { creator_id: '00000000-0000-0000-0000-000000000001', starts_at: '2030-01-01T00:00:00Z' }],
+    [
+      'events',
+      { creator_id: '00000000-0000-0000-0000-000000000001', starts_at: '2030-01-01T00:00:00Z' },
+    ],
   ])('anon may NOT INSERT into %s', async (table, payload) => {
     const res = await fetch(rest(table), {
       method: 'POST',

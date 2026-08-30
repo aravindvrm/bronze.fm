@@ -1,12 +1,26 @@
+node_modules
 dist
 dist-*
 coverage
-node_modules
 playwright-report
 test-results
-# Generated from a source document; rewritten wholesale by the importer.
+
+# Agent scratch: worktrees and design exports are not this project's source.
+.claude
+.design
+
+# Generated wholesale by scripts/import-document.mjs — reformatting them only
+# creates a diff the next import throws away.
 src/content/fixtures/*.document.ts
 src/content/fixtures/*.generated.ts
-# macOS AppleDouble sidecars — this repo lives on a volume with no xattr
+supabase/migrations
+
+# macOS AppleDouble sidecars. This repo lives on a volume with no xattr
 # support, so the OS writes a binary companion for every file.
 ._*
+
+# Prose, wrapped by hand for reading rather than by column count.
+*.md
+
+# A generated manifest, rewritten by scripts/gen-fixtures.mjs.
+src/content/fixtures/bronze.manifest.json
