@@ -16,6 +16,7 @@ import { artUrl } from '@/lib/art'
 import { formatRelative } from '@/lib/format'
 import { AppHeader } from '@/components/AppHeader'
 import { MusicIcon, ReadIcon, VideosIcon } from '@/components/Icons'
+import { Select, type SelectOption } from '@/components/Select'
 
 const TYPE_ICON = { music: MusicIcon, video: VideosIcon, ereader: ReadIcon } as const
 
@@ -79,17 +80,39 @@ export function Feed() {
   }, [projects])
 
   /*
-   * Only types actually present get a chip — a "Video" filter that always
+   * Only types actually present get an entry — a "Video" filter that always
    * returns nothing yet would be an affordance for a feature that doesn't
    * exist, the same reasoning behind not showing a search "clear" toggle
    * with nothing typed. Order follows CONTENT_TYPE_LABEL's own key order
-   * rather than first-appearance, so the row doesn't reshuffle as new
+   * rather than first-appearance, so the list doesn't reshuffle as new
    * content publishes.
    */
   const availableTypes = useMemo(() => {
     const present = new Set(feedItems.map((i) => i.content.type))
     return (Object.keys(CONTENT_TYPE_LABEL) as ContentType[]).filter((t) => present.has(t))
   }, [feedItems])
+
+  /*
+   * Each option carries its count.
+   *
+   * The number is the question people open a type filter to ask — whether
+   * there is anything under it worth the tap — and a list can answer that
+   * where a row of chips had nowhere to put it. Counted before the search
+   * term is applied, so the figures describe the feed rather than the
+   * current query; a count that moved as you typed would be reporting on
+   * the search, not the library.
+   */
+  const typeOptions = useMemo<SelectOption<ContentType | 'all'>[]>(() => {
+    const count = (t: ContentType) => feedItems.filter((i) => i.content.type === t).length
+    return [
+      { value: 'all' as const, label: 'All', hint: String(feedItems.length) },
+      ...availableTypes.map((t) => ({
+        value: t,
+        label: CONTENT_TYPE_LABEL[t],
+        hint: String(count(t)),
+      })),
+    ]
+  }, [feedItems, availableTypes])
 
   const q = query.trim().toLowerCase()
   const shownCreators = useMemo(
@@ -186,28 +209,16 @@ export function Feed() {
                 Feed
               </h2>
 
-              {/* A single type has nothing to filter, so the row only earns
-                  its place once there is a real choice to make. */}
+              {/* A single type has nothing to filter, so the control only
+                  earns its place once there is a real choice to make. */}
               {availableTypes.length > 1 && (
-                <div className="flex gap-1.5">
-                  {(['all', ...availableTypes] as const).map((t) => {
-                    const active = typeFilter === t
-                    return (
-                      <button
-                        key={t}
-                        onClick={() => setTypeFilter(t)}
-                        aria-pressed={active}
-                        className={`border px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] transition ${
-                          active
-                            ? 'border-ember/60 bg-gilt/15 text-ember'
-                            : 'border-parchment/20 text-parchment/40 hover:border-parchment/25 hover:text-parchment/70'
-                        }`}
-                      >
-                        {t === 'all' ? 'All' : CONTENT_TYPE_LABEL[t]}
-                      </button>
-                    )
-                  })}
-                </div>
+                <Select
+                  label="Filter the feed by type"
+                  value={typeFilter}
+                  options={typeOptions}
+                  onChange={setTypeFilter}
+                  accented={typeFilter !== 'all'}
+                />
               )}
             </div>
 
