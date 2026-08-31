@@ -66,7 +66,7 @@ export async function waitPlaying(page: Page) {
 
 /** Navigates within the Creator namespace and waits for the store handle. */
 export async function gotoCreator(page: Page, path = '') {
-  await page.goto(`/@dean${path}`)
+  await page.goto(`/@deanMaye${path}`)
   await page.waitForFunction(
     () => !!(window as never as { __player?: unknown }).__player,
     undefined,
@@ -115,7 +115,7 @@ export async function openSearch(page: Page) {
   return box
 }
 
-/** A Project hub — the interfaces onto one body of work, at /@dean/bronze. */
+/** A Project hub — the interfaces onto one body of work, at /@deanMaye/bronze. */
 export async function gotoProject(page: Page, projectSlug = 'bronze') {
   await gotoCreator(page, `/${projectSlug}`)
   await page.getByRole('button', { name: /^Music/ }).waitFor({ timeout: 10_000 })
@@ -137,7 +137,7 @@ export async function playTrack(page: Page, index: number) {
   await page.evaluate(
     async ([i, slug]) => {
       const mod = await import('/src/content/adapter.ts')
-      const c = await mod.content.getContent('dean', slug as string, 'music')
+      const c = await mod.content.getContent('deanMaye', slug as string, 'music')
       const s = (
         window as never as {
           __player: { getState: () => { playFrom: (c: unknown, i: number) => void } }
@@ -170,7 +170,7 @@ export async function gotoReader(page: Page, opts: { coach?: boolean } = {}) {
       }
     })
   }
-  await page.goto('/@dean/atonomos/read')
+  await page.goto('/@deanMaye/atonomos/read')
   await page.getByRole('slider', { name: 'Page' }).waitFor({ timeout: 10_000 })
 }
 

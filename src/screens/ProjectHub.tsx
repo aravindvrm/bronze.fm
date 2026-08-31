@@ -12,7 +12,7 @@ import { AppHeader } from '@/components/AppHeader'
 import { MusicIcon, ReadIcon, VideosIcon } from '@/components/Icons'
 
 /**
- * One Project and the ways into it — `/@dean/bronze`.
+ * One Project and the ways into it — `/@deanMaye/bronze`.
  *
  * The interfaces listed are whatever Contents the Project actually holds, not
  * a fixed set of tiles. Bronze shows one (music); Atonomos shows its

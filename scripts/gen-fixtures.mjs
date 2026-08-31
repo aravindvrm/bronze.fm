@@ -48,7 +48,9 @@ const items = files.map((f, i) => {
     isInterlude: /\(skit\)/i.test(f),
     // Placeholder until Dean supplies real per-track credits. Interludes get
     // none; everything else is attributed to the owner.
-    credits: /\(skit\)/i.test(f) ? [] : [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+    credits: /\(skit\)/i.test(f)
+      ? []
+      : [{ creatorSlug: 'deanMaye', name: 'Dean Maye', role: 'artist' }],
     hash,
     bytes: fs.statSync(full).size,
     durationMs,
@@ -70,8 +72,8 @@ import deanAvatar from '@/assets/avatars/dean.jpg'
 
 export const dean: Creator = {
   id: 'crt_dean',
-  slug: 'dean',
-  name: 'Dean',
+  slug: 'deanMaye',
+  name: 'Dean Maye',
   bio: 'Technology executive, venture investor, and strategic advisor with 15+ years leading enterprise transformation, AI innovation, and technology-enabled value creation across Fortune 500 enterprises, venture-backed and growth-staged businesses. Combines executive leadership, investment perspective, and deep technical expertise to accelerate business transformation and performance.',
   // Low-quality source photo, kept until Dean supplies a better one — see
   // src/assets/avatars/dean.jpg.
@@ -87,12 +89,12 @@ export const dean: Creator = {
 export const bronzeMusic: Content = {
   id: 'cnt_bronze_music',
   type: 'music',
-  ownerSlug: 'dean',
+  ownerSlug: 'deanMaye',
   projectSlug: 'bronze',
   title: 'Bronze',
   published: false,
   totalDurationMs: ${totalMs},
-  credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+  credits: [{ creatorSlug: 'deanMaye', name: 'Dean Maye', role: 'artist' }],
   items: ${JSON.stringify(items, null, 2).replace(/\n/g, '\n  ')},
   // Mirrors this row's actual created_at in Supabase, so the feed orders
   // fixtures the same way it orders production.
@@ -101,7 +103,7 @@ export const bronzeMusic: Content = {
 
 export const bronze: Project = {
   id: 'prj_bronze',
-  ownerSlug: 'dean',
+  ownerSlug: 'deanMaye',
   slug: 'bronze',
   title: 'Bronze',
   published: false,
@@ -120,11 +122,11 @@ fs.writeFileSync(
   path.join(path.dirname(outFile), 'bronze.manifest.json'),
   JSON.stringify(
     {
-      creator: { slug: 'dean', name: 'Dean', tier: 'standard' },
+      creator: { slug: 'deanMaye', name: 'Dean Maye', tier: 'standard' },
       slug: 'bronze',
       type: 'music',
       title: 'Bronze',
-      credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+      credits: [{ creatorSlug: 'deanMaye', name: 'Dean Maye', role: 'artist' }],
       totalDurationMs: totalMs,
       items,
     },

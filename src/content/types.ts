@@ -158,7 +158,7 @@ export type DocBlock =
  * one; an ereader holds its document sections.
  *
  * A Content is identified within its Project by `type`, not by a slug — the
- * URL is `/@dean/bronze/music`, so two Contents of the same type in one
+ * URL is `/@deanMaye/bronze/music`, so two Contents of the same type in one
  * Project would be unaddressable.
  */
 export interface Content {
@@ -194,7 +194,7 @@ export interface Content {
 }
 
 /**
- * A body of work, and the unit a visitor navigates to: `/@dean/bronze`.
+ * A body of work, and the unit a visitor navigates to: `/@deanMaye/bronze`.
  *
  * Holds the artwork and the description because those describe the work
  * itself rather than any one way of consuming it.
@@ -272,8 +272,17 @@ export interface SearchHit {
   kind: SearchKind
   id: string
   title: string
-  /** Where this sits — "Dean", or "Bronze · Music". */
+  /** Whose it is — the creator's name. */
   subtitle?: string
+  /**
+   * What kind of thing this is, when the title cannot say.
+   *
+   * A release and its project share a name often enough that two rows come
+   * back looking identical — same words, same cover. The badge is what
+   * separates them, and it is a field rather than part of `subtitle` so it
+   * can be drawn as a badge rather than read as more prose.
+   */
+  badge?: string
   /** In-app path this row leads to. */
   href: string
   /** Avatar, cover, or track art. */

@@ -88,12 +88,27 @@ describe('adapter.search', () => {
   it('finds the release a track belongs to, by the release name', async () => {
     const found = await adapter.search('bronze')
     expect(found.contents.map((c) => c.title)).toContain('Bronze')
-    expect(found.contents[0].href).toMatch(/@dean\/bronze\/music/)
+    expect(found.contents[0].href).toMatch(/@deanMaye\/bronze\/music/)
   })
 
   it('finds a creator by name and by handle', async () => {
     expect((await adapter.search('dean')).creators).toHaveLength(1)
-    expect((await adapter.search('Dean')).creators[0].href).toBe('/@dean')
+    expect((await adapter.search('Dean')).creators[0].href).toBe('/@deanMaye')
+    // The handle carries a capital; nobody types one.
+    expect((await adapter.search('deanmaye')).creators).toHaveLength(1)
+  })
+
+  /*
+   * A handle may be spelled with capitals but is addressed without them.
+   * `getCreator` matches case-insensitively so `/@deanmaye` is not a 404 for
+   * the person typing their own name in lower case.
+   */
+  it('resolves a handle whatever case it is asked for', async () => {
+    for (const asked of ['deanMaye', 'deanmaye', 'DEANMAYE']) {
+      const creator = await adapter.getCreator(asked)
+      expect(creator?.slug, `getCreator(${asked})`).toBe('deanMaye')
+    }
+    expect(await adapter.getCreator('dean')).toBeNull()
   })
 
   it('finds a project by its description, not only its title', async () => {
@@ -112,10 +127,16 @@ describe('adapter.search', () => {
    * whose work it is — and "Bronze" is the project AND the release, so the
    * two rows are otherwise identical.
    */
-  it('attributes a release to its creator and names its kind', async () => {
+  it('attributes a release to its creator and badges its kind', async () => {
     const [release] = (await adapter.search('bronze')).contents
-    expect(release.subtitle).toBe('Dean · Music')
+    // Whose it is in the subtitle, what it is in the badge — the project row
+    // beside it carries the same title, the same cover and no badge.
+    expect(release.subtitle).toBe('Dean Maye')
+    expect(release.badge).toBe('Music')
     expect(release.imageUrl).toBeTruthy()
+
+    const [project] = (await adapter.search('bronze')).projects
+    expect(project.badge).toBeUndefined()
   })
 
   it('gives every hit something to draw', async () => {

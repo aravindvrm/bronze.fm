@@ -42,11 +42,25 @@ test.describe('search', () => {
    * A release and its project routinely share a title, so the row's own name
    * says neither whose it is nor what kind of thing it is.
    */
-  test('attributes a release and pictures every row', async ({ page }) => {
+  test('badges a release with its kind, and pictures every row', async ({ page }) => {
     await page.goto('/search?q=bronze')
-    const release = page.getByRole('button', { name: /Dean · Music/ }).first()
-    await expect(release).toBeVisible()
-    await expect(release.locator('img')).toHaveAttribute('src', /.+/)
+
+    // The project and the release come back with the same word and the same
+    // cover. The badge is the only thing that separates them, so it is what
+    // gets asserted.
+    const project = page.locator('section', { hasText: 'Projects' }).getByRole('listitem').first()
+    const release = page.locator('section', { hasText: 'Releases' }).getByRole('listitem').first()
+
+    await expect(project).toContainText('Bronze')
+    await expect(release).toContainText('Bronze')
+    await expect(release).toContainText('Music')
+    await expect(project).not.toContainText('Music')
+
+    // Attribution is the creator, on its own, on both.
+    await expect(release).toContainText('Dean Maye')
+    for (const row of [project, release]) {
+      await expect(row.locator('img')).toHaveAttribute('src', /.+/)
+    }
   })
 
   test('hands off from the header to a screen that owns the URL', async ({ page }) => {
@@ -99,7 +113,7 @@ test.describe('search', () => {
   test('a result leads to the thing it names', async ({ page }) => {
     await page.goto('/search?q=dean')
     await page.getByRole('button', { name: /Dean/ }).first().click()
-    await expect(page).toHaveURL(/\/@dean$/)
+    await expect(page).toHaveURL(/\/@deanMaye$/)
   })
 
   /*

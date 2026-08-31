@@ -237,11 +237,16 @@ function toContent(row: ContentRow, ownerSlug: string, projectSlug: string): Con
 }
 
 export const supabaseAdapter: ContentAdapter = {
+  /*
+   * `ilike`, not `eq`: a handle may carry capitals and a URL will not, so
+   * `/@deanmaye` has to reach `@deanMaye`. No wildcards in the pattern, so
+   * this is still an exact match — only a case-blind one.
+   */
   async getCreator(slug) {
     const { data, error } = await getSupabase()
       .from('creators')
       .select('*')
-      .eq('slug', slug)
+      .ilike('slug', slug)
       .maybeSingle()
     if (error) throw error
     return data ? toCreator(data as CreatorRow) : null
@@ -371,9 +376,8 @@ export const supabaseAdapter: ContentAdapter = {
           kind: 'content' as const,
           id: row.id,
           title: row.title,
-          // Creator first, then kind — a release and its project often share
-          // a title, so the row's own name says neither whose it is nor what.
-          subtitle: `${row.projects!.creators!.name} · ${CONTENT_TYPE_LABEL[row.type]}`,
+          subtitle: row.projects!.creators!.name,
+          badge: CONTENT_TYPE_LABEL[row.type],
           href: projectPath(
             row.projects!.creators!.slug,
             row.projects!.slug,

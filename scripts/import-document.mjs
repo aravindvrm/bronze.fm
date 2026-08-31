@@ -149,7 +149,7 @@ set document = $doc$${JSON.stringify(blocks)}$doc$::jsonb
 from projects p, creators c
 where ct.project_id = p.id
   and p.owner_creator_id = c.id
-  and c.slug = 'dean'
+  and c.slug = 'deanMaye'
   and p.slug = '${slug}'
   and ct.type = 'ereader';
 `,

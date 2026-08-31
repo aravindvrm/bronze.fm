@@ -11,7 +11,7 @@ import { atonomosWordCount } from '@/content/fixtures/atonomos.meta'
 export const atonomosWhitepaper: Content = {
   id: 'cnt_atonomos_read',
   type: 'ereader',
-  ownerSlug: 'dean',
+  ownerSlug: 'deanMaye',
   projectSlug: 'atonomos',
   title: 'Autonomous: The Agentic Enterprise',
   // An ereader Content has no items: its body is the document, not a list of
@@ -19,7 +19,7 @@ export const atonomosWhitepaper: Content = {
   published: true,
   totalDurationMs: 0,
   items: [],
-  credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'writer' }],
+  credits: [{ creatorSlug: 'deanMaye', name: 'Dean Maye', role: 'writer' }],
   /*
    * No `document` here. The prose is ~26 KB gzipped and was riding in the
    * initial bundle for every visitor, including the ones who never open the
@@ -34,7 +34,7 @@ export const atonomosWhitepaper: Content = {
 
 export const atonomos: Project = {
   id: 'prj_atonomos',
-  ownerSlug: 'dean',
+  ownerSlug: 'deanMaye',
   slug: 'atonomos',
   title: 'Atonomos',
   description:

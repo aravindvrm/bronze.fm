@@ -29,8 +29,18 @@ const allProjects: Project[] = [bronze, atonomos]
 const allCreators = [dean]
 
 const fixtureAdapter: ContentAdapter = {
+  /*
+   * Matched without regard to case.
+   *
+   * A handle can carry capitals — `@deanMaye` — but nobody types them, and
+   * a URL segment is compared byte for byte. Without this, `/@deanmaye` is
+   * a 404 for the person who typed their own name in lower case. The
+   * CANONICAL spelling still comes back on the record, and every call after
+   * this one uses `creator.slug` rather than the URL's segment, so the rest
+   * of the app never sees the variant.
+   */
   async getCreator(slug) {
-    return slug === dean.slug ? dean : null
+    return slug.toLowerCase() === dean.slug.toLowerCase() ? dean : null
   },
   async listProjects(creatorSlug) {
     return allProjects.filter((p) => p.ownerSlug === creatorSlug)
@@ -152,15 +162,8 @@ const fixtureAdapter: ContentAdapter = {
             kind: 'content',
             id: content.id,
             title: content.title,
-            /*
-             * The creator first, then what kind of thing this is.
-             *
-             * A release and its project frequently share a title — "Bronze"
-             * is both — so the row's own name cannot say whose it is or what
-             * it is. Attribution leads because that is the question a result
-             * list is least able to answer from the title alone.
-             */
-            subtitle: `${owner?.name ?? project.ownerSlug} · ${CONTENT_TYPE_LABEL[content.type]}`,
+            subtitle: owner?.name ?? project.ownerSlug,
+            badge: CONTENT_TYPE_LABEL[content.type],
             href: projectPath(project.ownerSlug, project.slug, CONTENT_TYPE_SEGMENT[content.type]),
             imageUrl: cover,
           },

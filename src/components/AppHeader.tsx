@@ -351,6 +351,11 @@ export function AppHeader({
                             </span>
                           )}
                         </span>
+                        {hit.badge && (
+                          <span className="shrink-0 border border-ember/35 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-ember/80">
+                            {hit.badge}
+                          </span>
+                        )}
                       </button>
                     </li>
                   ))}

@@ -42,9 +42,9 @@ function NotFound({ what, name }: { what: string; name: string }) {
 /**
  * One Project and the typed interfaces onto it.
  *
- *   /@dean/bronze          project hub
- *   /@dean/bronze/music    the album
- *   /@dean/atonomos/read   the whitepaper
+ *   /@deanMaye/bronze          project hub
+ *   /@deanMaye/bronze/music    the album
+ *   /@deanMaye/atonomos/read   the whitepaper
  *
  * The trailing segment selects a Content by type rather than naming one by
  * slug — a Project holds at most one Content of each type, so the type is the
@@ -97,10 +97,10 @@ function ContentShell() {
 /**
  * Everything under one Creator.
  *
- *   /@dean            profile
- *   /@dean/store      creator-level section
- *   /@dean/events     creator-level section
- *   /@dean/bronze     a Project, with its interfaces below it
+ *   /@deanMaye            profile
+ *   /@deanMaye/store      creator-level section
+ *   /@deanMaye/events     creator-level section
+ *   /@deanMaye/bronze     a Project, with its interfaces below it
  *
  * Creator sections are matched before Project slugs, so a Project can never be
  * called `store`. RESERVED_PROJECT_SLUGS and a CHECK constraint enforce that

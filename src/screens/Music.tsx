@@ -8,7 +8,7 @@ import { OfflineControl } from '@/components/OfflineControl'
 import { useCreator } from '@/content/CreatorContext'
 import { projectPath } from '@/lib/tenant'
 
-/** Track list for a Project's music interface, at `/@dean/bronze/music`. */
+/** Track list for a Project's music interface, at `/@deanMaye/bronze/music`. */
 export function Music() {
   const creator = useCreator()
   const project = useProject()

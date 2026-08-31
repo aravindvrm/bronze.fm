@@ -39,7 +39,7 @@ test.describe('pinned content', () => {
   test('a pinned document opens its reader', async ({ page }) => {
     await gotoCreator(page)
     await page.getByRole('button', { name: /Autonomous/ }).click()
-    await expect(page).toHaveURL(/\/@dean\/atonomos\/read$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/atonomos\/read$/)
   })
 })
 
@@ -154,7 +154,7 @@ test.describe('splash', () => {
   // A deep link is someone arriving at a specific thing, usually from a shared
   // URL; holding that behind a tap gate would be friction with no purpose.
   test('never covers a deep link', async ({ page }) => {
-    await page.goto('/@dean/bronze')
+    await page.goto('/@deanMaye/bronze')
     await expect(page.locator('.z-\\[60\\]')).toHaveCount(0)
   })
 })
@@ -405,7 +405,7 @@ test.describe('reader', () => {
   })
 
   test('the hub advertises a read time once the paper has text', async ({ page }) => {
-    await page.goto('/@dean/atonomos')
+    await page.goto('/@deanMaye/atonomos')
     await expect(page.getByRole('button', { name: /^Read/ })).toContainText(/min read/)
   })
 })

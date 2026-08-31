@@ -7,8 +7,8 @@ import deanAvatar from '@/assets/avatars/dean.jpg'
 
 export const dean: Creator = {
   id: 'crt_dean',
-  slug: 'dean',
-  name: 'Dean',
+  slug: 'deanMaye',
+  name: 'Dean Maye',
   bio: 'Technology executive, venture investor, and strategic advisor with 15+ years leading enterprise transformation, AI innovation, and technology-enabled value creation across Fortune 500 enterprises, venture-backed and growth-staged businesses. Combines executive leadership, investment perspective, and deep technical expertise to accelerate business transformation and performance.',
   // Low-quality source photo, kept until Dean supplies a better one — see
   // src/assets/avatars/dean.jpg.
@@ -24,12 +24,12 @@ export const dean: Creator = {
 export const bronzeMusic: Content = {
   id: 'cnt_bronze_music',
   type: 'music',
-  ownerSlug: 'dean',
+  ownerSlug: 'deanMaye',
   projectSlug: 'bronze',
   title: 'Bronze',
   published: false,
   totalDurationMs: 2272825,
-  credits: [{ creatorSlug: 'dean', name: 'Dean', role: 'artist' }],
+  credits: [{ creatorSlug: 'deanMaye', name: 'Dean Maye', role: 'artist' }],
   items: [
     {
       "id": "itm_01",
@@ -52,8 +52,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -72,8 +72,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -92,8 +92,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -126,8 +126,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -146,8 +146,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -180,8 +180,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -200,8 +200,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -234,8 +234,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -254,8 +254,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -274,8 +274,8 @@ export const bronzeMusic: Content = {
       "isInterlude": false,
       "credits": [
         {
-          "creatorSlug": "dean",
-          "name": "Dean",
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
           "role": "artist"
         }
       ],
@@ -295,7 +295,7 @@ export const bronzeMusic: Content = {
 
 export const bronze: Project = {
   id: 'prj_bronze',
-  ownerSlug: 'dean',
+  ownerSlug: 'deanMaye',
   slug: 'bronze',
   title: 'Bronze',
   published: false,

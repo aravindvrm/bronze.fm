@@ -4,13 +4,13 @@
  * Structure (PLAN.md §8.2):
  *
  *   /                        the feed
- *   /@dean                   creator
- *   /@dean/store             creator-level section
- *   /@dean/bronze            project
- *   /@dean/bronze/music      typed interface onto that project
+ *   /@deanMaye                   creator
+ *   /@deanMaye/store             creator-level section
+ *   /@deanMaye/bronze            project
+ *   /@deanMaye/bronze/music      typed interface onto that project
  *
  * Host is still checked before path, so promoting a Creator to
- * `dean.bronze.fm` remains a DNS record plus a column, with no code change.
+ * `deanmaye.bronze.fm` remains a DNS record plus a column, with no code change.
  */
 
 /** Marks a path segment as a creator handle. */
@@ -22,7 +22,7 @@ const RESERVED = new Set(['www', 'app', 'api', 'admin', 'staging', 'localhost'])
 /**
  * Second-segment words reserved against Project slugs.
  *
- * Projects sit directly under the creator (`/@dean/bronze`), sharing that
+ * Projects sit directly under the creator (`/@deanMaye/bronze`), sharing that
  * segment with the Creator's own sections — so a project may not be called
  * `store` or `events`.
  *
@@ -80,7 +80,7 @@ export function creatorFromHost(hostname = window.location.hostname): string | n
   if (!host.endsWith(suffix)) return null
 
   const label = host.slice(0, -suffix.length)
-  // One label only: `dean.bronze.fm` yes, `dean.eu.bronze.fm` no.
+  // One label only: `deanmaye.bronze.fm` yes, `dean.eu.bronze.fm` no.
   if (!label || label.includes('.')) return null
   if (RESERVED.has(label)) return null
   return label
@@ -114,7 +114,7 @@ export function resolveCreatorSlug(): string | null {
 
 /** The Creator shown where a URL names none — the feed's own listing. */
 export function defaultCreatorSlug(): string {
-  return (import.meta.env.VITE_DEFAULT_CREATOR as string | undefined) ?? 'dean'
+  return (import.meta.env.VITE_DEFAULT_CREATOR as string | undefined) ?? 'deanMaye'
 }
 
 /** True when the Creator is being served from their own subdomain/domain. */
@@ -127,7 +127,7 @@ export function isReservedProjectSlug(slug: string): boolean {
 }
 
 /**
- * Builds an in-app URL under a Creator: `/@dean`, `/@dean/bronze/music`.
+ * Builds an in-app URL under a Creator: `/@deanMaye`, `/@deanMaye/bronze/music`.
  *
  * On a dedicated host the Creator is implied by the hostname and must be
  * omitted from the path; on the shared host the handle leads.
@@ -138,7 +138,7 @@ export function creatorPath(creatorSlug: string, ...segments: string[]): string 
   return `/${HANDLE_PREFIX}${creatorSlug}${tail ? `/${tail}` : ''}`
 }
 
-/** Builds a URL inside a Project: `/@dean/bronze`, `/@dean/bronze/music`. */
+/** Builds a URL inside a Project: `/@deanMaye/bronze`, `/@deanMaye/bronze/music`. */
 export function projectPath(
   creatorSlug: string,
   projectSlug: string,

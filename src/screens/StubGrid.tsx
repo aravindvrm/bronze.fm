@@ -5,7 +5,7 @@ import { AppHeader } from '@/components/AppHeader'
 import { StubTiles } from '@/components/StubTiles'
 
 /**
- * Store and Events as their own route — `/@dean/store`, `/@dean/events`.
+ * Store and Events as their own route — `/@deanMaye/store`, `/@deanMaye/events`.
  *
  * Both are stubs: the rows exist so the routes and layout are real, but
  * nothing is purchasable or ticketed yet, and every card says so.

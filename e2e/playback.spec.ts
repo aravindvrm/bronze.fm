@@ -21,15 +21,15 @@ test.describe('playback', () => {
     // document and tear down the audio element, which is the very thing this
     // test exists to prove does not happen.
     await page.getByRole('button', { name: 'Back' }).click()
-    await expect(page).toHaveURL(/\/@dean\/bronze$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/bronze$/)
     await page.getByRole('button', { name: 'Back' }).click()
-    await expect(page).toHaveURL(/\/@dean$/)
+    await expect(page).toHaveURL(/\/@deanMaye$/)
     // Store and Events became tabs on the profile rather than links, so the
     // last hop routes into a Project — still a genuine cross-section
     // navigation, which is what this asserts survives.
     await page.getByRole('tab', { name: 'Projects' }).click()
     await page.getByRole('button', { name: /^Atonomos/ }).click()
-    await expect(page).toHaveURL(/\/@dean\/atonomos$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/atonomos$/)
 
     await page.waitForTimeout(1500)
     const after = await snapshot(page)
@@ -123,7 +123,7 @@ test.describe('entering playback', () => {
     await page.getByRole('button', { name: 'Close player' }).click()
 
     // The player is an overlay, not a route: the URL never moved.
-    await expect(page).toHaveURL(/\/@dean\/bronze\/music$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/bronze\/music$/)
     await expect(page.getByRole('button', { name: 'Open player' })).toBeVisible()
   })
 

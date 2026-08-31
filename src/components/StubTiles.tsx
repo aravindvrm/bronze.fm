@@ -8,7 +8,7 @@ import { artUrl } from '@/lib/art'
  * The Store / Events card grid.
  *
  * Shared rather than duplicated: these tiles render both as a tab on the
- * creator profile and as the whole of the standalone `/@dean/store` route,
+ * creator profile and as the whole of the standalone `/@deanMaye/store` route,
  * and the two must not drift — a card that says SOON in one place and not
  * the other is worse than either.
  *

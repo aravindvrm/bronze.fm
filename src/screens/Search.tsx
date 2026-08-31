@@ -216,6 +216,20 @@ function Row({ hit, index, onOpen }: { hit: SearchHit; index: number; onOpen: ()
             </span>
           )}
         </span>
+
+        {/*
+          The kind, as a badge rather than as more subtitle.
+          
+          A release and its project come back with the same words and the
+          same cover, so the only thing separating the two rows is what kind
+          of thing each is — and that reads as a label at a glance where it
+          disappeared into a line of prose.
+        */}
+        {hit.badge && (
+          <span className="shrink-0 border border-ember/35 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-ember/80">
+            {hit.badge}
+          </span>
+        )}
       </motion.button>
     </li>
   )

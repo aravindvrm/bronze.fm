@@ -26,7 +26,7 @@ import {
 } from '@/lib/readerPrefs'
 
 /**
- * The document interface — `/@dean/atonomos/read`.
+ * The document interface — `/@deanMaye/atonomos/read`.
  *
  * A paged reader, not a scroll. Ten thousand words in one continuous column
  * gives you no sense of where you are, nowhere to stop, and nothing to

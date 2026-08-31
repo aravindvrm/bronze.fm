@@ -35,7 +35,7 @@ const SOCIALS = [
 ] as const
 
 /**
- * The Creator's profile — `/@dean`.
+ * The Creator's profile — `/@deanMaye`.
  *
  * Projects lead, because they are the work. Store and Events are Creator-wide
  * sections and sit below as stubs (PLAN.md §8.2); there is no Content tile,
@@ -382,7 +382,7 @@ export function CreatorProfile() {
             rather than a grid below the others so reaching them never
             depends on how long the Pinned or Projects lists happen to be —
             the same tap from anywhere. The grid itself is shared with the
-            standalone /@dean/store and /@dean/events routes. */}
+            standalone /@deanMaye/store and /@deanMaye/events routes. */}
         {tab === 'store' && (
           <section className="mt-6" data-testid="panel-store">
             <StubTiles kind="store" emptyLabel={`${creator.name} has nothing here yet.`} />

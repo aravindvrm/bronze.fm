@@ -24,7 +24,7 @@ test.describe('the feed', () => {
   test('leads into a creator', async ({ page }) => {
     await gotoFeed(page)
     await page.getByRole('button', { name: /Dean/ }).first().click()
-    await expect(page).toHaveURL(/\/@dean$/)
+    await expect(page).toHaveURL(/\/@deanMaye$/)
   })
 
   // The creator row used to show a Project's cover art rather than the
@@ -50,7 +50,7 @@ test.describe('the feed', () => {
     await expect(rows.nth(1)).toContainText('Bronze')
 
     await rows.nth(1).click()
-    await expect(page).toHaveURL(/\/@dean\/bronze\/music$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/bronze\/music$/)
   })
 
   /*
@@ -61,7 +61,7 @@ test.describe('the feed', () => {
    * wherever you came FROM, which for a shared link is nowhere at all.
    */
   test('the project hero carries the creator, and links to them', async ({ page }) => {
-    await page.goto('/@dean/atonomos')
+    await page.goto('/@deanMaye/atonomos')
     const link = page.getByRole('button', { name: /Dean.*creator profile/ })
     await expect(link).toBeVisible()
     // The creator's own photo, not the project's cover — those were once the
@@ -69,7 +69,7 @@ test.describe('the feed', () => {
     await expect(link.locator('img')).toHaveAttribute('src', /avatar|dean/i)
 
     await link.click()
-    await expect(page).toHaveURL(/\/@dean$/)
+    await expect(page).toHaveURL(/\/@deanMaye$/)
   })
 
   /*
@@ -104,7 +104,7 @@ test.describe('the feed', () => {
     expect(feedBand!.left).toBe(0)
     expect(feedBand!.width).toBe(feedBand!.viewport)
 
-    await page.goto('/@dean/atonomos')
+    await page.goto('/@deanMaye/atonomos')
     await page.getByRole('heading', { name: 'Atonomos' }).waitFor()
     const hubBand = await measure()
     expect(hubBand, 'no bg-ink band behind the project hero').not.toBeNull()
@@ -246,7 +246,7 @@ test.describe('creator profile tabs', () => {
 test.describe('creator routing', () => {
   test('the creator lives behind an @ handle', async ({ page }) => {
     await gotoCreator(page)
-    await expect(page).toHaveURL(/\/@dean$/)
+    await expect(page).toHaveURL(/\/@deanMaye$/)
     await expect(page.getByRole('heading', { name: 'Dean' })).toBeVisible()
   })
 
@@ -268,8 +268,8 @@ test.describe('creator routing', () => {
   test('carries creator-level Store and Events', async ({ page }) => {
     await gotoCreator(page)
     for (const seg of ['store', 'events']) {
-      await page.goto(`/@dean/${seg}`)
-      await expect(page).toHaveURL(new RegExp(`/@dean/${seg}$`))
+      await page.goto(`/@deanMaye/${seg}`)
+      await expect(page).toHaveURL(new RegExp(`/@deanMaye/${seg}$`))
     }
   })
 
@@ -280,7 +280,7 @@ test.describe('creator routing', () => {
    * ordering safe rather than merely lucky.
    */
   test('creator sections resolve ahead of project slugs', async ({ page }) => {
-    await page.goto('/@dean/store')
+    await page.goto('/@deanMaye/store')
     await expect(page.getByRole('heading', { name: 'Store' }).first()).toBeVisible()
   })
 
@@ -302,30 +302,30 @@ test.describe('creator routing', () => {
 test.describe('projects', () => {
   test('a project hub lists its interfaces', async ({ page }) => {
     await gotoProject(page)
-    await expect(page).toHaveURL(/\/@dean\/bronze$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/bronze$/)
     await expect(page.getByRole('button', { name: /^Music/ })).toBeVisible()
   })
 
   test('the music interface is a segment below the project', async ({ page }) => {
     await gotoProject(page)
     await page.getByRole('button', { name: /^Music/ }).click()
-    await expect(page).toHaveURL(/\/@dean\/bronze\/music$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/bronze\/music$/)
   })
 
   test('the whitepaper project resolves and offers its reader', async ({ page }) => {
-    await page.goto('/@dean/atonomos')
+    await page.goto('/@deanMaye/atonomos')
     await expect(page.getByRole('heading', { name: 'Atonomos' }).first()).toBeVisible()
     await page.getByRole('button', { name: /^Read/ }).click()
-    await expect(page).toHaveURL(/\/@dean\/atonomos\/read$/)
+    await expect(page).toHaveURL(/\/@deanMaye\/atonomos\/read$/)
   })
 
   test('shows an honest empty state for an unknown project', async ({ page }) => {
-    await page.goto('/@dean/no-such-project')
+    await page.goto('/@deanMaye/no-such-project')
     await expect(page.getByText(/No project called/)).toBeVisible()
   })
 
   test('an unknown interface type is not found rather than blank', async ({ page }) => {
-    await page.goto('/@dean/bronze/tapdance')
+    await page.goto('/@deanMaye/bronze/tapdance')
     await expect(page.getByText(/No section called/)).toBeVisible()
   })
 })
