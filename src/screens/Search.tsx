@@ -27,7 +27,7 @@ import { SearchIcon } from '@/components/Icons'
 const GROUPS = [
   { key: 'creators', label: 'Creators' },
   { key: 'projects', label: 'Projects' },
-  { key: 'contents', label: 'Releases' },
+  { key: 'contents', label: 'Content' },
 ] as const
 
 /** How many of a group to show before offering the rest. */
@@ -123,7 +123,7 @@ export function Search() {
         <div aria-live="polite" className="mt-6">
           {!isQueryable(draft.trim()) ? (
             <p className="text-sm text-parchment/40">
-              Type at least two characters to search creators, projects and releases.
+              Type at least two characters to search creators, projects and content.
             </p>
           ) : loading && !results ? (
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-parchment/35">

@@ -15,10 +15,7 @@ import { coverUrl } from '@/lib/cover'
 import { artUrl } from '@/lib/art'
 import { formatRelative } from '@/lib/format'
 import { AppHeader } from '@/components/AppHeader'
-import { MusicIcon, ReadIcon, VideosIcon } from '@/components/Icons'
 import { Select, type SelectOption } from '@/components/Select'
-
-const TYPE_ICON = { music: MusicIcon, video: VideosIcon, ereader: ReadIcon } as const
 
 /** One published interface, carrying the Project it belongs to for its link. */
 interface FeedItem {
@@ -80,7 +77,7 @@ export function Feed() {
     }
   }, [])
 
-  const creatorName = useMemo(() => new Map(creators.map((c) => [c.slug, c.name])), [creators])
+  const creatorBySlug = useMemo(() => new Map(creators.map((c) => [c.slug, c])), [creators])
 
   /*
    * Flattened to one entry per typed interface, not per Project: a Project
@@ -301,7 +298,7 @@ export function Feed() {
                 the list has no stray edge above the first or below the last. */}
             <div className="flex flex-col divide-y divide-parchment/15" data-testid="feed-rows">
               {shownFeed.map(({ content, project }, i) => {
-                const Icon = TYPE_ICON[content.type]
+                const creator = creatorBySlug.get(project.ownerSlug)
                 return (
                   <motion.button
                     key={content.id}
@@ -324,20 +321,61 @@ export function Feed() {
                     // the text it belongs to.
                     className="-mx-2 flex items-center gap-3 px-2 py-3 text-left transition hover:bg-parchment/[0.04]"
                   >
+                    {/*
+                      Who made it, on the left, as a face over a handle.
+
+                      The row used to open with the cover and carry the
+                      creator as the first word of a grey meta line, which
+                      put the least identifiable thing first: covers are
+                      art, and art does not say whose it is. A face does.
+
+                      Fixed width rather than intrinsic, so the titles beside
+                      it all start at the same x — a ragged left edge down
+                      the column is what you get when every row is as wide as
+                      its own creator's handle.
+                    */}
+                    <span className="flex w-14 shrink-0 flex-col items-center gap-1">
+                      <img
+                        src={
+                          creator?.avatarUrl ?? artUrl(`${project.ownerSlug}-hero`, 'cover', 120)
+                        }
+                        alt=""
+                        // The same accent ring the rail above and the profile
+                        // use, at the weight that suits this size: `ring-2`
+                        // at 36px reads as a border rather than a rim.
+                        className="size-9 rounded-full object-cover ring-1 ring-ember/50"
+                      />
+                      <span className="w-full truncate text-center font-mono text-[10px] text-parchment/40">
+                        @{project.ownerSlug}
+                      </span>
+                    </span>
+
+                    <span className="min-w-0 flex-1">
+                      {/* Two lines before truncating. The creator moving out
+                          of the meta line freed the room, and these titles
+                          are long enough that one line ended mid-word on a
+                          phone. */}
+                      <span className="line-clamp-2 block text-sm leading-snug text-parchment">
+                        {content.title}
+                      </span>
+                      {/* What it is and when — the creator is the column to
+                          the left now, and saying it twice in one row was
+                          the reason this line ran out of space. */}
+                      <span className="mt-1 block truncate font-mono text-[11px] text-parchment/40">
+                        {CONTENT_TYPE_LABEL[content.type]}
+                        {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
+                      </span>
+                    </span>
+
+                    {/* The cover, where the type icon used to sit. The icon
+                        was saying what the line above it already says in
+                        words — "Whitepaper", "Music" — so it cost a slot
+                        and added nothing. The art earns that slot. */}
                     <img
                       src={coverUrl(project, 200)}
                       alt=""
                       className="size-14 shrink-0 object-cover"
                     />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm text-parchment">{content.title}</span>
-                      <span className="mt-0.5 block truncate font-mono text-[11px] text-parchment/40">
-                        {creatorName.get(project.ownerSlug) ?? project.ownerSlug} ·{' '}
-                        {CONTENT_TYPE_LABEL[content.type]}
-                        {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
-                      </span>
-                    </span>
-                    <Icon className="size-5 shrink-0 text-ember/70" />
                   </motion.button>
                 )
               })}

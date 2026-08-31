@@ -49,7 +49,7 @@ test.describe('search', () => {
     // cover. The badge is the only thing that separates them, so it is what
     // gets asserted.
     const project = page.locator('section', { hasText: 'Projects' }).getByRole('listitem').first()
-    const release = page.locator('section', { hasText: 'Releases' }).getByRole('listitem').first()
+    const release = page.locator('section', { hasText: 'Content' }).getByRole('listitem').first()
 
     await expect(project).toContainText('Bronze')
     await expect(release).toContainText('Bronze')
