@@ -79,6 +79,15 @@ export function ProjectHub() {
               {/*
               Whose project this is, with a face on it.
 
+              Sized against the title rather than in isolation. The title was
+              48px to the name's 10 — nearly five to one, which read as a
+              caption stuck to a billboard rather than as an attribution. 36
+              to 12 is three to one: the title still leads, the creator is
+              still legible as the smaller thing, and neither is shouting.
+
+              The tracking came down with it. 0.4em is spacing for type at
+              10px; at 12 it pulls the word apart.
+
               A link as well as a label. The creator's name was already here
               as plain text, which named the owner while giving no way to
               reach them — the only route back to the profile was the
@@ -94,18 +103,18 @@ export function ProjectHub() {
               <button
                 onClick={() => navigate(creatorPath(creator.slug))}
                 aria-label={`${creator.name} — creator profile`}
-                className="group flex items-center gap-2"
+                className="group flex items-center gap-2.5"
               >
                 <img
                   src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 120)}
                   alt=""
-                  className="size-6 shrink-0 rounded-full object-cover ring-1 ring-ember/50"
+                  className="size-8 shrink-0 rounded-full object-cover ring-1 ring-ember/50"
                 />
-                <span className="text-[10px] uppercase tracking-[0.4em] text-ember/70 transition group-hover:text-ember">
+                <span className="text-xs uppercase tracking-[0.22em] text-ember/70 transition group-hover:text-ember">
                   {creator.name}
                 </span>
               </button>
-              <h1 className="mt-2 text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
+              <h1 className="mt-2.5 text-4xl leading-[1.08] tracking-tight text-parchment sm:text-6xl">
                 {project.title}
               </h1>
               {project.description && (
