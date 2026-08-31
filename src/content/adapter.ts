@@ -42,6 +42,9 @@ const fixtureAdapter: ContentAdapter = {
   async getCreator(slug) {
     return slug.toLowerCase() === dean.slug.toLowerCase() ? dean : null
   },
+  async listCreators() {
+    return allCreators
+  },
   async listProjects(creatorSlug) {
     return allProjects.filter((p) => p.ownerSlug === creatorSlug)
   },

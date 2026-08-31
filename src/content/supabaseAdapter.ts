@@ -252,6 +252,23 @@ export const supabaseAdapter: ContentAdapter = {
     return data ? toCreator(data as CreatorRow) : null
   },
 
+  /*
+   * Ordered by when they joined, not by name.
+   *
+   * There is no curation column, so any order here is arbitrary — but it has
+   * to be STABLE, or the featured rail reshuffles between loads for no
+   * reason a visitor can see. Join order is at least a fact about the
+   * platform rather than an accident of the alphabet.
+   */
+  async listCreators() {
+    const { data, error } = await getSupabase()
+      .from('creators')
+      .select('*')
+      .order('created_at', { ascending: true })
+    if (error) throw error
+    return ((data ?? []) as CreatorRow[]).map(toCreator)
+  },
+
   async listProjects(creatorSlug) {
     const { data, error } = await getSupabase()
       .from('projects')

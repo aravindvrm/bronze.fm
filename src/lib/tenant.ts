@@ -112,11 +112,6 @@ export function resolveCreatorSlug(): string | null {
   return creatorFromHost() ?? creatorFromPath()
 }
 
-/** The Creator shown where a URL names none — the feed's own listing. */
-export function defaultCreatorSlug(): string {
-  return (import.meta.env.VITE_DEFAULT_CREATOR as string | undefined) ?? 'deanMaye'
-}
-
 /** True when the Creator is being served from their own subdomain/domain. */
 export function isDedicatedHost(): boolean {
   return creatorFromHost() !== null

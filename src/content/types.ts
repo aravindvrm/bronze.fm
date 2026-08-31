@@ -303,6 +303,16 @@ export interface SearchResults {
 
 export interface ContentAdapter {
   getCreator(slug: string): Promise<Creator | null>
+  /**
+   * Every Creator on the platform.
+   *
+   * The home page needs this to exist at all: without it there is no way to
+   * ask WHO is here, only to fetch somebody already named — so the feed
+   * carried a hard-coded slug from an environment variable and rendered
+   * nothing at all when that slug was stale. Naming a creator in config is
+   * not a listing; it is a guess that fails silently.
+   */
+  listCreators(): Promise<Creator[]>
   /** Every Project a Creator owns, in display order. */
   listProjects(creatorSlug: string): Promise<Project[]>
   getProject(creatorSlug: string, projectSlug: string): Promise<Project | null>

@@ -7,12 +7,7 @@ import { content as adapter } from '@/content/adapter'
 import { CreatorProvider, useCreator } from '@/content/CreatorContext'
 import { ProjectProvider } from '@/content/ProjectContext'
 import { contentTypeFromSegment, type Creator, type Project } from '@/content/types'
-import {
-  HANDLE_PREFIX,
-  defaultCreatorSlug,
-  isDedicatedHost,
-  resolveCreatorSlug,
-} from '@/lib/tenant'
+import { HANDLE_PREFIX, isDedicatedHost, resolveCreatorSlug } from '@/lib/tenant'
 import { MiniPlayer } from '@/components/MiniPlayer'
 import { PlayerScreen } from '@/components/PlayerScreen'
 import { InstallBanner } from '@/components/InstallBanner'
@@ -120,9 +115,13 @@ function CreatorShell() {
    */
   const dedicated = isDedicatedHost()
   const valid = dedicated || handle.startsWith(HANDLE_PREFIX)
-  const slug = dedicated
-    ? (resolveCreatorSlug() ?? defaultCreatorSlug())
-    : handle.slice(HANDLE_PREFIX.length)
+  /*
+   * No fallback, because there was never a case for one. `isDedicatedHost()`
+   * IS `creatorFromHost() !== null`, and `resolveCreatorSlug()` returns that
+   * same value first — so inside this branch it cannot be null, and the
+   * `?? defaultCreatorSlug()` it used to carry could never run.
+   */
+  const slug = dedicated ? resolveCreatorSlug()! : handle.slice(HANDLE_PREFIX.length)
 
   const [creator, setCreator] = useState<Creator | null>(null)
   const [missing, setMissing] = useState(false)

@@ -91,6 +91,19 @@ describe('adapter.search', () => {
     expect(found.contents[0].href).toMatch(/@deanMaye\/bronze\/music/)
   })
 
+  /*
+   * The listing the home page needed and did not have.
+   *
+   * Every other adapter method takes a slug, so the feed could only fetch a
+   * creator it was already told about — a hard-coded name in an environment
+   * variable, which rendered the page blank the moment it went stale.
+   */
+  it('lists who is on the platform without being told who to look for', async () => {
+    const all = await adapter.listCreators()
+    expect(all.length).toBeGreaterThan(0)
+    expect(all.map((c) => c.slug)).toContain('deanMaye')
+  })
+
   it('finds a creator by name and by handle', async () => {
     expect((await adapter.search('dean')).creators).toHaveLength(1)
     expect((await adapter.search('Dean')).creators[0].href).toBe('/@deanMaye')

@@ -10,7 +10,7 @@ import {
   type Creator,
   type Project,
 } from '@/content/types'
-import { creatorPath, defaultCreatorSlug, projectPath } from '@/lib/tenant'
+import { creatorPath, projectPath } from '@/lib/tenant'
 import { coverUrl } from '@/lib/cover'
 import { artUrl } from '@/lib/art'
 import { formatRelative } from '@/lib/format'
@@ -45,17 +45,35 @@ export function Feed() {
   const [projects, setProjects] = useState<Project[]>([])
   const [typeFilter, setTypeFilter] = useState<ContentType | 'all'>('all')
 
+  const [loaded, setLoaded] = useState(false)
+
   useEffect(() => {
     let cancelled = false
     void (async () => {
-      // A creators-listing endpoint does not exist yet; the feed shows the
-      // one known Creator until it does.
-      const creator = await adapter.getCreator(defaultCreatorSlug())
-      if (cancelled || !creator) return
-      const owned = await adapter.listProjects(creator.slug)
+      /*
+       * Asks who is here, rather than being told.
+       *
+       * This used to fetch one creator named by VITE_DEFAULT_CREATOR. That
+       * is not a listing, it is a guess — and when the guess went stale after
+       * a handle change, `getCreator` returned null, this effect returned
+       * early, and every section's `length > 0` guard failed. The result was
+       * a blank white page with nothing to say what had happened.
+       */
+      const found = await adapter.listCreators()
       if (cancelled) return
-      setCreators([creator])
-      setProjects(owned)
+
+      /*
+       * One request per creator, which is fine at this size and will not be.
+       * The moment the platform has more than a page of creators this wants
+       * to be a single query returning the feed already assembled — the
+       * adapter is the seam where that happens, and no screen changes.
+       */
+      const owned = await Promise.all(found.map((creator) => adapter.listProjects(creator.slug)))
+      if (cancelled) return
+
+      setCreators(found)
+      setProjects(owned.flat())
+      setLoaded(true)
     })()
     return () => {
       cancelled = true
@@ -134,6 +152,25 @@ export function Feed() {
           heading, so the page would otherwise have no h1 for a screen
           reader to announce or navigate by. */}
       <h1 className="sr-only">bronze.fm</h1>
+
+      {/*
+        Something, rather than nothing.
+        
+        Every section below is guarded on having rows, so with no data at all
+        the page rendered as blank white — which is what a stale creator slug
+        produced, with no way to tell that from a broken build. An empty
+        platform is a real state and it should look like one.
+      */}
+      {loaded && creators.length === 0 && (
+        <div className="mx-auto max-w-[var(--app-w)] px-5 pt-10 sm:px-8">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-parchment/45">
+            Nothing published yet
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-parchment/50">
+            No creators have joined yet. This is where they will appear.
+          </p>
+        </div>
+      )}
 
       {shownCreators.length > 0 && (
         /*
