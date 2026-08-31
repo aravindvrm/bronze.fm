@@ -99,3 +99,19 @@ export function totalHits(results: SearchResults): number {
 export function isQueryable(query: string): boolean {
   return normalise(query).length >= 2
 }
+
+/**
+ * What the search field says before anyone types.
+ *
+ * Here rather than at the two call sites because there are two of them —
+ * the header's bar and the search screen's own — and they are meant to be
+ * the same field wearing two hats. Typed out twice they drift, and the
+ * drift is invisible: nothing fails, the bar just describes itself
+ * differently depending on where you opened it.
+ *
+ * It doubles as the accessible name. The field has no visible label, so
+ * this string is the only thing that says what the box is for, and a
+ * screen reader announcing something other than what is written in the box
+ * describes a different control than the one on screen.
+ */
+export const SEARCH_PLACEHOLDER = 'Search creators and content'

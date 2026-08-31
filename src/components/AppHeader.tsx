@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useScrolledPast } from '@/lib/useScrolledPast'
 import { content as adapter } from '@/content/adapter'
-import { isQueryable } from '@/content/search'
+import { SEARCH_PLACEHOLDER, isQueryable } from '@/content/search'
 import type { SearchHit } from '@/content/types'
 import { Wordmark } from '@/components/Wordmark'
 import { useTheme } from '@/lib/theme'
@@ -260,7 +260,7 @@ export function AppHeader({
             >
               {/* On the accent, white is the readable pairing — the same
                   inversion the wordmark's badge and the primary buttons use.
-                  Full white on #c92c10 measures 5.45:1; the softer weights
+                  Full white on #ad630e measures 4.6:1; the softer weights
                   here stay above 3:1. */}
               <SearchIcon className="size-5 shrink-0 text-on-accent/80" />
               <input
@@ -275,8 +275,8 @@ export function AppHeader({
                   // one a keyboard reaches for without being told.
                   if (!screenLocal && e.key === 'Enter') seeAll()
                 }}
-                placeholder={screenLocal ? 'Search this paper' : 'Creators, projects, releases'}
-                aria-label={screenLocal ? 'Search this paper' : 'Search everything'}
+                placeholder={screenLocal ? 'Search this paper' : SEARCH_PLACEHOLDER}
+                aria-label={screenLocal ? 'Search this paper' : SEARCH_PLACEHOLDER}
                 // The native WebKit clear button is suppressed: it renders in
                 // the browser's own blue, immediately beside our close
                 // control, so the bar ends up with two adjacent crosses in

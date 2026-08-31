@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
  *
  * Every colour this app draws lives in the `@theme` block in index.css. That
  * only holds while components ask for colour by token — the moment one
- * hard-codes `#c92c10` or reaches for Tailwind's built-in `black`/`white`,
+ * hard-codes `#ad630e` or reaches for Tailwind's built-in `black`/`white`,
  * that element stops following the theme, and a palette change leaves it
  * behind looking like a bug on one screen.
  *

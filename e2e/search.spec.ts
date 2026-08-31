@@ -72,7 +72,9 @@ test.describe('search', () => {
     await expect(page).toHaveURL(/\/search\?q=bronze/)
     await expect(results(page).first()).toBeVisible()
     // One field on the screen, carrying the query it was handed.
-    await expect(page.getByRole('searchbox', { name: 'Search everything' })).toHaveValue('bronze')
+    await expect(page.getByRole('searchbox', { name: 'Search creators and content' })).toHaveValue(
+      'bronze',
+    )
   })
 
   /*
@@ -82,7 +84,9 @@ test.describe('search', () => {
    */
   test('is addressable — a link opens its own results', async ({ page }) => {
     await page.goto('/search?q=agentic')
-    await expect(page.getByRole('searchbox', { name: 'Search everything' })).toHaveValue('agentic')
+    await expect(page.getByRole('searchbox', { name: 'Search creators and content' })).toHaveValue(
+      'agentic',
+    )
     await expect(results(page).first()).toBeVisible()
   })
 
@@ -124,7 +128,7 @@ test.describe('search', () => {
    */
   test('waits for a query worth running', async ({ page }) => {
     await page.goto('/search?q=')
-    const box = page.getByRole('searchbox', { name: 'Search everything' })
+    const box = page.getByRole('searchbox', { name: 'Search creators and content' })
     await box.fill('d')
     await expect(page.getByText(/at least two characters/i)).toBeVisible()
     await box.fill('de')

@@ -72,7 +72,7 @@ test.describe('dark mode', () => {
    * The accent is two tokens because a fill and a piece of text are judged
    * against different backdrops. The fill stays put across themes — which is
    * what keeps the wordmark's block the same object — while accent text
-   * lifts, because #c92c10 reads 3.44:1 on the dark ground and that is under
+   * lifts, because #ad630e reads 4.07:1 on the dark ground and that is under
    * AA. Asserted as computed colours, since the whole point is that they are
    * allowed to differ.
    */

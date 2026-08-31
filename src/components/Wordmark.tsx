@@ -23,7 +23,7 @@ export function Wordmark({
    * For placing the mark ON the accent rather than on the page: the word
    * turns white and the block swaps to a white ground with accent text.
    * Both directions are the same two colours, so the pairing keeps its
-   * 5.45:1 either way round.
+   * 4.6:1 either way round.
    */
   /**
    * Swaps the block: the accent becomes the letters and the block goes

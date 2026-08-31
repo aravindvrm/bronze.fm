@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { content as adapter } from '@/content/adapter'
-import { isQueryable, totalHits } from '@/content/search'
+import { SEARCH_PLACEHOLDER, isQueryable, totalHits } from '@/content/search'
 import type { SearchHit, SearchResults } from '@/content/types'
 import { AppHeader } from '@/components/AppHeader'
 import { artUrl } from '@/lib/art'
@@ -114,8 +114,8 @@ export function Search() {
             type="search"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Creators, projects, releases"
-            aria-label="Search everything"
+            placeholder={SEARCH_PLACEHOLDER}
+            aria-label={SEARCH_PLACEHOLDER}
             className="min-w-0 flex-1 bg-transparent text-lg text-parchment caret-ember placeholder:text-parchment/35 focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
           />
         </div>
