@@ -139,19 +139,37 @@ export function Feed() {
     <div className="min-h-full">
       <AppHeader query={query} onQueryChange={setQuery} />
 
-      <div
-        className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
-        style={{ paddingTop: '1.75rem', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
-      >
-        {/* The visible wordmark is in the header and is a link, not a
-            heading, so the page would otherwise have no h1 for a screen
-            reader to announce or navigate by. */}
-        <h1 className="sr-only">bronze.fm</h1>
+      {/* The visible wordmark is in the header and is a link, not a
+          heading, so the page would otherwise have no h1 for a screen
+          reader to announce or navigate by. */}
+      <h1 className="sr-only">bronze.fm</h1>
 
-        {nothing && <p className="mb-8 text-sm text-parchment/40">Nothing matches “{query}”.</p>}
+      {nothing && (
+        <p className="mx-auto max-w-[var(--app-w)] px-5 pt-7 text-sm text-parchment/40 sm:px-8">
+          Nothing matches “{query}”.
+        </p>
+      )}
 
-        {shownCreators.length > 0 && (
-          <section>
+      {shownCreators.length > 0 && (
+        /*
+          A band, full-bleed rather than inset.
+
+          The home page was two lists on one white ground with nothing to say
+          where the first ended and the second began. `ink` is the token for
+          precisely this — a surface raised off the page — which is why the
+          band needs no border or shadow to read as its own thing, and why it
+          becomes a subtle LIFT rather than a grey slab under the dark theme
+          without anything here knowing about that.
+
+          It sits outside the content column so the colour runs edge to edge,
+          with its own column within. A band stopping at the 72rem ceiling
+          would read as a very wide card on a desktop rather than as a
+          section of the page. Flush to the header for the same reason: a gap
+          above it would leave a white stripe between the header and the
+          band, which looks like a mistake rather than a margin.
+        */
+        <section className="bg-ink">
+          <div className="mx-auto max-w-[var(--app-w)] px-5 pb-6 pt-7 sm:px-8">
             <div className="mb-3.5 flex items-baseline justify-between gap-3">
               <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">
                 Featured Creators
@@ -199,11 +217,16 @@ export function Feed() {
                 </motion.button>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
+      <div
+        className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
+        style={{ paddingTop: '2.5rem', paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
+      >
         {feedItems.length > 0 && (
-          <section className="mt-10">
+          <section>
             <div className="mb-3.5 flex items-center justify-between gap-3">
               <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">
                 Feed

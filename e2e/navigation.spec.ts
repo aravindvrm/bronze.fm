@@ -64,6 +64,34 @@ test.describe('the feed', () => {
     await rows.nth(1).click()
     await expect(page).toHaveURL(/\/@dean\/bronze\/music$/)
   })
+
+  /*
+   * The creators band runs edge to edge.
+   *
+   * It is a full-bleed section outside the content column precisely so the
+   * colour does not stop at the 72rem ceiling — inset, it would read as a
+   * very wide card rather than as a band across the page. That is a single
+   * nesting level away from being wrong and nothing about the phone layout
+   * would show it, so it is checked at a desktop width where the ceiling
+   * actually engages.
+   */
+  test('gives the creators row a band that reaches both edges', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await gotoFeed(page)
+
+    const band = await page.evaluate(() => {
+      const el = [...document.querySelectorAll('section')].find((s) =>
+        s.className.includes('bg-ink'),
+      )
+      if (!el) return null
+      const r = el.getBoundingClientRect()
+      return { left: Math.round(r.left), width: Math.round(r.width), viewport: window.innerWidth }
+    })
+
+    expect(band, 'no bg-ink band found behind the creators row').not.toBeNull()
+    expect(band!.left).toBe(0)
+    expect(band!.width).toBe(band!.viewport)
+  })
 })
 
 test.describe('app header', () => {
