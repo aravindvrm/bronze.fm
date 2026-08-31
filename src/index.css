@@ -110,20 +110,20 @@
   --color-void: #ffffff;
   --color-ink: #e9e9e9;
   --color-parchment: #111111;
-  /* A hot vermilion. Contrasts the ground at ~5.45:1, past WCAG AA's
+  /* A bronze. Contrasts the ground at ~4.6:1, past WCAG AA's
      4.5:1 for normal text, which is what lets it carry text and not only
      decoration. Anything swapped in here wants checking against both
      --color-void and --color-on-accent. */
-  --color-gilt: #c92c10;
+  --color-gilt: #ad630e;
 
   /* ── The accent, when it has to be READ ─────────────────────────────
      Identical to --color-gilt here, and deliberately a separate token
      anyway, because the two part company on a dark ground.
 
-     A FILL only has to be told apart from the page: 3:1, which #c92c10
-     manages against a dark ground at 3.44:1, and white on it stays at
-     5.45:1 because that pairing never touches the page. TEXT in the
-     accent is judged against the ground itself, and there 3.44:1 is
+     A FILL only has to be told apart from the page: 3:1, which #ad630e
+     manages against a dark ground at 4.08:1, and white on it stays at
+     4.6:1 because that pairing never touches the page. TEXT in the
+     accent is judged against the ground itself, and there 4.08:1 is
      under AA's 4.5:1 — so the dark theme lifts this one and leaves the
      fill alone. That keeps the wordmark's block identical in both
      themes, which a single lightened accent would not.
@@ -132,7 +132,7 @@
      page ground is `ember`; accent text on a fill of its own — the
      inverted wordmark's letters on their white block — is `gilt`, because
      that pairing never meets the page. Fills are always `gilt`. */
-  --color-ember: #c92c10;
+  --color-ember: #ad630e;
 
   /* ── On the accent ──────────────────────────────────────────────────
      What sits ON --color-gilt: the search bar's text, the drawer's
@@ -201,13 +201,13 @@
   --color-ink: #1e1e1e;
   --color-parchment: #e8e8e8;
 
-  /* The fill does not move. White on it is still 5.45:1, and that pairing
-     is judged against the red, never against the page — which is what lets
-     the wordmark's block be the same object in both themes. */
-  --color-gilt: #c92c10;
-  /* The accent as text does move: #c92c10 reads 3.44:1 on this ground,
-     under AA. This is 4.57:1 and still plainly the same red. */
-  --color-ember: #e2452a;
+  /* The fill does not move. White on it is still 4.6:1, and that pairing
+     is judged against the bronze, never against the page — which is what
+     lets the wordmark's block be the same object in both themes. */
+  --color-gilt: #ad630e;
+  /* The accent as text does move: #ad630e reads 4.08:1 on this ground,
+     under AA. This is 5.69:1 and still plainly the same bronze. */
+  --color-ember: #cc7a28;
 
   /* Shadows are nearly useless on a dark ground — there is no lighter
      surface for them to fall on. Kept, and deepened, so the few places
