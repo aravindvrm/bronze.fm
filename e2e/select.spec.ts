@@ -12,7 +12,7 @@ import { gotoFeed } from './helpers'
  */
 test.describe('feed type filter', () => {
   const trigger = (page: import('@playwright/test').Page) =>
-    page.getByRole('button', { name: 'Filter the feed by type' })
+    page.getByRole('button', { name: 'Filter by type' })
 
   test('filters the feed, and says how much of each there is', async ({ page }) => {
     await gotoFeed(page)

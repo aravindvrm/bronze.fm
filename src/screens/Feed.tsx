@@ -266,15 +266,20 @@ export function Feed() {
         {feedItems.length > 0 && (
           <section>
             <div className="mb-3.5 flex items-center justify-between gap-3">
+              {/* "Feed" named the mechanism, not the thing: it told you how
+                  the list was assembled rather than what was in it. These
+                  rows are finished works — an album, a paper — so the
+                  heading says what they are, in the same word the data model
+                  uses for them. */}
               <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">
-                Feed
+                New Content
               </h2>
 
               {/* A single type has nothing to filter, so the control only
                   earns its place once there is a real choice to make. */}
               {availableTypes.length > 1 && (
                 <Select
-                  label="Filter the feed by type"
+                  label="Filter by type"
                   value={typeFilter}
                   options={typeOptions}
                   onChange={setTypeFilter}

@@ -42,7 +42,7 @@ test.describe('the feed', () => {
    */
   test('lists published interfaces newest first, and opens straight into one', async ({ page }) => {
     await gotoFeed(page)
-    const feed = page.locator('section').filter({ hasText: 'FEED' }).first()
+    const feed = page.locator('section').filter({ hasText: 'New Content' }).first()
     const rows = feed.getByTestId('feed-rows').getByRole('button')
 
     await expect(rows).toHaveCount(2)
