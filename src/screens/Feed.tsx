@@ -169,7 +169,15 @@ export function Feed() {
           band, which looks like a mistake rather than a margin.
         */
         <section className="bg-ink">
-          <div className="mx-auto max-w-[var(--app-w)] px-5 pb-6 pt-7 sm:px-8">
+          {/*
+              20px of air top and bottom, and the two have to be written
+              differently to come out the same: the rail below already
+              carries `pb-2` for the avatars' rings, so `pb-3` here lands at
+              the same 20 as `pt-5` above. It measured 28 over 32 before —
+              generous, and heavier at the foot than the head, which is what
+              made the band look like it was drifting downward.
+            */}
+          <div className="mx-auto max-w-[var(--app-w)] px-5 pb-3 pt-5 sm:px-8">
             <div className="mb-3.5 flex items-baseline justify-between gap-3">
               <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">
                 Featured Creators
