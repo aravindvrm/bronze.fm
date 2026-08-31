@@ -57,18 +57,26 @@ export function ProjectHub() {
           deserves — the bar was printing it a second time in miniature. */}
       <AppHeader backTo={creatorPath(creator.slug)} />
 
-      <div
-        className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
-        style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
-      >
-        <motion.header
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-4 border border-parchment/25 p-4 sm:gap-8 sm:p-8"
-        >
-          <div className="min-w-0 flex-1">
-            {/*
+      {/*
+        The same full-bleed `ink` band the feed puts behind its creators row,
+        for the same reason and by the same construction: outside the content
+        column so the colour reaches both edges, with its own column within,
+        and flush to the header so no stripe of page shows between them.
+
+        The card's border goes with it. A band and a box around the same
+        content is framing twice — the band is already saying "this is a
+        thing apart", and the border was only there because nothing else was.
+      */}
+      <section className="bg-ink">
+        <div className="mx-auto max-w-[var(--app-w)] px-5 pb-4 pt-3 sm:px-8 sm:pb-6 sm:pt-5">
+          <motion.header
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center gap-4 sm:gap-8"
+          >
+            <div className="min-w-0 flex-1">
+              {/*
               Whose project this is, with a face on it.
 
               A link as well as a label. The creator's name was already here
@@ -83,37 +91,43 @@ export function ProjectHub() {
               because this is a quarter of the size and a two-pixel ring at
               24px reads as a border.
             */}
-            <button
-              onClick={() => navigate(creatorPath(creator.slug))}
-              aria-label={`${creator.name} — creator profile`}
-              className="group flex items-center gap-2"
-            >
-              <img
-                src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 120)}
-                alt=""
-                className="size-6 shrink-0 rounded-full object-cover ring-1 ring-ember/50"
-              />
-              <span className="text-[10px] uppercase tracking-[0.4em] text-ember/70 transition group-hover:text-ember">
-                {creator.name}
-              </span>
-            </button>
-            <h1 className="mt-2 text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
-              {project.title}
-            </h1>
-            {project.description && (
-              <p className="mt-3 text-sm leading-relaxed text-parchment/50">
-                {project.description}
-              </p>
-            )}
-          </div>
+              <button
+                onClick={() => navigate(creatorPath(creator.slug))}
+                aria-label={`${creator.name} — creator profile`}
+                className="group flex items-center gap-2"
+              >
+                <img
+                  src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 120)}
+                  alt=""
+                  className="size-6 shrink-0 rounded-full object-cover ring-1 ring-ember/50"
+                />
+                <span className="text-[10px] uppercase tracking-[0.4em] text-ember/70 transition group-hover:text-ember">
+                  {creator.name}
+                </span>
+              </button>
+              <h1 className="mt-2 text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
+                {project.title}
+              </h1>
+              {project.description && (
+                <p className="mt-3 text-sm leading-relaxed text-parchment/50">
+                  {project.description}
+                </p>
+              )}
+            </div>
 
-          <img
-            src={coverUrl(project, 400)}
-            alt={`${project.title} cover`}
-            className="size-24 shrink-0 self-center object-cover shadow-lg shadow-scrim/50 sm:size-44"
-          />
-        </motion.header>
+            <img
+              src={coverUrl(project, 400)}
+              alt={`${project.title} cover`}
+              className="size-24 shrink-0 self-center object-cover shadow-lg shadow-scrim/50 sm:size-44"
+            />
+          </motion.header>
+        </div>
+      </section>
 
+      <div
+        className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8"
+        style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
+      >
         {project.contents.length === 0 ? (
           <p className="mt-10 text-sm text-parchment/40">Nothing published in this project yet.</p>
         ) : (

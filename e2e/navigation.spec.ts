@@ -94,22 +94,34 @@ test.describe('the feed', () => {
    * would show it, so it is checked at a desktop width where the ceiling
    * actually engages.
    */
-  test('gives the creators row a band that reaches both edges', async ({ page }) => {
+  test('gives its bands both edges of the screen', async ({ page }) => {
+    const measure = () =>
+      page.evaluate(() => {
+        const el = [...document.querySelectorAll('section')].find((s) =>
+          s.className.includes('bg-ink'),
+        )
+        if (!el) return null
+        const r = el.getBoundingClientRect()
+        return { left: Math.round(r.left), width: Math.round(r.width), viewport: window.innerWidth }
+      })
+
     await page.setViewportSize({ width: 1280, height: 800 })
+
+    // Both bands, because they are the same construction and fail the same
+    // way — the feed's behind its creators row, the project's behind its
+    // hero.
     await gotoFeed(page)
+    const feedBand = await measure()
+    expect(feedBand, 'no bg-ink band behind the creators row').not.toBeNull()
+    expect(feedBand!.left).toBe(0)
+    expect(feedBand!.width).toBe(feedBand!.viewport)
 
-    const band = await page.evaluate(() => {
-      const el = [...document.querySelectorAll('section')].find((s) =>
-        s.className.includes('bg-ink'),
-      )
-      if (!el) return null
-      const r = el.getBoundingClientRect()
-      return { left: Math.round(r.left), width: Math.round(r.width), viewport: window.innerWidth }
-    })
-
-    expect(band, 'no bg-ink band found behind the creators row').not.toBeNull()
-    expect(band!.left).toBe(0)
-    expect(band!.width).toBe(band!.viewport)
+    await page.goto('/@dean/atonomos')
+    await page.getByRole('heading', { name: 'Atonomos' }).waitFor()
+    const hubBand = await measure()
+    expect(hubBand, 'no bg-ink band behind the project hero').not.toBeNull()
+    expect(hubBand!.left).toBe(0)
+    expect(hubBand!.width).toBe(hubBand!.viewport)
   })
 })
 
