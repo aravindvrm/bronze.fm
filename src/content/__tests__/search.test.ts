@@ -37,7 +37,7 @@ describe('scoring', () => {
    */
   it('breaks ties by title so an order is stable', () => {
     const hit = (title: string): SearchHit => ({
-      kind: 'track',
+      kind: 'content',
       id: title,
       title,
       href: '/x',
@@ -52,8 +52,8 @@ describe('scoring', () => {
 
   it('drops non-matches and honours the cap', () => {
     const scored = [
-      { hit: { kind: 'track', id: 'a', title: 'A', href: '/' } as SearchHit, score: 10 },
-      { hit: { kind: 'track', id: 'b', title: 'B', href: '/' } as SearchHit, score: 0 },
+      { hit: { kind: 'content', id: 'a', title: 'A', href: '/' } as SearchHit, score: 10 },
+      { hit: { kind: 'content', id: 'b', title: 'B', href: '/' } as SearchHit, score: 0 },
     ]
     expect(rank(scored, 10)).toHaveLength(1)
     expect(rank([...scored, ...scored], 1)).toHaveLength(1)
@@ -72,12 +72,23 @@ describe('scoring', () => {
  * you are looking for.
  */
 describe('adapter.search', () => {
-  it('finds a track three levels below anything a screen loads', async () => {
+  /*
+   * Individual tracks are deliberately NOT indexed.
+   *
+   * They were, and it made one word look like five answers: "bronze" is a
+   * project, a release and three track titles, all pointing at the same
+   * place. The cost is real and worth stating — a track title now finds
+   * nothing — and tracks are one tap further in, on the release.
+   */
+  it('does not index individual tracks', async () => {
     const found = await adapter.search('kissy')
-    expect(found.tracks.map((t) => t.title)).toContain('Kissy Face Emoji')
-    // And it knows where the track lives, so the row can navigate.
-    expect(found.tracks[0].href).toMatch(/@dean\/bronze\/music/)
-    expect(found.tracks[0].subtitle).toContain('Bronze')
+    expect(totalHits(found)).toBe(0)
+  })
+
+  it('finds the release a track belongs to, by the release name', async () => {
+    const found = await adapter.search('bronze')
+    expect(found.contents.map((c) => c.title)).toContain('Bronze')
+    expect(found.contents[0].href).toMatch(/@dean\/bronze\/music/)
   })
 
   it('finds a creator by name and by handle', async () => {
@@ -91,12 +102,27 @@ describe('adapter.search', () => {
   })
 
   it('puts one word into every group it belongs to', async () => {
-    // "Bronze" is a project, a release and a word in track titles. Grouping
-    // is what keeps all three answerable at once.
     const found = await adapter.search('bronze')
     expect(found.projects.length).toBeGreaterThan(0)
     expect(found.contents.length).toBeGreaterThan(0)
-    expect(found.tracks.length).toBeGreaterThan(0)
+  })
+
+  /*
+   * Attribution and a picture on every hit, because a title alone cannot say
+   * whose work it is — and "Bronze" is the project AND the release, so the
+   * two rows are otherwise identical.
+   */
+  it('attributes a release to its creator and names its kind', async () => {
+    const [release] = (await adapter.search('bronze')).contents
+    expect(release.subtitle).toBe('Dean · Music')
+    expect(release.imageUrl).toBeTruthy()
+  })
+
+  it('gives every hit something to draw', async () => {
+    const found = await adapter.search('bronze')
+    for (const hit of [...found.projects, ...found.contents]) {
+      expect(hit.imageUrl, `${hit.kind} ${hit.title} has no image`).toBeTruthy()
+    }
   })
 
   it('returns nothing for a query too short to mean anything', async () => {
@@ -108,7 +134,8 @@ describe('adapter.search', () => {
   })
 
   it('caps each group when asked', async () => {
-    const found = await adapter.search('e', { perGroup: 2 })
-    expect(found.tracks.length).toBeLessThanOrEqual(2)
+    const found = await adapter.search('on', { perGroup: 1 })
+    expect(found.contents.length).toBeLessThanOrEqual(1)
+    expect(found.projects.length).toBeLessThanOrEqual(1)
   })
 })

@@ -1,6 +1,7 @@
 import { getSupabase } from '@/lib/supabaseClient'
 import { DEFAULT_PER_GROUP, emptyResults, isQueryable, rank, scoreAny } from '@/content/search'
 import { creatorPath, projectPath } from '@/lib/tenant'
+import { coverForSlug } from '@/lib/cover'
 import { CONTENT_TYPE_LABEL, CONTENT_TYPE_SEGMENT } from '@/content/types'
 import type {
   Content,
@@ -143,16 +144,6 @@ interface SearchContentRow {
   projects: { slug: string; title: string; creators: { slug: string; name: string } | null } | null
 }
 
-interface SearchItemRow {
-  id: string
-  title: string
-  content: {
-    title: string
-    type: ContentType
-    projects: { slug: string; creators: { slug: string; name: string } | null } | null
-  } | null
-}
-
 /** A pinned work, or a pinned track that carries its work with it. */
 interface PinnedContent {
   title: string
@@ -292,10 +283,14 @@ export const supabaseAdapter: ContentAdapter = {
   /*
    * Narrowed in Postgres, ranked in the app.
    *
-   * Four queries rather than one view, because the four kinds have four
+   * Three queries rather than one view, because the three kinds have three
    * different join paths back to a URL and a single query would either
-   * repeat itself four times in SQL or return a union nobody can type. They
-   * run in parallel, so the cost is one round trip.
+   * repeat itself in SQL or return a union nobody can type. They run in
+   * parallel, so the cost is one round trip.
+   *
+   * `content_items` was a fourth and is deliberately gone: a track, its
+   * release and its project usually share a name, so searching one word
+   * returned the same answer four or five times over.
    *
    * `ilike` rather than full-text: this matches partial words, which is what
    * someone typing "kiss" into a search box expects, and `to_tsquery` does
@@ -318,7 +313,7 @@ export const supabaseAdapter: ContentAdapter = {
     // is not necessarily among the first `limit` rows Postgres returns.
     const pool = Math.max(limit * 4, 40)
 
-    const [creatorRows, projectRows, contentRows, itemRows] = await Promise.all([
+    const [creatorRows, projectRows, contentRows] = await Promise.all([
       db
         .from('creators')
         .select('id, slug, name, bio, avatar_url')
@@ -336,16 +331,9 @@ export const supabaseAdapter: ContentAdapter = {
         )
         .or(`title.ilike.${like},description.ilike.${like}`)
         .limit(pool),
-      db
-        .from('content_items')
-        .select(
-          'id, title, content!inner ( title, type, projects!inner ( slug, creators:owner_creator_id!inner ( slug, name ) ) )',
-        )
-        .ilike('title', like)
-        .limit(pool),
     ])
 
-    for (const result of [creatorRows, projectRows, contentRows, itemRows]) {
+    for (const result of [creatorRows, projectRows, contentRows]) {
       if (result.error) throw result.error
     }
 
@@ -371,6 +359,7 @@ export const supabaseAdapter: ContentAdapter = {
           title: row.title,
           subtitle: row.creators!.name,
           href: projectPath(row.creators!.slug, row.slug),
+          imageUrl: coverForSlug(row.slug, 160),
         },
       }))
 
@@ -382,29 +371,15 @@ export const supabaseAdapter: ContentAdapter = {
           kind: 'content' as const,
           id: row.id,
           title: row.title,
-          subtitle: `${row.projects!.title} · ${CONTENT_TYPE_LABEL[row.type]}`,
+          // Creator first, then kind — a release and its project often share
+          // a title, so the row's own name says neither whose it is nor what.
+          subtitle: `${row.projects!.creators!.name} · ${CONTENT_TYPE_LABEL[row.type]}`,
           href: projectPath(
             row.projects!.creators!.slug,
             row.projects!.slug,
             CONTENT_TYPE_SEGMENT[row.type],
           ),
-        },
-      }))
-
-    const tracks = ((itemRows.data ?? []) as unknown as SearchItemRow[])
-      .filter((row) => row.content?.projects?.creators?.slug)
-      .map((row) => ({
-        score: scoreAny([row.title], query),
-        hit: {
-          kind: 'track' as const,
-          id: row.id,
-          title: row.title,
-          subtitle: `${row.content!.title} · ${row.content!.projects!.creators!.name}`,
-          href: projectPath(
-            row.content!.projects!.creators!.slug,
-            row.content!.projects!.slug,
-            CONTENT_TYPE_SEGMENT[row.content!.type],
-          ),
+          imageUrl: coverForSlug(row.projects!.slug, 160),
         },
       }))
 
@@ -412,7 +387,6 @@ export const supabaseAdapter: ContentAdapter = {
       creators: rank(creators, limit),
       projects: rank(projects, limit),
       contents: rank(contents, limit),
-      tracks: rank(tracks, limit),
     }
   },
 

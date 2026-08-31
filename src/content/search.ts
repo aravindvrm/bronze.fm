@@ -83,16 +83,10 @@ export const emptyResults = (): SearchResults => ({
   creators: [],
   projects: [],
   contents: [],
-  tracks: [],
 })
 
 export function totalHits(results: SearchResults): number {
-  return (
-    results.creators.length +
-    results.projects.length +
-    results.contents.length +
-    results.tracks.length
-  )
+  return results.creators.length + results.projects.length + results.contents.length
 }
 
 /**

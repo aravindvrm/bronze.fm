@@ -6,7 +6,7 @@ import { isQueryable, totalHits } from '@/content/search'
 import type { SearchHit, SearchResults } from '@/content/types'
 import { AppHeader } from '@/components/AppHeader'
 import { artUrl } from '@/lib/art'
-import { MusicIcon, ReadIcon, SearchIcon } from '@/components/Icons'
+import { SearchIcon } from '@/components/Icons'
 
 /**
  * Search — `/search?q=…`.
@@ -28,7 +28,6 @@ const GROUPS = [
   { key: 'creators', label: 'Creators' },
   { key: 'projects', label: 'Projects' },
   { key: 'contents', label: 'Releases' },
-  { key: 'tracks', label: 'Tracks' },
 ] as const
 
 /** How many of a group to show before offering the rest. */
@@ -115,7 +114,7 @@ export function Search() {
             type="search"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Creators, projects, tracks"
+            placeholder="Creators, projects, releases"
             aria-label="Search everything"
             className="min-w-0 flex-1 bg-transparent text-lg text-parchment caret-ember placeholder:text-parchment/35 focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
           />
@@ -124,7 +123,7 @@ export function Search() {
         <div aria-live="polite" className="mt-6">
           {!isQueryable(draft.trim()) ? (
             <p className="text-sm text-parchment/40">
-              Type at least two characters to search creators, projects, releases and tracks.
+              Type at least two characters to search creators, projects and releases.
             </p>
           ) : loading && !results ? (
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-parchment/35">
@@ -173,18 +172,16 @@ export function Search() {
   )
 }
 
-const KIND_ICON = { content: ReadIcon, track: MusicIcon } as const
-
 function Row({ hit, index, onOpen }: { hit: SearchHit; index: number; onOpen: () => void }) {
-  // A creator gets their face, a track its artwork, a project neither —
-  // matching what each already looks like everywhere else in the app.
+  /*
+   * The picture comes from the hit, not from a rule here.
+   *
+   * The adapters already know a creator's avatar and a project's cover, and
+   * deriving them a second time in the row is how the same creator ends up
+   * with one face in a search result and another in the rail.
+   */
   const image =
-    hit.kind === 'creator'
-      ? (hit.imageUrl ?? artUrl(`${hit.id}-hero`, 'cover', 120))
-      : hit.kind === 'track'
-        ? artUrl(hit.id, 'item', 120)
-        : undefined
-  const Icon = hit.kind === 'content' ? KIND_ICON.content : undefined
+    hit.imageUrl ?? (hit.kind === 'creator' ? artUrl(`${hit.id}-hero`, 'cover', 120) : undefined)
 
   return (
     <li>
@@ -206,14 +203,8 @@ function Row({ hit, index, onOpen }: { hit: SearchHit; index: number; onOpen: ()
             }`}
           />
         ) : (
-          <span className="grid size-10 shrink-0 place-items-center border border-parchment/20">
-            {Icon ? (
-              <Icon className="size-4 text-ember" />
-            ) : (
-              <span className="font-mono text-[10px] text-parchment/40">
-                {hit.title.slice(0, 1).toUpperCase()}
-              </span>
-            )}
+          <span className="grid size-10 shrink-0 place-items-center border border-parchment/20 font-mono text-[10px] text-parchment/40">
+            {hit.title.slice(0, 1).toUpperCase()}
           </span>
         )}
 

@@ -30,9 +30,21 @@ const COVERS: Record<string, Cover> = {
  * artwork ships at its own resolution.
  */
 export function coverUrl(project: Project | null | undefined, size = 1400): string {
-  const real = project && COVERS[project.slug]
+  return coverForSlug(project?.slug, size)
+}
+
+/**
+ * The same cover, from a slug alone.
+ *
+ * Search hits carry a project's slug and nothing else — there is no Project
+ * object to hand over — and the lookup never needed one: `coverUrl` reads
+ * exactly one field. Both go through here so a project cannot end up with
+ * two different covers depending on which call site asked.
+ */
+export function coverForSlug(slug: string | null | undefined, size = 1400): string {
+  const real = slug ? COVERS[slug] : undefined
   if (real) return real.src
-  return artUrl(`${project?.slug ?? 'bronze'}-cover`, 'cover', size)
+  return artUrl(`${slug ?? 'bronze'}-cover`, 'cover', size)
 }
 
 /**

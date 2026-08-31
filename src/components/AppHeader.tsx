@@ -147,9 +147,7 @@ export function AppHeader({
     const timer = window.setTimeout(() => {
       void adapter.search(q, { perGroup: 3 }).then((found) => {
         if (stale) return
-        setHits(
-          [...found.creators, ...found.projects, ...found.contents, ...found.tracks].slice(0, 6),
-        )
+        setHits([...found.creators, ...found.projects, ...found.contents].slice(0, 6))
       })
     }, 180)
     return () => {
@@ -277,7 +275,7 @@ export function AppHeader({
                   // one a keyboard reaches for without being told.
                   if (!screenLocal && e.key === 'Enter') seeAll()
                 }}
-                placeholder={screenLocal ? 'Search this paper' : 'Creators, projects, tracks'}
+                placeholder={screenLocal ? 'Search this paper' : 'Creators, projects, releases'}
                 aria-label={screenLocal ? 'Search this paper' : 'Search everything'}
                 // The native WebKit clear button is suppressed: it renders in
                 // the browser's own blue, immediately beside our close
@@ -325,16 +323,34 @@ export function AppHeader({
                           closeSearch()
                           navigate(hit.href)
                         }}
-                        className="flex w-full items-center gap-3 py-2.5 text-left transition hover:text-ember"
+                        className="group/hit flex w-full items-center gap-3 py-2.5 text-left"
                       >
-                        <span className="min-w-0 flex-1 truncate text-sm text-parchment">
-                          {hit.title}
-                        </span>
-                        {hit.subtitle && (
-                          <span className="shrink-0 truncate font-mono text-[10px] text-parchment/40">
-                            {hit.subtitle}
-                          </span>
+                        {/*
+                          A face for a person, a cover for a work — the same
+                          two shapes they have everywhere else, so a row is
+                          recognisable before it is read. Round with the
+                          accent ring for a creator, square for a release, is
+                          the whole of the distinction and it needs no label.
+                        */}
+                        {hit.imageUrl && (
+                          <img
+                            src={hit.imageUrl}
+                            alt=""
+                            className={`size-8 shrink-0 object-cover ${
+                              hit.kind === 'creator' ? 'rounded-full ring-1 ring-ember/50' : ''
+                            }`}
+                          />
                         )}
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-sm text-parchment transition group-hover/hit:text-ember">
+                            {hit.title}
+                          </span>
+                          {hit.subtitle && (
+                            <span className="mt-0.5 block truncate font-mono text-[10px] text-parchment/45">
+                              {hit.subtitle}
+                            </span>
+                          )}
+                        </span>
                       </button>
                     </li>
                   ))}

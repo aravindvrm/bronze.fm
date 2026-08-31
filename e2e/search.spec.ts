@@ -14,17 +14,39 @@ test.describe('search', () => {
 
   /*
    * The case that could not work before, and the reason the adapter grew a
-   * method that takes no slug: a track title is three levels below anything
-   * the home page loads.
+   * method that takes no slug: nothing the home page loads reaches beyond
+   * one creator.
    */
-  test('finds a track by name, which the old filter never could', async ({ page }) => {
+  test('finds a release the home page never loaded a row for', async ({ page }) => {
     await gotoFeed(page)
     const box = await openSearch(page)
-    await box.fill('kissy')
+    await box.fill('bronze')
 
-    const quick = page.getByRole('button', { name: /Kissy Face Emoji/ })
+    const quick = page.getByRole('button', { name: /Bronze/ }).first()
     await expect(quick).toBeVisible()
-    await expect(quick).toContainText('Bronze')
+  })
+
+  /*
+   * Individual tracks are deliberately out of the index. They were in, and
+   * one word came back as five rows pointing at the same place — "bronze" is
+   * a project, a release and three track titles. The cost is that a track
+   * title finds nothing, which this states rather than leaves to be
+   * discovered.
+   */
+  test('does not offer individual tracks as results', async ({ page }) => {
+    await page.goto('/search?q=kissy')
+    await expect(page.getByText(/Nothing matches/)).toBeVisible()
+  })
+
+  /*
+   * A release and its project routinely share a title, so the row's own name
+   * says neither whose it is nor what kind of thing it is.
+   */
+  test('attributes a release and pictures every row', async ({ page }) => {
+    await page.goto('/search?q=bronze')
+    const release = page.getByRole('button', { name: /Dean · Music/ }).first()
+    await expect(release).toBeVisible()
+    await expect(release.locator('img')).toHaveAttribute('src', /.+/)
   })
 
   test('hands off from the header to a screen that owns the URL', async ({ page }) => {
@@ -34,7 +56,7 @@ test.describe('search', () => {
     await page.getByRole('button', { name: /See all results/ }).click()
 
     await expect(page).toHaveURL(/\/search\?q=bronze/)
-    await expect(results(page)).toContainText(['Projects'])
+    await expect(results(page).first()).toBeVisible()
     // One field on the screen, carrying the query it was handed.
     await expect(page.getByRole('searchbox', { name: 'Search everything' })).toHaveValue('bronze')
   })

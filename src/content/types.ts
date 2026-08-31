@@ -248,8 +248,17 @@ export interface StubItem {
   projectSlug?: string
 }
 
-/** What a search hit is — the four things a person might name out loud. */
-export type SearchKind = 'creator' | 'project' | 'content' | 'track'
+/**
+ * What a search hit is.
+ *
+ * Individual tracks were a fourth kind and are deliberately not any more.
+ * A release, its project and its tracks often share a name — searching
+ * "bronze" returned the project, the release and three tracks, most of them
+ * the same word pointing at the same place — so the list read as duplicates
+ * of one thing rather than as five answers. Tracks are reachable one tap
+ * further in, on the release they belong to.
+ */
+export type SearchKind = 'creator' | 'project' | 'content'
 
 /**
  * One result, flattened to what a row needs to draw itself and to navigate.
@@ -281,7 +290,6 @@ export interface SearchResults {
   creators: SearchHit[]
   projects: SearchHit[]
   contents: SearchHit[]
-  tracks: SearchHit[]
 }
 
 export interface ContentAdapter {

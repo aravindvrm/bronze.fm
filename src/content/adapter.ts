@@ -11,6 +11,7 @@ import type {
 import { DEFAULT_PER_GROUP, emptyResults, isQueryable, rank, scoreAny } from '@/content/search'
 import { CONTENT_TYPE_LABEL, CONTENT_TYPE_SEGMENT } from '@/content/types'
 import { creatorPath, projectPath } from '@/lib/tenant'
+import { coverForSlug } from '@/lib/cover'
 import { bronze, dean } from '@/content/fixtures/bronze.generated'
 import { atonomos } from '@/content/fixtures/atonomos'
 import { stubs } from '@/content/fixtures/stubs'
@@ -127,10 +128,11 @@ const fixtureAdapter: ContentAdapter = {
 
     const projects: { score: number; hit: SearchHit }[] = []
     const contents: { score: number; hit: SearchHit }[] = []
-    const tracks: { score: number; hit: SearchHit }[] = []
 
     for (const project of allProjects) {
       const owner = allCreators.find((c) => c.slug === project.ownerSlug)
+      const cover = coverForSlug(project.slug, 160)
+
       projects.push({
         score: scoreAny([project.title, project.description], query, [1, 0.5]),
         hit: {
@@ -139,38 +141,30 @@ const fixtureAdapter: ContentAdapter = {
           title: project.title,
           subtitle: owner?.name,
           href: projectPath(project.ownerSlug, project.slug),
+          imageUrl: cover,
         },
       })
 
       for (const content of project.contents) {
-        const href = projectPath(
-          project.ownerSlug,
-          project.slug,
-          CONTENT_TYPE_SEGMENT[content.type],
-        )
         contents.push({
           score: scoreAny([content.title, content.description], query, [1, 0.5]),
           hit: {
             kind: 'content',
             id: content.id,
             title: content.title,
-            subtitle: `${project.title} · ${CONTENT_TYPE_LABEL[content.type]}`,
-            href,
+            /*
+             * The creator first, then what kind of thing this is.
+             *
+             * A release and its project frequently share a title — "Bronze"
+             * is both — so the row's own name cannot say whose it is or what
+             * it is. Attribution leads because that is the question a result
+             * list is least able to answer from the title alone.
+             */
+            subtitle: `${owner?.name ?? project.ownerSlug} · ${CONTENT_TYPE_LABEL[content.type]}`,
+            href: projectPath(project.ownerSlug, project.slug, CONTENT_TYPE_SEGMENT[content.type]),
+            imageUrl: cover,
           },
         })
-
-        for (const item of content.items) {
-          tracks.push({
-            score: scoreAny([item.title], query),
-            hit: {
-              kind: 'track',
-              id: item.id,
-              title: item.title,
-              subtitle: `${content.title} · ${owner?.name ?? project.ownerSlug}`,
-              href,
-            },
-          })
-        }
       }
     }
 
@@ -178,7 +172,6 @@ const fixtureAdapter: ContentAdapter = {
       creators: rank(creators, limit),
       projects: rank(projects, limit),
       contents: rank(contents, limit),
-      tracks: rank(tracks, limit),
     }
   },
 }
