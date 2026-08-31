@@ -248,6 +248,42 @@ export interface StubItem {
   projectSlug?: string
 }
 
+/** What a search hit is — the four things a person might name out loud. */
+export type SearchKind = 'creator' | 'project' | 'content' | 'track'
+
+/**
+ * One result, flattened to what a row needs to draw itself and to navigate.
+ *
+ * Deliberately not the underlying Creator/Project/Content: a result list
+ * shows one shape, and carrying four different records into it would push
+ * the "what am I looking at" question into the rendering, where it becomes a
+ * switch per column.
+ */
+export interface SearchHit {
+  kind: SearchKind
+  id: string
+  title: string
+  /** Where this sits — "Dean", or "Bronze · Music". */
+  subtitle?: string
+  /** In-app path this row leads to. */
+  href: string
+  /** Avatar, cover, or track art. */
+  imageUrl?: string
+}
+
+/**
+ * Results by kind rather than one ranked list.
+ *
+ * Grouping is what lets "is there a creator by this name" be answerable
+ * without reading past ten track matches from a prolific one.
+ */
+export interface SearchResults {
+  creators: SearchHit[]
+  projects: SearchHit[]
+  contents: SearchHit[]
+  tracks: SearchHit[]
+}
+
 export interface ContentAdapter {
   getCreator(slug: string): Promise<Creator | null>
   /** Every Project a Creator owns, in display order. */
@@ -264,4 +300,16 @@ export interface ContentAdapter {
   getStubs(kind: StubKind, opts?: { creatorSlug?: string }): Promise<StubItem[]>
   /** The Creator's pinned highlights, in curation order. */
   listPins(creatorSlug: string): Promise<Pin[]>
+  /**
+   * Everything matching a query, grouped by kind.
+   *
+   * The first method here that does not take a slug, and that is the point
+   * of it: every other call requires already knowing what you are looking
+   * for. Search is how someone finds a creator they cannot name the URL of,
+   * which the app could not do at all before this existed.
+   *
+   * `perGroup` caps each group. The header's quick hits ask for a few; the
+   * search screen asks for enough to be worth a page.
+   */
+  search(query: string, opts?: { perGroup?: number }): Promise<SearchResults>
 }

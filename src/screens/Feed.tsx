@@ -33,16 +33,16 @@ interface FeedItem {
  * platform's, not his, which is why creators and the feed are separate
  * sections rather than one merged list.
  *
- * Search is client-side and unindexed on purpose: the corpus is a handful of
- * rows, so filtering in memory is both simpler and faster than a round trip,
- * and it keeps working offline against the cached shell. It becomes a real
- * query when there is enough content to justify one.
+ * No search here any more. It used to filter this page's own rows, which
+ * looked like search and was not: the page loads one creator, so a query for
+ * anyone else matched nothing and always would have, however many creators
+ * existed. Search is `/search` now, over the adapter, and this screen keeps
+ * only the type filter — which really is a filter over what is on it.
  */
 export function Feed() {
   const navigate = useNavigate()
   const [creators, setCreators] = useState<Creator[]>([])
   const [projects, setProjects] = useState<Project[]>([])
-  const [query, setQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState<ContentType | 'all'>('all')
 
   useEffect(() => {
@@ -114,41 +114,26 @@ export function Feed() {
     ]
   }, [feedItems, availableTypes])
 
-  const q = query.trim().toLowerCase()
-  const shownCreators = useMemo(
-    () => (q ? creators.filter((c) => c.name.toLowerCase().includes(q)) : creators),
-    [creators, q],
-  )
+  /*
+   * Only the type filter now. Search moved to its own screen and its own
+   * route, because filtering here could only ever hide rows this page had
+   * already loaded — and this page loads one creator, so searching for
+   * anybody else returned nothing and always would have.
+   */
+  const shownCreators = creators
   const shownFeed = useMemo(
-    () =>
-      feedItems.filter(({ content, project }) => {
-        if (typeFilter !== 'all' && content.type !== typeFilter) return false
-        if (!q) return true
-        return (
-          content.title.toLowerCase().includes(q) ||
-          project.title.toLowerCase().includes(q) ||
-          (project.description ?? '').toLowerCase().includes(q)
-        )
-      }),
-    [feedItems, q, typeFilter],
+    () => feedItems.filter(({ content }) => typeFilter === 'all' || content.type === typeFilter),
+    [feedItems, typeFilter],
   )
-
-  const nothing = q && shownCreators.length === 0 && shownFeed.length === 0
 
   return (
     <div className="min-h-full">
-      <AppHeader query={query} onQueryChange={setQuery} />
+      <AppHeader />
 
       {/* The visible wordmark is in the header and is a link, not a
           heading, so the page would otherwise have no h1 for a screen
           reader to announce or navigate by. */}
       <h1 className="sr-only">bronze.fm</h1>
-
-      {nothing && (
-        <p className="mx-auto max-w-[var(--app-w)] px-5 pt-7 text-sm text-parchment/40 sm:px-8">
-          Nothing matches “{query}”.
-        </p>
-      )}
 
       {shownCreators.length > 0 && (
         /*
@@ -261,9 +246,8 @@ export function Feed() {
               )}
             </div>
 
-            {/* Search already explains an empty result up top — this is only
-                for the case a type filter alone empties the list. */}
-            {!q && shownFeed.length === 0 && (
+            {/* The only way to empty this list now is the type filter. */}
+            {shownFeed.length === 0 && (
               <p className="text-sm text-parchment/40">Nothing matches the filter.</p>
             )}
 

@@ -20,6 +20,7 @@ import { UpdateBanner } from '@/components/UpdateBanner'
 import { Splash } from '@/components/Splash'
 import { CreatorProfile } from '@/screens/CreatorProfile'
 import { Feed } from '@/screens/Feed'
+import { Search } from '@/screens/Search'
 import { ProjectHub } from '@/screens/ProjectHub'
 import { Music } from '@/screens/Music'
 import { Reader } from '@/screens/Reader'
@@ -201,6 +202,18 @@ export default function App() {
         */}
         <ScreenBoundary key={location.pathname}>
           <Routes location={location}>
+            {/*
+              Ahead of the handle route, and that order is load-bearing:
+              `/:handle/*` matches `/search` with a handle of "search", and
+              the `@` prefix is only checked inside the shell — so the
+              mismatch would surface as a not-found page rather than as
+              anything that looks like a routing mistake.
+
+              On the dedicated-host branch too. A creator's own domain is
+              still the app, and the search there reaches whatever that
+              deployment reaches.
+            */}
+            <Route path="/search" element={<Search />} />
             {dedicated ? (
               <Route path="/*" element={<CreatorShell />} />
             ) : (

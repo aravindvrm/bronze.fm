@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useScrolledPast } from '@/lib/useScrolledPast'
+import { content as adapter } from '@/content/adapter'
+import { isQueryable } from '@/content/search'
+import type { SearchHit } from '@/content/types'
 import { Wordmark } from '@/components/Wordmark'
 import { useTheme } from '@/lib/theme'
 import {
@@ -58,7 +61,17 @@ export function AppHeader({
   onQueryChange,
   backTo,
 }: {
-  /** Present only on screens that actually have something to search. */
+  /*
+   * Screen-local search.
+   *
+   * When these are given, the field filters THIS screen and nothing else —
+   * the reader's find-in-paper. When they are absent the field searches the
+   * whole app instead, showing quick hits and handing off to /search.
+   *
+   * The distinction is by presence rather than by a mode flag because there
+   * is exactly one screen that owns its own query, and a boolean would
+   * invite a third state neither branch implements.
+   */
   query?: string
   onQueryChange?: (next: string) => void
   /**
@@ -77,7 +90,14 @@ export function AppHeader({
   const scrolled = useScrolledPast()
   const [searchOpen, setSearchOpen] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
-  const searchable = onQueryChange !== undefined
+  const screenLocal = onQueryChange !== undefined
+  // Every screen can search the app; only some can search themselves.
+  const searchable = true
+
+  /* Quick hits, for the global case. */
+  const [draft, setDraft] = useState('')
+  const [hits, setHits] = useState<SearchHit[]>([])
+  const text = screenLocal ? (query ?? '') : draft
 
   // Focus follows the affordance: opening a search field that isn't focused
   // asks for a second tap to do the thing the first tap already said.
@@ -104,6 +124,44 @@ export function AppHeader({
   function closeSearch() {
     setSearchOpen(false)
     onQueryChange?.('')
+    setDraft('')
+    setHits([])
+  }
+
+  /*
+   * A handful of hits, enough to answer "is the thing I want right here".
+   *
+   * Flattened across kinds and capped hard: this is a peek, and the screen
+   * is where grouping and counts live. Debounced, and late answers are
+   * dropped — a slow response to a shorter prefix must not overwrite a fast
+   * one to what was actually typed.
+   */
+  useEffect(() => {
+    if (screenLocal || !searchOpen) return
+    const q = draft.trim()
+    if (!isQueryable(q)) {
+      setHits([])
+      return
+    }
+    let stale = false
+    const timer = window.setTimeout(() => {
+      void adapter.search(q, { perGroup: 3 }).then((found) => {
+        if (stale) return
+        setHits(
+          [...found.creators, ...found.projects, ...found.contents, ...found.tracks].slice(0, 6),
+        )
+      })
+    }, 180)
+    return () => {
+      stale = true
+      window.clearTimeout(timer)
+    }
+  }, [draft, screenLocal, searchOpen])
+
+  function seeAll() {
+    const q = draft.trim()
+    closeSearch()
+    navigate(`/search${q ? `?q=${encodeURIComponent(q)}` : ''}`)
   }
 
   return (
@@ -210,10 +268,17 @@ export function AppHeader({
               <input
                 ref={searchRef}
                 type="search"
-                value={query ?? ''}
-                onChange={(e) => onQueryChange?.(e.target.value)}
-                placeholder="Search creators and content"
-                aria-label="Search creators and content"
+                value={text}
+                onChange={(e) =>
+                  screenLocal ? onQueryChange?.(e.target.value) : setDraft(e.target.value)
+                }
+                onKeyDown={(e) => {
+                  // Enter is the shortest path to the full results, and the
+                  // one a keyboard reaches for without being told.
+                  if (!screenLocal && e.key === 'Enter') seeAll()
+                }}
+                placeholder={screenLocal ? 'Search this paper' : 'Creators, projects, tracks'}
+                aria-label={screenLocal ? 'Search this paper' : 'Search everything'}
                 // The native WebKit clear button is suppressed: it renders in
                 // the browser's own blue, immediately beside our close
                 // control, so the bar ends up with two adjacent crosses in
@@ -227,6 +292,61 @@ export function AppHeader({
               >
                 <CloseIcon className="size-5" />
               </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/*
+          Quick hits, under the bar.
+          
+          A peek, not the results: a flat handful across all kinds, with the
+          grouping and the counts left to the screen. Only for global search
+          — the reader filters its own page as you type and has nothing to
+          preview.
+          
+          Outside the wiping overlay above, because that animates `clip-path`
+          and anything inside it would be clipped away with the bar.
+        */}
+        <AnimatePresence>
+          {searchOpen && !screenLocal && isQueryable(draft.trim()) && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -6 }}
+              transition={{ duration: reduceMotion ? 0 : 0.16 }}
+              className="absolute inset-x-0 top-full z-20 border-b border-parchment/15 bg-void shadow-lg shadow-shade"
+            >
+              <div className="mx-auto max-w-[var(--app-w)] px-5 sm:px-8">
+                <ul className="divide-y divide-parchment/10">
+                  {hits.map((hit) => (
+                    <li key={hit.id}>
+                      <button
+                        onClick={() => {
+                          closeSearch()
+                          navigate(hit.href)
+                        }}
+                        className="flex w-full items-center gap-3 py-2.5 text-left transition hover:text-ember"
+                      >
+                        <span className="min-w-0 flex-1 truncate text-sm text-parchment">
+                          {hit.title}
+                        </span>
+                        {hit.subtitle && (
+                          <span className="shrink-0 truncate font-mono text-[10px] text-parchment/40">
+                            {hit.subtitle}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={seeAll}
+                  className="w-full py-3 text-left font-mono text-[10px] uppercase tracking-[0.2em] text-ember transition hover:opacity-80"
+                >
+                  {hits.length ? 'See all results' : `Search for “${draft.trim()}”`}
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

@@ -21,18 +21,6 @@ test.describe('the feed', () => {
     await expect(page.getByRole('button', { name: /Bronze/ }).first()).toBeVisible()
   })
 
-  test('filters as you search, and says so when nothing matches', async ({ page }) => {
-    await gotoFeed(page)
-    const search = await openSearch(page)
-
-    await search.fill('bronze')
-    await expect(page.getByRole('button', { name: /Bronze/ }).first()).toBeVisible()
-    await expect(page.getByRole('button', { name: /Atonomos/ })).toHaveCount(0)
-
-    await search.fill('zzzz-no-such-thing')
-    await expect(page.getByText(/Nothing matches/)).toBeVisible()
-  })
-
   test('leads into a creator', async ({ page }) => {
     await gotoFeed(page)
     await page.getByRole('button', { name: /Dean/ }).first().click()
@@ -220,16 +208,21 @@ test.describe('app header', () => {
     await expect(nav.getByRole('button', { name: /^Settings$/ })).toHaveCount(0)
   })
 
-  // Closing search must also drop the query, or the screen stays filtered
-  // by a control the visitor just dismissed.
-  test('closing search clears the filter it applied', async ({ page }) => {
+  /*
+   * The feed does not filter itself any more; searching is its own screen.
+   * Asserted because the old behaviour was convincing and wrong — it hid
+   * rows this page had already loaded, which looks like search right up
+   * until the thing you want was never loaded.
+   */
+  test('leaves searching to the search screen', async ({ page }) => {
     await gotoFeed(page)
-    const search = await openSearch(page)
-    await search.fill('zzzz-no-such-thing')
-    await expect(page.getByText(/Nothing matches/)).toBeVisible()
+    const rows = page.getByTestId('feed-rows').getByRole('button')
+    const before = await rows.count()
 
-    await page.getByRole('button', { name: /close search/i }).click()
-    await expect(page.getByText(/Nothing matches/)).toHaveCount(0)
+    const search = await openSearch(page)
+    await search.fill('bronze')
+    // The feed behind the overlay is untouched.
+    expect(await rows.count()).toBe(before)
   })
 })
 

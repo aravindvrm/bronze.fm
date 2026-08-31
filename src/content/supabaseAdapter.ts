@@ -1,4 +1,7 @@
 import { getSupabase } from '@/lib/supabaseClient'
+import { DEFAULT_PER_GROUP, emptyResults, isQueryable, rank, scoreAny } from '@/content/search'
+import { creatorPath, projectPath } from '@/lib/tenant'
+import { CONTENT_TYPE_LABEL, CONTENT_TYPE_SEGMENT } from '@/content/types'
 import type {
   Content,
   ContentAdapter,
@@ -8,6 +11,7 @@ import type {
   DocBlock,
   Pin,
   Project,
+  SearchResults,
   StubKind,
   StubItem,
 } from '@/content/types'
@@ -106,6 +110,48 @@ const PROJECT_SELECT = `
     )
   )
 `
+
+/*
+ * Row shapes for the four search queries.
+ *
+ * Written out rather than inferred because PostgREST returns an embedded
+ * relation as an object or an array depending on the shape of the join, and
+ * the difference does not surface until a `.slug` read comes back undefined
+ * at run time on a screen nobody was testing.
+ */
+interface SearchCreatorRow {
+  id: string
+  slug: string
+  name: string
+  bio: string | null
+  avatar_url: string | null
+}
+
+interface SearchProjectRow {
+  id: string
+  slug: string
+  title: string
+  description: string | null
+  creators: { slug: string; name: string } | null
+}
+
+interface SearchContentRow {
+  id: string
+  title: string
+  description: string | null
+  type: ContentType
+  projects: { slug: string; title: string; creators: { slug: string; name: string } | null } | null
+}
+
+interface SearchItemRow {
+  id: string
+  title: string
+  content: {
+    title: string
+    type: ContentType
+    projects: { slug: string; creators: { slug: string; name: string } | null } | null
+  } | null
+}
 
 /** A pinned work, or a pinned track that carries its work with it. */
 interface PinnedContent {
@@ -241,6 +287,133 @@ export const supabaseAdapter: ContentAdapter = {
     // that scopes the lookup.
     const project = await this.getProject(creatorSlug, projectSlug)
     return project?.contents.find((c) => c.type === type) ?? null
+  },
+
+  /*
+   * Narrowed in Postgres, ranked in the app.
+   *
+   * Four queries rather than one view, because the four kinds have four
+   * different join paths back to a URL and a single query would either
+   * repeat itself four times in SQL or return a union nobody can type. They
+   * run in parallel, so the cost is one round trip.
+   *
+   * `ilike` rather than full-text: this matches partial words, which is what
+   * someone typing "kiss" into a search box expects, and `to_tsquery` does
+   * not without a prefix operator and a stemming configuration to reason
+   * about. Full text becomes worth it when documents are in the index; they
+   * are deliberately not.
+   *
+   * RLS does the gating. Nothing here filters on `published`, because the
+   * policies already do — and duplicating that rule in the client is how the
+   * two drift and something unpublished shows up in a result list.
+   */
+  async search(query, opts): Promise<SearchResults> {
+    if (!isQueryable(query)) return emptyResults()
+    const limit = opts?.perGroup ?? DEFAULT_PER_GROUP
+    const db = getSupabase()
+    // Postgres treats these as wildcards inside LIKE, so a query containing
+    // one would silently match far more than it says.
+    const like = `%${query.replace(/[%_\\]/g, '\\$&')}%`
+    // Over-fetch, because ranking happens here: the best match for a query
+    // is not necessarily among the first `limit` rows Postgres returns.
+    const pool = Math.max(limit * 4, 40)
+
+    const [creatorRows, projectRows, contentRows, itemRows] = await Promise.all([
+      db
+        .from('creators')
+        .select('id, slug, name, bio, avatar_url')
+        .or(`name.ilike.${like},slug.ilike.${like},bio.ilike.${like}`)
+        .limit(pool),
+      db
+        .from('projects')
+        .select('id, slug, title, description, creators:owner_creator_id!inner ( slug, name )')
+        .or(`title.ilike.${like},description.ilike.${like}`)
+        .limit(pool),
+      db
+        .from('content')
+        .select(
+          'id, title, description, type, projects!inner ( slug, title, creators:owner_creator_id!inner ( slug, name ) )',
+        )
+        .or(`title.ilike.${like},description.ilike.${like}`)
+        .limit(pool),
+      db
+        .from('content_items')
+        .select(
+          'id, title, content!inner ( title, type, projects!inner ( slug, creators:owner_creator_id!inner ( slug, name ) ) )',
+        )
+        .ilike('title', like)
+        .limit(pool),
+    ])
+
+    for (const result of [creatorRows, projectRows, contentRows, itemRows]) {
+      if (result.error) throw result.error
+    }
+
+    const creators = ((creatorRows.data ?? []) as unknown as SearchCreatorRow[]).map((row) => ({
+      score: scoreAny([row.name, row.slug, row.bio ?? undefined], query, [1, 0.9, 0.4]),
+      hit: {
+        kind: 'creator' as const,
+        id: row.id,
+        title: row.name,
+        subtitle: `@${row.slug}`,
+        href: creatorPath(row.slug),
+        imageUrl: row.avatar_url ?? undefined,
+      },
+    }))
+
+    const projects = ((projectRows.data ?? []) as unknown as SearchProjectRow[])
+      .filter((row) => row.creators?.slug)
+      .map((row) => ({
+        score: scoreAny([row.title, row.description ?? undefined], query, [1, 0.5]),
+        hit: {
+          kind: 'project' as const,
+          id: row.id,
+          title: row.title,
+          subtitle: row.creators!.name,
+          href: projectPath(row.creators!.slug, row.slug),
+        },
+      }))
+
+    const contents = ((contentRows.data ?? []) as unknown as SearchContentRow[])
+      .filter((row) => row.projects?.creators?.slug)
+      .map((row) => ({
+        score: scoreAny([row.title, row.description ?? undefined], query, [1, 0.5]),
+        hit: {
+          kind: 'content' as const,
+          id: row.id,
+          title: row.title,
+          subtitle: `${row.projects!.title} · ${CONTENT_TYPE_LABEL[row.type]}`,
+          href: projectPath(
+            row.projects!.creators!.slug,
+            row.projects!.slug,
+            CONTENT_TYPE_SEGMENT[row.type],
+          ),
+        },
+      }))
+
+    const tracks = ((itemRows.data ?? []) as unknown as SearchItemRow[])
+      .filter((row) => row.content?.projects?.creators?.slug)
+      .map((row) => ({
+        score: scoreAny([row.title], query),
+        hit: {
+          kind: 'track' as const,
+          id: row.id,
+          title: row.title,
+          subtitle: `${row.content!.title} · ${row.content!.projects!.creators!.name}`,
+          href: projectPath(
+            row.content!.projects!.creators!.slug,
+            row.content!.projects!.slug,
+            CONTENT_TYPE_SEGMENT[row.content!.type],
+          ),
+        },
+      }))
+
+    return {
+      creators: rank(creators, limit),
+      projects: rank(projects, limit),
+      contents: rank(contents, limit),
+      tracks: rank(tracks, limit),
+    }
   },
 
   async getStubs(_kind: StubKind, _opts): Promise<StubItem[]> {

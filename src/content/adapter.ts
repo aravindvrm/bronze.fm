@@ -1,10 +1,31 @@
-import type { Content, ContentAdapter, ContentType, Pin, Project, StubKind } from '@/content/types'
+import type {
+  Content,
+  ContentAdapter,
+  ContentType,
+  Pin,
+  Project,
+  SearchHit,
+  SearchResults,
+  StubKind,
+} from '@/content/types'
+import { DEFAULT_PER_GROUP, emptyResults, isQueryable, rank, scoreAny } from '@/content/search'
+import { CONTENT_TYPE_LABEL, CONTENT_TYPE_SEGMENT } from '@/content/types'
+import { creatorPath, projectPath } from '@/lib/tenant'
 import { bronze, dean } from '@/content/fixtures/bronze.generated'
 import { atonomos } from '@/content/fixtures/atonomos'
 import { stubs } from '@/content/fixtures/stubs'
 import { supabaseAdapter } from '@/content/supabaseAdapter'
 
 const allProjects: Project[] = [bronze, atonomos]
+/*
+ * Every creator the fixtures know about — one, today.
+ *
+ * Named as a list rather than reaching for `dean` directly because search is
+ * the first thing here that asks "who is there" instead of "who is this",
+ * and that question has no answer in a codebase where the only creator is a
+ * constant somebody imported.
+ */
+const allCreators = [dean]
 
 const fixtureAdapter: ContentAdapter = {
   async getCreator(slug) {
@@ -75,6 +96,90 @@ const fixtureAdapter: ContentAdapter = {
       })
     }
     return pins
+  },
+
+  /*
+   * Searched in memory, over everything the fixtures hold.
+   *
+   * That is not a shortcut standing in for the real thing — it IS the real
+   * thing for this adapter, whose whole corpus is two projects. The Supabase
+   * adapter narrows in Postgres first and then hands the survivors to the
+   * same ranker, so the two disagree about what is reachable and never about
+   * what wins.
+   */
+  async search(query, opts): Promise<SearchResults> {
+    if (!isQueryable(query)) return emptyResults()
+    const limit = opts?.perGroup ?? DEFAULT_PER_GROUP
+
+    const creators = allCreators.map((creator) => ({
+      // Name over handle over bio: someone typing "dean" means the person,
+      // and a bio that happens to contain the word is a weaker answer.
+      score: scoreAny([creator.name, creator.slug, creator.bio], query, [1, 0.9, 0.4]),
+      hit: {
+        kind: 'creator' as const,
+        id: creator.id,
+        title: creator.name,
+        subtitle: `@${creator.slug}`,
+        href: creatorPath(creator.slug),
+        imageUrl: creator.avatarUrl,
+      },
+    }))
+
+    const projects: { score: number; hit: SearchHit }[] = []
+    const contents: { score: number; hit: SearchHit }[] = []
+    const tracks: { score: number; hit: SearchHit }[] = []
+
+    for (const project of allProjects) {
+      const owner = allCreators.find((c) => c.slug === project.ownerSlug)
+      projects.push({
+        score: scoreAny([project.title, project.description], query, [1, 0.5]),
+        hit: {
+          kind: 'project',
+          id: project.id,
+          title: project.title,
+          subtitle: owner?.name,
+          href: projectPath(project.ownerSlug, project.slug),
+        },
+      })
+
+      for (const content of project.contents) {
+        const href = projectPath(
+          project.ownerSlug,
+          project.slug,
+          CONTENT_TYPE_SEGMENT[content.type],
+        )
+        contents.push({
+          score: scoreAny([content.title, content.description], query, [1, 0.5]),
+          hit: {
+            kind: 'content',
+            id: content.id,
+            title: content.title,
+            subtitle: `${project.title} · ${CONTENT_TYPE_LABEL[content.type]}`,
+            href,
+          },
+        })
+
+        for (const item of content.items) {
+          tracks.push({
+            score: scoreAny([item.title], query),
+            hit: {
+              kind: 'track',
+              id: item.id,
+              title: item.title,
+              subtitle: `${content.title} · ${owner?.name ?? project.ownerSlug}`,
+              href,
+            },
+          })
+        }
+      }
+    }
+
+    return {
+      creators: rank(creators, limit),
+      projects: rank(projects, limit),
+      contents: rank(contents, limit),
+      tracks: rank(tracks, limit),
+    }
   },
 }
 
