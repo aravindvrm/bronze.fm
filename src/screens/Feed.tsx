@@ -170,15 +170,23 @@ export function Feed() {
         */
         <section className="bg-ink">
           {/*
-              20px of air top and bottom, and the two have to be written
-              differently to come out the same: the rail below already
-              carries `pb-2` for the avatars' rings, so `pb-3` here lands at
-              the same 20 as `pt-5` above. It measured 28 over 32 before —
-              generous, and heavier at the foot than the head, which is what
-              made the band look like it was drifting downward.
-            */}
-          <div className="mx-auto max-w-[var(--app-w)] px-5 pb-3 pt-5 sm:px-8">
-            <div className="mb-3.5 flex items-baseline justify-between gap-3">
+            12px of air, on all three of the gaps this owns: above the
+            heading, between the heading and the rail, and below the labels.
+            It began at 28 over 32 — generous, and heavier at the foot than
+            the head, which read as the band drifting downward rather than
+            sitting on the page.
+
+            The three are written as different numbers to come out the same,
+            which is worth knowing before "fixing" them. The rail carries
+            `pt-2` and `pb-2` of its own so the avatars' rings are not
+            clipped by its `overflow-x: auto`, so `pt-3` above, `mb-1` in the
+            middle and `pb-1` below all land at 12.
+
+            The band is 176px tall now against the avatar's 88 — most of what
+            is left is the content itself.
+          */}
+          <div className="mx-auto max-w-[var(--app-w)] px-5 pb-1 pt-3 sm:px-8">
+            <div className="mb-1 flex items-baseline justify-between gap-3">
               <h2 className="font-display text-lg font-semibold tracking-tight text-parchment">
                 Featured Creators
               </h2>
