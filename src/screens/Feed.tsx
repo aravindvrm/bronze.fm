@@ -249,7 +249,7 @@ export function Feed() {
                     // like themselves in both places.
                     className="size-[5.5rem] rounded-full object-cover ring-2 ring-ember/50 transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="w-full font-mono text-[13px] leading-tight text-parchment/80">
+                  <span className="w-full font-sans text-[13px] font-medium leading-tight text-parchment/80">
                     {creator.name}
                   </span>
                 </motion.button>

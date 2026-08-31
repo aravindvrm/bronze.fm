@@ -93,7 +93,7 @@ function Wordmark({ still }: { still: boolean }) {
        * on any device instead of stepping between two fixed sizes. The
        * ceiling stops it from becoming a billboard on a desktop monitor.
        */
-      className="flex select-none items-baseline font-display text-[clamp(2rem,12vw,5rem)] font-bold leading-none tracking-[0.06em]"
+      className="flex select-none items-baseline font-wordmark text-[clamp(2rem,12vw,5rem)] leading-none tracking-[0.06em]"
     >
       <span className="text-parchment">
         {WORD.map(({ char, axis, from }, i) => (

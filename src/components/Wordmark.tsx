@@ -34,7 +34,7 @@ export function Wordmark({
   inverted?: boolean
 }) {
   return (
-    <span className={`inline-flex items-baseline font-display uppercase ${className}`}>
+    <span className={`inline-flex items-baseline font-wordmark uppercase ${className}`}>
       {/*
         Letter-spacing puts a gap AFTER the final glyph too, so `bronze` ends
         with 0.42em of air that would otherwise stack on top of the block's

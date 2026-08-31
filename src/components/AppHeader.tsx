@@ -215,7 +215,7 @@ export function AppHeader({
             aria-label="bronze.fm home"
             className="absolute inset-x-0 mx-auto w-fit"
           >
-            <Wordmark className="text-sm" />
+            <Wordmark className="text-base" />
           </button>
 
           {/* Right slot: the menu, on every screen without exception. */}
@@ -402,7 +402,7 @@ export function AppHeader({
               style={{ paddingTop: 'var(--safe-t)', paddingBottom: 'var(--safe-b)' }}
             >
               <div className="flex h-14 items-center justify-between px-4">
-                <Wordmark className="text-sm" inverted />
+                <Wordmark className="text-base" inverted />
                 <button
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
