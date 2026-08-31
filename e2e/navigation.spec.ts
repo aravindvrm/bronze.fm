@@ -66,6 +66,25 @@ test.describe('the feed', () => {
   })
 
   /*
+   * A project names its creator, and that name goes somewhere.
+   *
+   * It was plain text before: it said who made this and gave no way to reach
+   * them. The header's back arrow is not the same thing — it returns to
+   * wherever you came FROM, which for a shared link is nowhere at all.
+   */
+  test('the project hero carries the creator, and links to them', async ({ page }) => {
+    await page.goto('/@dean/atonomos')
+    const link = page.getByRole('button', { name: /Dean.*creator profile/ })
+    await expect(link).toBeVisible()
+    // The creator's own photo, not the project's cover — those were once the
+    // same image, which is exactly the confusion an avatar here would repeat.
+    await expect(link.locator('img')).toHaveAttribute('src', /avatar|dean/i)
+
+    await link.click()
+    await expect(page).toHaveURL(/\/@dean$/)
+  })
+
+  /*
    * The creators band runs edge to edge.
    *
    * It is a full-bleed section outside the content column precisely so the

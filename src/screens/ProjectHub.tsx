@@ -6,6 +6,7 @@ import { CONTENT_TYPE_SEGMENT, type Content } from '@/content/types'
 import { countWords } from '@/content/blocks'
 import { creatorPath, projectPath } from '@/lib/tenant'
 import { coverUrl } from '@/lib/cover'
+import { artUrl } from '@/lib/art'
 import { formatTotal } from '@/lib/format'
 import { AppHeader } from '@/components/AppHeader'
 import { MusicIcon, ReadIcon, VideosIcon } from '@/components/Icons'
@@ -67,7 +68,35 @@ export function ProjectHub() {
           className="flex items-center gap-4 border border-parchment/25 p-4 sm:gap-8 sm:p-8"
         >
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-ember/70">{creator.name}</p>
+            {/*
+              Whose project this is, with a face on it.
+
+              A link as well as a label. The creator's name was already here
+              as plain text, which named the owner while giving no way to
+              reach them — the only route back to the profile was the
+              header's back arrow, and that goes wherever you came FROM
+              rather than to whoever made this.
+
+              Same avatar and same accent ring as the featured rail and the
+              profile itself, including the fallback, so a creator looks like
+              themselves everywhere. `ring-1` rather than the rail's `ring-2`
+              because this is a quarter of the size and a two-pixel ring at
+              24px reads as a border.
+            */}
+            <button
+              onClick={() => navigate(creatorPath(creator.slug))}
+              aria-label={`${creator.name} — creator profile`}
+              className="group flex items-center gap-2"
+            >
+              <img
+                src={creator.avatarUrl ?? artUrl(`${creator.slug}-hero`, 'cover', 120)}
+                alt=""
+                className="size-6 shrink-0 rounded-full object-cover ring-1 ring-ember/50"
+              />
+              <span className="text-[10px] uppercase tracking-[0.4em] text-ember/70 transition group-hover:text-ember">
+                {creator.name}
+              </span>
+            </button>
             <h1 className="mt-2 text-5xl leading-[1.05] tracking-tight text-parchment sm:text-7xl">
               {project.title}
             </h1>
