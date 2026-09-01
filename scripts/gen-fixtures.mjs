@@ -8,7 +8,7 @@ import path from 'node:path'
 import crypto from 'node:crypto'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { cleanTitle } from './lib/titles.mjs'
+import { cleanTitle, isInterludeTitle } from './lib/titles.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const audioDir = path.join(root, 'Bronze')
@@ -45,10 +45,10 @@ const items = files.map((f, i) => {
     id: `itm_${String(i + 1).padStart(2, '0')}`,
     position: i + 1,
     title: cleanTitle(f),
-    isInterlude: /\(skit\)/i.test(f),
+    isInterlude: isInterludeTitle(f),
     // Placeholder until Dean supplies real per-track credits. Interludes get
     // none; everything else is attributed to the owner.
-    credits: /\(skit\)/i.test(f)
+    credits: isInterludeTitle(f)
       ? []
       : [{ creatorSlug: 'deanMaye', name: 'Dean Maye', role: 'artist' }],
     hash,

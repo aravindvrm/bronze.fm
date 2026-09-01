@@ -6,59 +6,416 @@ import type { DocBlock } from '@/content/types'
 
 export const atonomosDocument: DocBlock[] = [
   {
-    "kind": "h",
-    "level": 1,
-    "text": "Autonomous"
-  },
-  {
-    "kind": "h",
-    "level": 1,
-    "text": "The Agentic Enterprise"
+    "kind": "p",
+    "spans": [
+      {
+        "text": "AUTONOMOUS"
+      }
+    ]
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Odean Maye"
+        "text": "The Agentic Enterprise"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "A Framework for Building the AI-Native Organization",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Odean Maye",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Whitepaper | 2026"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Contents"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Executive BriefThe thesis and executive implications"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "1. The Shift Is Bigger Than AIFrom software tools to digital workers"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "2. The Enterprise Was Built for HumansWhy old process architecture becomes the constraint"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "3. Six Principles of the Agentic EnterpriseThe design manifesto"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "4. Organizational TransformationLeading the people and structure through the shift"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "5. Technology TransformationBuilding the infrastructure for autonomous execution"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "6. A Roadmap to the Agentic EnterpriseFive stages of maturity"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "ConclusionThe operating-model mandate"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "AppendixExecutive checklist, metrics, and glossary"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
+    "text": "Executive Brief"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "AI agents introduce a new form of labor, and the enterprise has to be designed accordingly.",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Generative AI is not simply another wave of enterprise software. The important shift is the emergence of software that can perceive context, reason about objectives, choose among alternatives, use tools, and complete multi-step work with limited human supervision. Once software can act rather than merely inform, the central management question changes. The question is no longer where AI can be added to an existing workflow. It is how the enterprise itself should be designed when part of the workforce is digital."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Most organizations still operate through an architecture built around people. A person decides what should happen, a person performs or initiates the work, another person reviews it, and someone hands it to the next function. Software supports those steps, but the workflow assumes that humans remain in the loop at each transition. That architecture made sense when software was deterministic and passive. It becomes a constraint when agents can execute work continuously, in parallel, and across systems."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The agentic enterprise is an organization in which autonomous software agents perform the bulk of routine digital knowledge work while humans remain at the helm: setting objectives, establishing policy, exercising judgment, handling exceptions, and governing outcomes. The goal is not a business without humans. It is a business in which human attention is reserved for the work where it creates the most value."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The implications extend well beyond the AI platform. Organizational structures must evolve so leaders can govern a hybrid workforce. Technology architecture must expose data, tools, and business capabilities to agents while enforcing identity, security, and observability. Operating models must treat agent reliability, exception rates, policy adherence, and business outcomes as first-class management concerns. Transformation therefore has three inseparable layers: organization, operations, and technology."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The transition should be staged. Companies typically begin with AI assistance, progress to bounded task automation, then to agent-driven workflows, department-level autonomy, and eventually an enterprise in which humans increasingly manage objectives while agents coordinate execution. The sequence matters. Autonomy should expand only as identity, controls, interfaces, process definition, and operational confidence mature with it."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The strategic advantage comes from architecture, not from the number of models, copilots, or agents deployed. Organizations that simply attach agents to old processes will inherit old bottlenecks in a more complicated form. Organizations that redesign work around the capabilities of a digital workforce can compress cycle times, increase consistency, and scale execution without scaling coordination overhead at the same rate. The agentic enterprise is therefore best understood as an operating-model transformation enabled by AI, not an AI implementation project."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
+    "text": "The Shift Is Bigger Than AI"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The strategic change is that software is becoming more intelligent. and capable of owning work.",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "For most of the software era, applications waited for people. A user opened a screen, entered information, selected an option, reviewed a result, and initiated the next step. Even sophisticated automation usually lived inside that pattern. Rules engines, workflow tools, robotic process automation, and machine learning reduced manual effort, but the organization remained fundamentally human-driven."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "AI agents change the unit of automation. An agent is an autonomous software system powered by AI that pursues a goal by perceiving its environment, reasoning about what to do next, and taking action through tools. In practical terms, an agent combines four capabilities: a reasoning model that interprets goals and plans work; memory that preserves context; planning and reflection mechanisms that allow the system to break down a goal and adjust its approach; and tools that let it act on the world through APIs, databases, applications, code, messages, and other systems."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That combination matters because the system is no longer limited to returning an answer. It can decide which steps are required, execute them, inspect the results, and continue until a goal is reached or a boundary requires human intervention. A travel agent, for example, can move from understanding a budget and destination to researching options, checking calendars, comparing tradeoffs, and carrying out approved bookings. A support agent can retrieve a customer's history, determine an appropriate resolution, process a return, create a shipping label, and communicate the outcome. The action loop is the important difference."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This shifts the enterprise conversation from productivity tools to workforce design. If software can perform multi-step knowledge work, then job boundaries, process handoffs, application interfaces, governance mechanisms, and management practices all become design choices rather than fixed assumptions. The organization must decide what humans should continue to do, what agents should do, how authority is delegated, and how the two forms of labor coordinate."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The agentic enterprise is the organizational response to that shift. It is an enterprise in which autonomous software agents complete the bulk of routine digital work, with humans steering at a higher level. Humans remain responsible for purpose, strategy, policy, judgment, accountability, and relationships. Agents provide scalable execution. This division of labor is not absolute, but it provides a useful default: humans define and govern; agents execute and escalate."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The distinction is important because many AI programs remain trapped at the feature level. They ask where to place a copilot, where to summarize text, or where to automate an individual task. Those use cases can create value, but they do not require a different enterprise architecture. An agentic operating model does. Once agents are expected to own meaningful portions of a business process, the organization must provide them with identities, permissions, access to tools, machine-readable policies, observability, escalation paths, and lifecycle management. The surrounding system becomes as important as the model itself."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
+    "text": "The Enterprise Was Built for Humans"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The traditional enterprise assumes that people plan, execute, review, and hand work to one another. Agents challenge that assumption.",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Traditional business architecture was built for predictable, human-driven processes. At a simplified level, knowledge work often follows four steps: plan, execute, review, and hand off. A person decides what should happen. A person or human-operated application performs the work. Someone checks it. Then the work moves to another individual or function. Each transition depends on availability, context, communication, and coordination."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That structure creates a hidden tax on the enterprise. Work waits in queues. Context is lost between teams. Decisions are repeated because information does not travel with the task. Managers spend time coordinating dependencies rather than improving outcomes. Processes are optimized around staffing models, working hours, spans of control, and the limits of human attention. Software helps, but the process remains sequential because the process itself assumes a person at each important step."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Generative AI makes a different architecture possible. Agent-executed workflows can move immediately when an event occurs or a decision is made. Handoffs can be automatic. Multiple branches of work can execute in parallel. Agents can carry complete context from one step to the next. Humans can supervise the process at the level of goals, exceptions, and outcomes rather than coordinating every transition."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This does not mean that every process should be fully autonomous. Some decisions demand human judgment, empathy, legal accountability, or strategic discretion. The design objective is not maximum autonomy at any cost. It is to stop treating human involvement as the default simply because the process was designed that way years ago. Every human step should have a reason: judgment, relationship, risk, regulation, creativity, or explicit accountability. Everything else becomes a candidate for agent execution."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The payoff is best understood in three dimensions. First is speed. Work can begin the moment a condition is met, without waiting for manual coordination. Second is efficiency. Automation is no longer bolted onto a human workflow; it becomes part of the workflow's architecture. Third is consistency. Once policies, tools, and controls are encoded correctly, the same operating logic can be applied across time zones and geographies without fatigue or local drift."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The constraint therefore moves. In the traditional enterprise, the bottleneck is often human capacity and coordination. In the agentic enterprise, the bottleneck becomes the quality of objectives, policies, interfaces, data, and governance. That is why adopting agents without redesigning the surrounding architecture produces disappointing results. The enterprise must be rebuilt around a new assumption: software is becoming an active participant in work."
       }
     ]
   },
   {
     "kind": "h",
     "level": 2,
-    "text": "Introduction"
+    "text": "From human-driven to agent-executed"
   },
   {
-    "kind": "p",
-    "spans": [
+    "kind": "table",
+    "head": [
       {
-        "text": "The modern enterprise is at the inflection of a transformational shift. For years, organizations have layered automation onto existing workflows in hopes of efficiency gains, but most of these efforts failed to turn into meaningful business impact. It wasn’t for lack of trying but the traditional business architecture simply was not designed for the robust demands of such software driven mechanisms. Instead it was built for predictable, human-driven processes. Modern generative AI powered automation patterns have exponentially exacerbated this problem and now we are at a crossroad. We must make the choice to re-architect how work flows through the business. We must boldly deconstruct and transform the core of the organization. To realize the agentic enterprise. In such an enterprise, autonomous software agents complete the bulk of digital work, with humans, at the helm, steering at a higher level. Organizations that embrace this paradigm, making AI agents first-class citizens, along with humans, in their operations, will move faster, operate more efficiently, and deliver consistent outcomes at a global scale. This is a call to action for leaders to boldly reimagine their business in a world where AI agents work seamlessly with the human workforce. I outline the core philosophy and guiding principles of the agent-native enterprise, and I provide guidance on how to lead the transformation from organizational, technological, and operational perspectives. Leaders who redesign their organizations today will define the competitive landscape of tomorrow."
+        "spans": [
+          {
+            "text": "BUILT FOR THE OLD REALITY",
+            "strong": true
+          }
+        ]
+      },
+      {
+        "spans": [
+          {
+            "text": "WHAT AGENTIC OPERATIONS ENABLE",
+            "strong": true
+          }
+        ]
       }
+    ],
+    "rows": [
+      [
+        {
+          "spans": [
+            {
+              "text": "Static roles and sequential handoffs"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Dynamic workflows executed by agents"
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Manual coordination between steps"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Automatic handoffs with context preserved"
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "One task moves at a time"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Work can execute in parallel"
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Humans initiate and supervise each step"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Humans set direction, policy, and exceptions"
+            }
+          ]
+        }
+      ]
     ]
   },
   {
     "kind": "h",
-    "level": 2,
-    "text": "Core Principles"
+    "level": 1,
+    "text": "Six Principles of the Agentic Enterprise"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "The agent-native philosophy can be distilled into a set of foundational principles. These principles form the manifesto for how work should be organized and executed when AI agents are treated as primary actors."
-      }
-    ]
-  },
-  {
-    "kind": "h",
-    "level": 3,
-    "text": "Principle 1: Agents are first class citizens"
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "An AI agent should exist in the enterprise the way an employee does. It should be a distinct, accountable identity with its own credentials, its own access policies, and its own manager, never an extension of a human’s login. This sounds like a simple provisioning decision. It is actually the foundation the other five principles depend on, because none of them are enforceable if the enterprise cannot say, precisely, which agent did what, under whose authority, and with what permissions."
+        "text": "A manifesto for how humans and agents should work side by side when software becomes a primary actor in enterprise execution.",
+        "em": true
       }
     ]
   },
@@ -66,80 +423,178 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "The scale of the problem is easy to underestimate. Non-human identities, including service accounts, API keys, OAuth tokens, and now AI agents, already outnumber human identities in most enterprises, with ratios commonly cited between 40:1 and 80:1 and considerably higher in cloud-native environments. Identity and access management was built for the other side of that ratio: for people who join, move between roles, and eventually leave, in a rhythm that HR systems can track and access reviews can keep pace with. Agents don’t file onboarding paperwork. A developer can stand one up in an afternoon, grant it broad permissions to get something working, and move on, while the identity governance program that was supposed to review it is still running its normal quarterly cadence. By the time anyone looks again, the agent has been live in production for months, its permissions have quietly drifted, and if it does something wrong, the honest answer to “who owns this” is often nobody. Recent industry surveys put a number on that gap: a large majority of organizations using AI agents today have little or no formal governance in place for them, and roughly half of security leaders say they have no clear ownership model for their non-human identities at all."
+        "text": "The principles below are intentionally architectural rather than product-specific. They define the conditions that must be true for agentic operations to be safe, scalable, and durable. They also reinforce one another: identity enables accountability; objectives require enforceable policy; execution requires access; access requires auditability; and automation at scale requires machine-interpretable process knowledge."
       }
     ]
   },
   {
-    "kind": "p",
-    "spans": [
+    "kind": "table",
+    "head": [
       {
-        "text": "Agents also break two assumptions that human-centric IAM quietly relies on. First, behavior is not static: two agents with identical role assignments can take different actions depending on context, because they reason and choose rather than execute a fixed script. Second, authority is delegated and chained. An agent frequently acts on behalf of a user, another agent, or a downstream service, so a single action may carry several layers of delegated authority. Attribution has to follow that whole chain, not just the first hop, or accountability collapses the moment something goes wrong."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
+        "spans": [
+          {
+            "text": "#"
+          }
+        ]
+      },
       {
-        "text": "This is why the discipline of agent identity is now being treated as its own field rather than a subset of service-account management. A standards landscape is forming quickly: the NIST AI Risk Management Framework provides the governance and risk vocabulary; NIST Special Publication 800-207 supplies the zero-trust architecture that agent access should be built on; the Cloud Security Alliance’s Agentic Trust Framework and OWASP’s work on agentic application and non-human identity risks catalog the specific failure modes to defend against; and an IETF draft standard for agent identity management is emerging that combines workload identity (SPIFFE/SPIRE), OAuth 2.0, and secure workload messaging into a common approach for authenticating agents and scoping what they can do. None of this is settled yet, but the direction is consistent: agents should be inventoried, individually credentialed, and run through the same governance lifecycle as human accounts, not folded into it."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
+        "spans": [
+          {
+            "text": "PRINCIPLE"
+          }
+        ]
+      },
       {
-        "text": "In practice, that means:"
+        "spans": [
+          {
+            "text": "DESIGN RULE"
+          }
+        ]
       }
-    ]
-  },
-  {
-    "kind": "ul",
-    "items": [
+    ],
+    "rows": [
       [
         {
-          "text": "Dedicated, non-human identities.",
-          "strong": true
+          "spans": [
+            {
+              "text": "1",
+              "strong": true
+            }
+          ]
         },
         {
-          "text": " Every agent gets its own identity and credentials: never a human’s login and never a shared service account borrowed across multiple agents. Borrowing credentials is the path of least resistance during a pilot and the path to the worst finding during an audit."
+          "spans": [
+            {
+              "text": "Agents Are First-Class Citizens"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Dedicated identity, credentials, owner, and lifecycle."
+            }
+          ]
         }
       ],
       [
         {
-          "text": "Short-lived, scoped access over standing permissions.",
-          "strong": true
+          "spans": [
+            {
+              "text": "2",
+              "strong": true
+            }
+          ]
         },
         {
-          "text": " Static, long-lived API keys are exactly the failure mode the identity community is now racing to retire. Agents should authenticate with short-lived, narrowly scoped credentials, provisioned just-in-time for the task at hand, so a compromised or misbehaving agent has a small and time-limited blast radius rather than standing access to everything it might ever need."
+          "spans": [
+            {
+              "text": "Humans Define Objectives"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "People set goals, constraints, and accountability."
+            }
+          ]
         }
       ],
       [
         {
-          "text": "A named human owner for every agent.",
-          "strong": true
+          "spans": [
+            {
+              "text": "3",
+              "strong": true
+            }
+          ]
         },
         {
-          "text": " Every agent should be assigned to a manager the way a human employee would be, accountable for its performance, its scope, and its behavior. Critically, that manager governs the agent; they should not hold or be able to use the agent’s own access keys, roles, or permissions. The roles of governing an identity and being that identity must remain separate. Otherwise, the accountability on which the entire model depends breaks down."
+          "spans": [
+            {
+              "text": "Agents Handle Execution"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Digital work defaults to agents unless a human step is justified."
+            }
+          ]
         }
       ],
       [
         {
-          "text": "Continuous, not periodic, review.",
-          "strong": true
+          "spans": [
+            {
+              "text": "4",
+              "strong": true
+            }
+          ]
         },
         {
-          "text": " Quarterly access reviews were built for humans whose roles rarely change. An agent’s effective permissions and behavior can drift week to week, so the highest-risk agents need automated, near-continuous review rather than a calendar-driven checklist."
+          "spans": [
+            {
+              "text": "Systems Are Agent Accessible"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Critical capabilities are callable through machine interfaces."
+            }
+          ]
         }
       ],
       [
         {
-          "text": "A living registry, not tribal knowledge.",
-          "strong": true
+          "spans": [
+            {
+              "text": "5",
+              "strong": true
+            }
+          ]
         },
         {
-          "text": " The enterprise needs a single, current inventory of every agent in operation, including what it can access, who owns it, and what it has done. That way, “which agents do we actually have running?” is always an answerable question, not an open investigation."
+          "spans": [
+            {
+              "text": "Agent Actions Are Auditable"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Every important action is observable, traceable, and governable."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "6",
+              "strong": true
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Documentation Is Agent Interpretable"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Processes and policies are represented in executable or structured form."
+            }
+          ]
         }
       ]
     ]
@@ -148,200 +603,21 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Implementation considerations for Principle 1:"
-      }
-    ]
-  },
-  {
-    "kind": "ul",
-    "items": [
-      [
-        {
-          "text": "Agent Identity Registry:",
-          "strong": true
-        },
-        {
-          "text": " Stand up a central, mandatory registry for every agent deployed anywhere in the enterprise: identity, owner, scope, credentials, and status. No agent goes into production without an entry."
-        }
-      ],
-      [
-        {
-          "text": "Non-Human IAM Platform:",
-          "strong": true
-        },
-        {
-          "text": " Extend or replace legacy IAM with a platform purpose-built for machine and agent identities that supports short-lived credentials, delegation claims, and per-action scoping instead of static keys and broad role assignments."
-        }
-      ],
-      [
-        {
-          "text": "Ownership and Accountability Model:",
-          "strong": true
-        },
-        {
-          "text": " Require a named human owner for every agent, distinct from whoever administers its credentials. Make that ownership a factor in performance reviews the same way owning a system or a process would be."
-        }
-      ],
-      [
-        {
-          "text": "Kill Switches and Revocation:",
-          "strong": true
-        },
-        {
-          "text": " Ensure every agent’s access can be suspended immediately and independently of other agents sharing its role or team, without waiting on a broader system change."
-        }
-      ],
-      [
-        {
-          "text": "Alignment to Emerging Standards:",
-          "strong": true
-        },
-        {
-          "text": " Track the NIST AI RMF, NIST SP 800-207, the CSA Agentic Trust Framework, and OWASP’s agentic and non-human identity guidance, and architect toward them now rather than retrofitting later once they harden into requirements."
-        }
-      ]
-    ]
-  },
-  {
-    "kind": "h",
-    "level": 3,
-    "text": "Principle 2: Humans define objectives"
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Human workers should focus on defining objectives, constraints, and governance, while agents carry out the tasks to achieve those objectives. This principle defines a new division of labor: humans are the strategists and governors, and agents are the executors. The role of leadership and subject-matter experts is to translate business strategy into goals for agents, set the policies and constraints (e.g. compliance rules, budget limits, ethical guidelines) within which agents must operate, and then let the agents figure out the "
-      },
-      {
-        "text": "“how”",
-        "em": true
-      },
-      {
-        "text": " through autonomous action and decision-making."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "In practice, this might mean a manager specifies the desired outcome (e.g. “onboard this customer within 24 hours under policy guidelines”) and the AI agents handle all the steps – pulling data, filling forms, sending welcome emails, scheduling follow-ups – subject to any constraints (e.g. “if fraud check fails, require human approval”). Humans no longer micromanage each step; instead, they program the guardrails and let agents navigate within them. As a result, organizational focus shifts to goal-setting, rule-setting, and training of AI. Roles like AI orchestrators or policy managers emerge, tasked with encoding business rules and Standard Operating Procedures (SOPs) into machine-readable formats that agents can consume (more on this in Principle 5). Workers become more like coaches and supervisors of agents: they define success criteria and acceptable boundaries, then monitor outcomes rather than performing the work directly."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "From a technical standpoint, implementing this principle requires systems for translating human intents into agent actions. This could involve declarative process definitions and policy-as-code frameworks. For example, business process management (BPM) tools or workflow engines can allow humans to define at a high level what needs to happen, and the platform then delegates subtasks to agents. Advanced AI planning algorithms (or even large language models tuned for following instructions) can take goals and break them into actionable plans for agents. It is essential to have a central place to encode constraints and business rules – such as an AI governance system or rules engine – that all agents consult to ensure their actions stay within prescribed policies. The Control Plane plays this role, embedding enterprise-wide rules, compliance checks, and policy enforcement directly into workflows that agents execute . Think of it as a digital manager that continuously aligns agent activities with business objectives and constraints."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Operationally, shifting humans to goal-setters and agents to doers requires robust oversight and feedback loops. Humans will monitor dashboards and reports on what agents are doing, intervening only when results deviate from goals or when policies need adjustment. A key practice is human-in-the-loop feedback: humans should review agent performance and outcomes regularly, providing corrections or updates to goals/policies as needed. This continuous feedback allows agents to improve over time and ensures that strategic intent is being met. Importantly, this principle doesn’t mean humans abdicate responsibility – they remain accountable for setting the right direction and ensuring the AI behaves appropriately. It does mean, however, that once the direction is set, the heavy lifting of execution is delegated. Humans should be there in critical moments to guide, verify and supervise. By focusing on guidance over execution, enterprises can dramatically increase speed and throughput – decisions and tasks can be executed instantly by agents as soon as humans make a call on the objectives. In fact, in a well-architected agent-native enterprise, when a decision or goal is set, every relevant agent across the enterprise can spring into action almost immediately, without waiting for manual coordination ."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Implementation considerations for Principle 2:",
-        "strong": true,
-        "em": true
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Objective Definition Frameworks:",
+        "text": "PRINCIPLE 1",
         "strong": true
-      },
-      {
-        "text": " Develop standard ways to specify goals and tasks for AI agents (e.g. structured requests, process templates, or natural language instructions that agents can parse). Ensure goals are tied to business KPIs so agents optimize for true outcomes, not proxies."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Policy & Constraint Libraries:",
-        "strong": true
-      },
-      {
-        "text": " Encode organization policies, regulatory requirements, and business rules in a central repository (using policy-as-code tools or rule engines). For example, define approval thresholds, data access rules, and compliance checks in machine-readable form. Agents should query this library before acting."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Governance Boards:",
-        "strong": true
-      },
-      {
-        "text": " Establish an AI governance committee or role (e.g. AI Policy Officer) responsible for updating and reviewing the goals/constraints given to agents. This group ensures that as business strategy or regulations change, the agent directives are adjusted accordingly."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Human Oversight Mechanisms:",
-        "strong": true
-      },
-      {
-        "text": " Implement dashboards and alerts for human supervisors to monitor agent activities. Set up review checkpoints (either time-based or event-based) where humans validate that the outcomes agents produce indeed align with the high-level intent. This might include sampling agent decisions for quality assurance, much like a manager reviews a subordinate’s work."
       }
     ]
   },
   {
     "kind": "h",
-    "level": 3,
-    "text": "Principle 3: Agents handle execution"
+    "level": 1,
+    "text": "Agents Are First-Class Citizens"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Every digital action is performed by an AI agent unless there’s a good reason for a human to do it. In an agent-native organization, mundane and routine digital tasks are no longer the default domain of human employees, they are delegated to software agents. Humans step in only where uniquely human judgment, creativity, or interpersonal interaction is required. This represents a reversal of the traditional mindset: instead of automating only what we explicitly identify, assume everything automatable should"
-      },
-      {
-        "text": "be automated, and justify any manual intervention."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Implementing this principle demands a cultural shift. Teams must cultivate an “automation-first” mentality where they proactively identify tasks that can be handed off to AI agents. Leadership should encourage human employees to view AI agents as part of the team. In practice, organizations might conduct systematic process audits to catalog repeatable tasks and then implement AI agents to handle those tasks. Over time, employees transition from being task performers to task supervisors and strategists, overseeing fleets of agents. This can improve employee satisfaction by freeing people from drudgery to focus on higher-level strategy, creativity, and problem-solving."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Operationally, process execution must become dynamic and continuous. As soon as a business event occurs or a decision is made, the relevant agents are triggered to act – without waiting for human initiation. Organizations need to establish policies for how agents escalate issues or uncertainties to humans. For instance, if an agent encounters an edge case outside its training or a decision above a certain risk threshold, it should pause and request human input. Humans thus serve as a fail-safe, a moral barometer and a strategic compass, while the agents handle the bulk of transactions. The end state is an agentic workforce dynamically orchestrating work, with humans providing oversight and handling only exceptions and strategic decisions."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Implementation considerations for Principle 1:",
-        "strong": true,
+        "text": "An agent should exist the way an employee does: with its own identity, explicit scope, and revocable authority.",
         "em": true
       }
     ]
@@ -350,85 +626,111 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Automation Inventory:",
+        "text": "An AI agent should exist in the enterprise the way an employee does: as a distinct, accountable identity with its own credentials, access policies, and manager, never as an extension of a human’s identity. This sounds like a simple provisioning decision. It is actually the foundation the other five principles depend on, because none of them are enforceable if the enterprise cannot say precisely which agent did what, under whose authority, and with what permissions."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The scale of the problem is easy to underestimate. Non-human identities, including service accounts and API keys, already outnumber human identities in most enterprises, with ratios commonly cited between 40:1 and 80:1, and considerably higher in cloud-native environments. Identity and access management was built for the other side of that ratio: people who join, move between roles, and eventually leave in a rhythm that HR systems can track and periodic access reviews can keep pace with."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agents operate differently. A developer can stand one up in an afternoon, grant it broad permissions to get something working, and move on while the identity governance program that was supposed to review it is still running its normal quarterly cadence. By the time anyone looks again, the agent may have been live in production for months, its permissions may have quietly drifted, and if something goes wrong, the honest answer to “who owns this?” may be nobody. Recent industry surveys illustrate the gap: a large majority of organizations using AI agents have little or no formal governance in place for them, and roughly half of security leaders report having no clear ownership model for their non-human identities."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agents also break two assumptions that human-centric IAM quietly relies on. First, behavior is not static. Two agents with identical role assignments can take different actions depending on context because they reason and choose rather than simply execute a fixed script. Second, authority can be delegated and chained. An agent may act on behalf of a user, invoke another agent, and interact with downstream services, creating several layers of delegated authority within a single transaction. Attribution must follow that entire chain. Otherwise, accountability collapses the moment something goes wrong."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This is why agent identity is emerging as its own discipline rather than simply an extension of service-account management. A standards landscape is forming quickly. The NIST AI Risk Management Framework provides a governance and risk vocabulary, while NIST Special Publication 800-207 provides a zero-trust architecture applicable to agent access. The Cloud Security Alliance’s Agentic Trust Framework and OWASP’s work on agentic applications and non-human identity risks identify specific failure modes, while emerging IETF work is exploring approaches that combine workload identity, OAuth 2.0, and secure workload messaging. The standards are still evolving, but the direction is consistent: agents should be individually identifiable, independently governed, and explicitly accountable."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "In practice, every production agent should have its own non-human identity and credentials, never a human login or a shared service account. Its access should be narrowly scoped and, wherever possible, short-lived and provisioned only when required. This limits the blast radius of a compromised or misbehaving agent and avoids creating standing privileges that persist long after their original purpose. Every agent should also have a named human owner accountable for its scope, performance, and behavior. That ownership must remain separate from credential administration: governing an identity and being able to impersonate that identity are fundamentally different responsibilities."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "These identities should be maintained in a central, living registry that provides a current view of every agent operating across the enterprise, including who owns it, what it is authorized to do, what systems it can access, and whether it is active. No agent should enter production without being registered. This registry becomes the foundation for managing the digital workforce in much the same way that HR and identity systems provide a system of record for the human workforce."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Governance must also operate at machine speed. Quarterly access reviews were designed for human roles that change relatively slowly. An agent’s permissions, tools, integrations, and behavior can evolve much faster. Higher-risk agents therefore require automated, continuous or near-continuous review, with the ability to revoke credentials, suspend access, or shut down an individual agent immediately without disrupting unrelated agents or systems."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The result is a lifecycle model for agent identity that extends from registration and provisioning through authorization, monitoring, review, and eventual decommissioning. As standards mature, enterprises should align this model with emerging NIST, CSA, OWASP, IETF, and related guidance rather than waiting for those practices to become formal requirements. The objective is not simply better identity management. It is to create a governance foundation capable of answering, at any moment: What agents are operating in the enterprise, what are they allowed to do, on whose authority are they acting, and who is accountable for them?"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "EXECUTIVE QUESTION",
         "strong": true
-      },
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
       {
-        "text": " Create an enterprise-wide inventory of processes and tasks, identifying which can be executed by AI agents. Start with high-volume, routine processes to maximize impact."
-      },
+        "text": "Can we identify every production agent, its owner, its permissions, and its current status without launching an investigation?",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
       {
-        "text": "Digital Workforce Training:",
+        "text": "PRINCIPLE 2",
         "strong": true
-      },
-      {
-        "text": " Invest in platforms to train and deploy AI agents for specific roles. Ensure each agent’s scope and abilities are well-defined."
-      },
-      {
-        "text": "Exception Handling Protocols:",
-        "strong": true
-      },
-      {
-        "text": " Define clear rules for when agents must defer to humans – e.g. approval requirements, novel situations, or ethical judgments. Implement an escalation system so agents automatically hand off such cases with context."
-      },
-      {
-        "text": "Change Management:",
-        "strong": true
-      },
-      {
-        "text": " Communicate the shift to all staff, emphasizing that agents free them from grunt work rather than threaten their jobs. Provide training for employees to effectively supervise and collaborate with AI agents."
       }
     ]
   },
   {
     "kind": "h",
-    "level": 3,
-    "text": "Principle 4: All Systems Are Agent Accessible"
+    "level": 1,
+    "text": "Humans Define Objectives"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "All critical business functions should be exposed via APIs or machine-accessible interfaces, not buried exclusively behind human-facing UIs. In an agent-native enterprise, if something is “important,” it means agents must be able to interact with it directly. This principle addresses a major practical barrier to automation: many enterprise applications are designed for humans (with buttons and forms) rather than for programmatic control. The agent-native philosophy pushes organizations to adopt an API-first architecture, where any valuable capability – from updating a customer record to approving an invoice – is available as a service or API call that an agent can invoke. If a system lacks an API, the enterprise should treat that as technical debt to be resolved (e.g. by implementing RPA or replacing the system)."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Adopting this principle has far-reaching technical implications. Enterprises may need to modernize legacy systems or integrate wrappers around them. Modern cloud software generally offers APIs, but older on-premise or niche SaaS might not. The goal is to avoid situations where an AI agent is stymied because the only way to perform an action is for a human to click through a GUI. By exposing functionality as services, applications become “headless” back-ends that agents can drive. In agent-native architectures, traditional applications will evolve into “atomic business capabilities consumed by agents,” essentially turning apps into modular services accessible via API calls. For example, instead of a human opening an HR system’s UI to onboard an employee, an agent could call an “CreateEmployee” API provided by the HR system. Or an agent could query a “PricingService” instead of a person manually looking up a pricing spreadsheet."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Event-driven integration is another key aspect – important events in the business (new order placed, support ticket created, etc.) should emit events that agents subscribe and react to in real-time without human prompting. The enterprise integration layer thus shifts from point-to-point manual integrations to an event bus or service network that agents can discover and utilize. A robust tooling ecosystem is also needed: AI agents will require a suite of tools (functions like sending emails, retrieving database entries, invoking machine learning models). Ensuring that all these tools exist and have standard interfaces is crucial. This might involve developing internal APIs for anything that agents need which isn’t already available. A practical recommendation is to adopt “Everything as a Service” internally – treating business functions as services with well-defined APIs."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "From an organizational perspective, an API-first approach might require upskilling teams and possibly reorganizing IT departments. Product and engineering teams should prioritize API development and documentation whenever building or buying software. Data and functionality silos need to be broken down. Organizations should establish an internal developer platform or catalog where all available APIs and tools are published for easy access by those building AI agents. In essence, the organization needs to think of itself as a software platform where human-facing UIs are just one of many consumers of the core services – with AI agents now being primary consumers. This is aligned with the growing trend of “composable enterprise” architecture, where capabilities are modular and can be recombined dynamically. It’s also a guard against vendor lock-in: insisting that critical SaaS vendors provide APIs (or choosing vendors that do) ensures your agents can orchestrate across systems seamlessly."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Operationally, having everything as an API/tool means agents can work at high speed and scale, but it also introduces new management needs. Organizations will have to manage API credentials, rate limits, and dependencies. They should implement robust API governance and monitoring – every time an agent calls a service, that transaction should be logged (tying into Principle 4, observability). Also, as more processes rely on APIs, reliability of those services becomes even more crucial. Practices from SRE (Site Reliability Engineering) and DevOps – such as monitoring the uptime of internal services, retry mechanisms, and circuit breakers for failing calls – become part of operational excellence for AI agents. Essentially, the enterprise must treat its APIs as mission-critical infrastructure. If an important API is down, it’s akin to all your human workers suddenly losing access to that function – work grinds to a halt. Thus, investments in integration testing, sandbox environments, and API performance tuning pay even greater dividends in an agent-native context."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Implementation considerations for Principle 3:",
+        "text": "Humans set the goal and the guardrails. Agents determine how to execute within them, while humans remain accountable for the outcome.",
         "em": true
       }
     ]
@@ -437,11 +739,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Enterprise API Inventory:",
-        "strong": true
-      },
-      {
-        "text": " Catalog all existing APIs and identify gaps where critical functions lack programmatic access. For each major system (CRM, finance, etc.), ensure there is a strategy to expose needed actions via API or automation scripts."
+        "text": "Human workers should increasingly focus on defining objectives, constraints, and governance, while agents determine how to execute the work required to achieve those objectives. This creates a new division of labor within the enterprise: humans provide direction, judgment, and accountability, while agents provide execution. Rather than prescribing every step in a process, leaders and subject-matter experts translate business strategy into desired outcomes, establish the boundaries within which agents may operate, and allow agents to determine the appropriate course of action."
       }
     ]
   },
@@ -449,11 +747,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Legacy System Wrapping:",
-        "strong": true
-      },
-      {
-        "text": " For legacy or third-party systems without APIs, consider RPA wrappers or middleware that expose a pseudo-API. For instance, use RPA bots to interact with a legacy UI but provide a REST API for agents to trigger those bots."
+        "text": "Consider customer onboarding. A manager might define the objective as, “Onboard this customer within 24 hours while complying with all applicable policies.” The organization would establish the constraints around that objective, such as required identity verification, spending or credit thresholds, data access policies, and conditions requiring human approval. Agents could then determine and execute the necessary steps, pulling data, completing forms, communicating with the customer, coordinating across systems, and scheduling follow-ups. If a fraud check fails or another defined risk threshold is crossed, the workflow escalates to a human. The human defines the destination and the boundaries; the agents navigate the path."
       }
     ]
   },
@@ -461,11 +755,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Developer Platform & Standards:",
-        "strong": true
-      },
-      {
-        "text": " Create internal standards and tools for API development (consistent authentication, logging, error handling). Provide a self-service portal where teams can discover and request access to APIs and data for their agents."
+        "text": "This represents a meaningful shift from traditional management. Much of management today involves coordinating activities: assigning tasks, tracking their completion, resolving handoffs, and ensuring that people follow established processes. In an agentic enterprise, more of that coordination can happen autonomously. Human attention moves upward toward defining what success looks like, establishing acceptable boundaries, resolving ambiguity, and evaluating outcomes. Employees increasingly become supervisors, coaches, and governors of digital work rather than the default performers of every task within it."
       }
     ]
   },
@@ -473,11 +763,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Microservices and Modularization:",
-        "strong": true
-      },
-      {
-        "text": " Encourage breaking monolithic applications into microservices or at least adding a service layer. Modular business logic so that even internal processes are callable services that agents could leverage ."
+        "text": "For this model to work, objectives must be explicit enough for agents to act upon and measurable enough for humans to determine whether they succeeded. Enterprises therefore need consistent ways to translate business intent into objectives that agents can consume, whether through structured requests, process templates, declarative definitions, or natural language interfaces. Those objectives should connect directly to business outcomes and KPIs. An agent told simply to “resolve support cases faster,” for example, might optimize for speed at the expense of customer satisfaction. A well-defined objective makes the intended outcome and its boundaries clear."
       }
     ]
   },
@@ -485,11 +771,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Event-Driven Architecture:",
-        "strong": true
-      },
-      {
-        "text": " Implement an event bus or messaging system to broadcast important business events. Ensure agents are designed to subscribe to relevant events (e.g. an “OrderPlaced” event triggers an order-fulfillment agent workflow)."
+        "text": "Constraints must be equally explicit. Regulatory requirements, approval thresholds, data access rules, financial limits, ethical guidelines, and other business policies cannot remain scattered across documents or dependent on institutional knowledge if autonomous systems are expected to follow them consistently. They need to be encoded in forms that agents and orchestration platforms can evaluate during execution. Policy-as-code frameworks, rules engines, workflow systems, and similar mechanisms can turn these constraints into enforceable operating boundaries rather than advisory documentation."
       }
     ]
   },
@@ -497,93 +779,71 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "API Governance:",
-        "strong": true
-      },
+        "text": "At the architectural level, these objectives and constraints form part of an enterprise control plane that governs how autonomous work is executed. The control plane provides a common mechanism for translating objectives into coordinated activity while applying policies, compliance requirements, approvals, and human-in-the-loop checkpoints along the way. Agents may retain considerable freedom in determining how to accomplish a task, but that freedom exists within boundaries established by the enterprise. Autonomy, in this model, does not mean the absence of control. It means allowing agents discretion over execution while maintaining centralized control over objectives, authority, and constraints."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
       {
-        "text": " Monitor usage of APIs by agents – track performance, failures, and security. Apply rate limiting or concurrency controls to prevent runaway agents from overwhelming services. Include APIs and integrations in disaster recovery planning (agents should gracefully handle when a service is unavailable)."
+        "text": "Human oversight therefore remains essential, but its nature changes. Instead of approving every routine action, people monitor outcomes, exceptions, and risk. Dashboards, alerts, and review mechanisms provide visibility into whether agents are achieving their objectives and remaining within established boundaries. Higher-risk decisions may require explicit human approval, while lower-risk activity can proceed autonomously and be reviewed through sampling or exception-based monitoring. As confidence in an agent or process increases, organizations can deliberately adjust these thresholds and expand the scope of autonomous execution."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This model does not transfer accountability from humans to machines. Leaders remain responsible for defining the right objectives, establishing appropriate constraints, determining where human judgment is required, and correcting the system when outcomes diverge from intent. Governance bodies or designated AI policy owners should continuously review these objectives and constraints as strategies, regulations, and risk tolerances change. The organization is not removing humans from the operating model; it is concentrating human involvement where judgment and accountability create the most value."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The advantage is speed and leverage. Once an objective is established, the enterprise no longer needs to wait for a chain of people to interpret the decision, assign work, coordinate across departments, and move each task forward. Relevant agents can begin acting immediately, coordinating across systems and with one another while escalating only the decisions that genuinely require human intervention. The management model shifts from directing activity to defining intent: humans decide what the enterprise is trying to accomplish and the boundaries within which it may operate; agents determine how to get the work done."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "EXECUTIVE QUESTION",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Are leaders specifying outcomes and constraints clearly enough that execution can be delegated without micromanagement?",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "PRINCIPLE 3",
+        "strong": true
       }
     ]
   },
   {
     "kind": "h",
-    "level": 3,
-    "text": "Principle 5: Agent Actions Are Auditable"
+    "level": 1,
+    "text": "Agents Handle Execution"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Every action taken by an AI agent should be observable, traceable, and auditable from the start. When software agents are executing business processes, it’s imperative to have complete visibility into what they’re doing, why they’re doing it, and whether it’s producing the correct results. This principle is about building trust and accountability into an agent-native enterprise. Just as traditional enterprises have audit trails for human actions (e.g. who approved a payment and when), AI agents must produce an analogous (or even more detailed) trail. In fact, because agents can act much faster and potentially at a larger scale than humans, having robust monitoring and logging is even more critical – it’s the only way to maintain control and compliance when much of the work is handled by autonomous systems."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Concretely, this means instrumenting agents and processes such that every significant event is logged: what decision was made, what data was accessed, which API was called, what outcome occurred, etc. Each agent action should be timestamped and tied to a “reason” or context. This could include storing the input prompt and output of an AI model for later review. The enterprise should be able to reconstruct the sequence of steps an agent took on any given transaction – in other words, achieve "
-      },
-      {
-        "text": "end-to-end traceability",
-        "em": true
-      },
-      {
-        "text": ". In an agent-native environment, nothing important should happen in a black box. If an agent executes a trade or changes a customer record, stakeholders should be able to inspect that action after the fact (or even in real-time) with as much clarity as if a human had done it – including understanding "
-      },
-      {
-        "text": "why",
-        "em": true
-      },
-      {
-        "text": " it happened."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "To implement this, enterprises need an observability stack tailored to AI operations. This might include specialized logging for AI decisions (e.g. logging the model’s confidence score or which rule triggered a certain branch), distributed tracing across services to follow a transaction through multiple agents/tools, and unified dashboards to monitor agent activity volumes, success/failure rates, and key performance metrics. Traditional IT monitoring covers servers and apps; AI ops monitoring must cover business process metrics and agent decision metrics. For instance, you might track how many cases an agent handled today, how often it had to defer to a human, or how long each case took. Tools from AIOps (AI for IT Operations) can be applied – some organizations feed agent logs into analytics or even other AI systems that look for anomalies or potential issues (like an agent that suddenly starts outputting unusual results)."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Auditability is not just about internal needs but also external compliance. Many industries (finance, healthcare, etc.) have regulations requiring certain activities to be auditable and explainable. If an AI agent declines a loan application or adjusts a medical appointment, the organization may need to show regulators the justification. That’s why explainability is a key aspect of this principle: wherever possible, agents should be able to provide a rationale for their actions, or at least the enterprise should store enough context to derive one later . This can involve techniques like logging which rules were fired, or using XAI (explainable AI) tools for machine learning models to record salient features. Additionally, audit logs must be tamper-proof and retained as per compliance requirements. Many firms integrate agent logs into their existing SIEM (Security Information and Event Management) or compliance archival systems."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Organizationally, ensuring observability by default might require establishing new roles or teams. For example, a "
-      },
-      {
-        "text": "“",
-        "em": true
-      },
-      {
-        "text": "AI Controller” role (akin to a financial controller) might be responsible for periodically auditing AI agent decisions and compliance. An AI Ethics or Risk board might review logs to ensure agents are not exhibiting biased or unsafe behavior. The enterprise should promote a mindset that if it isn’t logged, it didn’t happen – meaning developers and process owners must design agents with instrumentation from day one, not as an afterthought. This can be enforced via development guidelines or checklists (e.g. any new agent must include logging and the ability to output an audit report)."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Finally, observability extends to real-time awareness: operational dashboards for the NOC (Network/Operations Center) or process owners should show the pulse of agent-driven processes. If an agent is stuck in a loop or erroring out, it should be apparent quickly so it can be fixed or taken offline. In effect, managing a fleet of AI agents becomes somewhat analogous to managing a fleet of employees – you need to know who’s doing what and how well, except here “who” are digital workers whose activities can be precisely recorded. The reward is not only preventing disasters but also continuous improvement: with rich telemetry on processes, the enterprise can identify bottlenecks or failure points and retrain or adjust agents to perform better (a virtuous cycle of optimization)."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Implementation considerations for Principle 4:",
+        "text": "Every digital action should default to an agent unless there is a good reason for a human to perform it.",
         "em": true
       }
     ]
@@ -592,11 +852,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Unified Logging Framework:",
-        "strong": true
-      },
-      {
-        "text": " Adopt or build a logging framework that all agents use. Ensure logs capture inputs, outputs, decisions, and any rule/ML model influences on each decision. Structure logs in a way that they can be queried for audit (e.g. JSON logs with keys for action type, outcome, etc.)."
+        "text": "If humans define the objectives and boundaries of the agentic enterprise, agents should become its primary engine of digital execution. Every digital action should be performed by an AI agent unless there is a compelling reason for a human to do it. Routine analysis, data entry, system updates, coordination, communications, monitoring, and other repeatable digital activities should no longer default to human labor simply because that is how the work has historically been performed. Humans should remain directly involved where judgment, creativity, accountability, empathy, or interpersonal interaction materially improves the outcome."
       }
     ]
   },
@@ -604,11 +860,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Audit Trail Systems:",
-        "strong": true
-      },
-      {
-        "text": " Integrate agent logs with existing audit/compliance systems. For instance, if you have an audit requirement for financial transactions, ensure the agent’s actions on those transactions are recorded in the same audit repository. Use immutability techniques (write-once storage or blockchain-style ledger if appropriate) to prevent tampering."
+        "text": "This reverses the traditional approach to automation. For decades, organizations have started with human-operated processes and selectively automated individual tasks when the economics justified the investment. The agentic enterprise begins with the opposite assumption: if work can be performed safely and effectively by an agent, it should be. Manual execution becomes the exception that must be justified rather than the organizational default. This does not mean automating everything indiscriminately. It means systematically determining where human involvement creates meaningful value and designing the rest of the workflow for autonomous execution."
       }
     ]
   },
@@ -616,11 +868,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Real-Time Monitoring:",
-        "strong": true
-      },
-      {
-        "text": " Implement dashboards that show key metrics of agent operations (throughput, success rate, error rate, queue lengths, etc.). Set up alerts – for example, if an agent starts erroring out on more than 5% of tasks in a hour, page an operator."
+        "text": "Making that shift requires organizations to understand how work actually happens. Enterprises should develop a comprehensive view of their processes and the tasks within them, identifying activities that are repetitive, rules-based, digitally executable, or otherwise suitable for agents. High-volume and routine work provides a natural starting point, but the longer-term objective is broader than task automation. Organizations should continually evaluate entire workflows to determine where agents can assume responsibility for execution and where human participation should remain."
       }
     ]
   },
@@ -628,11 +876,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Traceability and Explainability:",
-        "strong": true
-      },
-      {
-        "text": " Where applicable, log the “why” behind decisions. For rule-based agents, this could be the rule ID or condition that was true. For learning-based agents, consider storing model version and any confidence scores or attention weights. Use tools that can analyze model decisions (like LLM prompt+response logs) to provide post-hoc explanations."
+        "text": "As agents take on more of this work, the role of employees changes with it. People move from performing routine tasks to supervising outcomes, resolving exceptions, improving processes, and directing increasingly capable digital workers. A finance professional who once spent hours gathering information and reconciling records might instead supervise agents performing those activities and focus on interpreting anomalies or making consequential decisions. A customer service employee might spend less time answering repetitive questions and more time handling situations requiring empathy, negotiation, or discretion. Human capacity shifts toward the work where human capabilities matter most."
       }
     ]
   },
@@ -640,11 +884,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Ownership and Governance:",
-        "strong": true
-      },
-      {
-        "text": " Assign each AI agent an owner (a human product/process owner responsible for it) . That owner should regularly review the agent’s logs and performance. Additionally, set up a cadence (e.g. monthly AI audit meetings) where various stakeholders (IT, compliance, business line) review agent operation reports – similar to how financials are reviewed."
+        "text": "Execution must also become continuous rather than dependent on human initiation. In a traditional enterprise, an event often creates a queue: an order arrives, a case is opened, a document is submitted, or a decision is made, and someone must notice it, interpret it, and initiate the next step. In an agentic enterprise, business events should trigger action directly. Relevant agents can respond as events occur, coordinate across systems, invoke other agents or services, and continue the workflow without waiting for someone to manually move the process forward. This allows work to flow at machine speed rather than organizational speed."
       }
     ]
   },
@@ -652,157 +892,71 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Built-in Reversibility:",
+        "text": "Autonomous execution, however, requires deliberate boundaries for when agents should stop. Organizations must define exception-handling protocols that specify when uncertainty, risk, novelty, or policy requires human intervention. An agent encountering an unfamiliar situation, exceeding an authorization threshold, detecting conflicting information, or facing a consequential judgment should be able to pause and escalate the issue with the relevant context already assembled. The objective is not to remove humans from the process entirely, but to make human involvement intentional and valuable rather than routine."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This requires a digital workforce platform capable of deploying agents into clearly defined roles, managing their capabilities, and coordinating their work at scale. Each agent should have an explicit scope of responsibility and a clear understanding of the tools, systems, and actions available to it. As the number of agents grows, organizations will increasingly manage them as a workforce rather than as isolated automation projects, with defined responsibilities, performance expectations, escalation paths, and oversight."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The transition also requires thoughtful change management. Employees need to understand how their roles will evolve and develop the skills required to supervise, collaborate with, and improve agent-driven processes. Leaders should be clear that the objective is not simply to insert agents into existing workflows, but to reconsider how work should be performed when digital execution is abundant, fast, and increasingly capable. That requires new skills, new operating practices, and in many cases a fundamental redesign of jobs themselves."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The end state is an enterprise in which work moves continuously from intent to execution. Business events trigger agents, agents coordinate and act, and humans intervene where judgment or accountability demands it. Instead of people spending their days moving information between systems and pushing processes forward, the digital workforce handles the mechanics of execution while the human workforce focuses on the decisions, relationships, creativity, and oversight that determine where the enterprise should go."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "EXECUTIVE QUESTION",
         "strong": true
-      },
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
       {
-        "text": " Design processes so that any agent action can be rolled back if found erroneous. This may involve keeping checkpoints or designing transactions to be compensatable. As noted in one principle, "
-      },
-      {
-        "text": "“approvals, audit trails, and rollback should be native behaviors”",
+        "text": "Which human steps in our highest-volume workflows are still there because they are necessary, and which are simply inherited?",
         "em": true
-      },
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
       {
-        "text": " of the automation platform . If an agent mistakenly updates data, there should be an easy way to revert or correct it (possibly automated or via a human-triggered action)."
+        "text": "PRINCIPLE 4",
+        "strong": true
       }
     ]
   },
   {
     "kind": "h",
-    "level": 3,
-    "text": "Principle 6: All Documentation is Agent Interpretable"
+    "level": 1,
+    "text": "All Systems Are Agent Accessible"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Every important process, policy, or procedure in the enterprise should be written in a form that machines can understand and execute, with human-readable documentation as a byproduct (not the other way around). In traditional organizations, processes and policies are often documented in prose (Word documents, wiki pages) intended for human consumption. An agent-native enterprise inverts this: it prioritizes formal, structured definitions that an AI agent can directly interpret (or compile into executable form), ensuring that processes are unambiguous and actionable by machines. Humans can still read these definitions (perhaps with the help of tools), but the key is that nothing lives solely as a PDF or a flowchart on paper – if it’s important enough to have a process, it should exist as code or a data specification in the operational systems."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "This principle stems from recognizing that "
-      },
-      {
-        "text": "ambiguity and informality are the enemies of automation",
-        "em": true
-      },
-      {
-        "text": ". When a policy is only described in natural language, AI agents must rely on complex NLP to follow it, which may lead to errors or inconsistencies. Instead, policies should be encoded in deterministic ways. For example, a organization travel policy could be codified in a rules engine (“If airfare > $X and employee level < Y, require manager approval”) rather than just a paragraph in an HR handbook. Similarly, SOPs (Standard Operating Procedures) for handling an incident should be translated into a workflow script or decision tree that an agent can execute step by step ."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "There are several approaches to make processes machine-readable:"
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Workflow Automation Languages:",
-        "strong": true
-      },
-      {
-        "text": " Use BPMN diagrams, workflow DSLs (Domain Specific Languages), or even YAML/JSON configurations to map out processes. These are then interpreted by orchestration engines or agents. Many helpdesk and ops teams, for instance, have begun encoding SOPs as interactive decision trees or state machines that an AI can walk through . This ensures consistency and allows AI to handle routine cases exactly as a human would – because it’s following the same decision tree a human would have, only encoded formally."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Declarative Policies (“Policy as Code”):",
-        "strong": true
-      },
-      {
-        "text": " This involves writing policies in code-like formats (using languages or engines like Open Policy Agent’s Rego, or AWS Config rules, etc.). For access control, deployment rules, compliance checks – treat them like unit tests or if-then logic that can be evaluated by machines continuously. One example in AI operations: codifying escalation paths and approval matrices such that an agent can automatically know who to ask (and how) when a certain condition is met, rather than relying on tribal knowledge. A transparent governance model with "
-      },
-      {
-        "text": "policy-as-code and case memory",
-        "strong": true
-      },
-      {
-        "text": " makes actions explainable and auditable, as noted earlier ."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Executable Contracts and Documents:",
-        "strong": true
-      },
-      {
-        "text": " In some domains, contracts or requirements can be made executable. For instance, Service Level Agreements (SLAs) could be tied to monitors that automatically trigger agents if conditions aren’t met. Or take the concept of "
-      },
-      {
-        "text": "“smart contracts”",
-        "em": true
-      },
-      {
-        "text": " in blockchain – similarly, an agent-native enterprise might express inter-department agreements in a form that agents can use to coordinate work (e.g. if Sales closes a deal, an agent automatically triggers provisioning per the agreed timeline, because the contract is digitized in the system)."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Organizationally, moving to machine-readable processes requires a concerted effort to capture tacit knowledge and formalize it. Many organizations have a wealth of know-how in employees’ heads or scattered documents. Initiatives like "
-      },
-      {
-        "text": "knowledge graphs",
-        "em": true
-      },
-      {
-        "text": " or "
-      },
-      {
-        "text": "process mining",
-        "em": true
-      },
-      {
-        "text": " can help extract this and encode it. For example, observing how employees handle cases and then turning that into a structured process model is one way (some organizations like Skan specialize in this “Observation-to-Agent” approach ). It may be useful to form a dedicated Process Automation Team that works with business units to translate their SOPs and rules into machine-executable formats. Over time, as new processes are created, the default should be to create them in a digital, structured format first, and only then derive any textual documentation from that – essentially treating the machine-readable version as the source of truth."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "The benefits of machine-first process definition are tremendous: it ensures that AI agents have a clear blueprint to follow and reduces errors from misinterpretation. It also accelerates automation – if your processes are already in an AI-readable form, deploying a new agent to handle a process is much faster. One case study in helpdesk operations found that by encoding SOPs into a structured format, they could "
-      },
-      {
-        "text": "automatically resolve routine tasks and allow human agents to focus on complex cases",
-        "em": true
-      },
-      {
-        "text": ", significantly improving resolution times and consistency . Additionally, having processes as code means you can simulate and test them. Before deploying an agent, you might run the process logic against historical data to see if it yields the expected outcomes – akin to unit-testing your business operations."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "From an operational perspective, machine-readable processes also make change management easier. Updating a procedure is as simple as updating the code or configuration and then all agents instantly follow the new version. Contrast this with retraining hundreds of human employees on a policy change – with AI agents, you update once in the code repository and it’s live (of course, with proper testing and approval flows around that update). However, it introduces a new kind of operational challenge: managing process versions and configurations. This starts to resemble software version control. Enterprises should use version control systems or policy management tools to track changes to processes and who approved them. This ties back to auditability as well – you want to know which version of a process was in effect at any given time in case of post-mortems."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Implementation considerations for Principle 5:",
+        "text": "If a capability matters to the business, an agent should be able to reach it programmatically rather than depend on a human-facing screen.",
         "em": true
       }
     ]
@@ -811,11 +965,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Process Modeling Tools:",
-        "strong": true
-      },
-      {
-        "text": " Invest in tools that allow non-programmers to define workflows and rules in a structured way (low-code platforms, visual BPMN modelers, etc.). Ensure these tools can output an executable process that agents or automation engines can run."
+        "text": "All critical business functions should be accessible through APIs or other machine-readable interfaces, not buried exclusively behind human-facing screens. In an agentic enterprise, if a capability matters to the business, agents must be able to invoke it directly. This addresses one of the most practical barriers to autonomous execution: many enterprise systems were designed around people clicking buttons, completing forms, and navigating interfaces rather than software acting programmatically."
       }
     ]
   },
@@ -823,11 +973,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Knowledge Capture:",
-        "strong": true
-      },
-      {
-        "text": " Before automating a process, capture it in a formal model. Leverage process mining tools that watch user interactions to suggest process models. Interview domain experts and translate their step-by-step approach into decision trees or pseudocode that can be coded."
+        "text": "The implication is an API-first architecture in which important business capabilities are exposed as services that agents can call. Updating a customer record, approving an invoice, creating an employee, retrieving pricing, or initiating a workflow should not require a person to open an application and manually move through a series of screens. Where critical functionality is available only through a user interface, organizations should treat that limitation as technical debt. The long-term solution may be modernization or replacement, while transitional approaches such as middleware or RPA can provide machine-accessible wrappers around legacy systems."
       }
     ]
   },
@@ -835,11 +981,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Policy-as-Code Platforms:",
-        "strong": true
-      },
-      {
-        "text": " Use or build a central policy engine for things like approvals, business rules, compliance checks. For example, use Open Policy Agent or similar to write policies in a declarative manner that all services and agents can query. Integrate this engine with your orchestration layer so that policies are enforced consistently by agents during execution ."
+        "text": "Over time, this changes how enterprises should think about applications themselves. Rather than treating the application interface as the primary way work gets done, organizations should view the underlying business capabilities as the core product. Human-facing interfaces become one consumer of those capabilities, while agents become another. A traditional HR application, for example, may still provide a dashboard for employees and managers, but its underlying onboarding, payroll, benefits, and employee-management functions should also be independently callable by authorized agents. The same principle applies across finance, sales, operations, customer service, and other enterprise functions."
       }
     ]
   },
@@ -847,11 +989,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Templates and Reuse:",
-        "strong": true
-      },
-      {
-        "text": " Create templates for common patterns (e.g. an “approvals workflow” template, a “data validation” step, etc.) so that process authors can easily assemble new processes from proven building blocks. This encourages consistency across the enterprise."
+        "text": "This model naturally leads toward a more composable architecture. Business capabilities become modular services that can be discovered, combined, and orchestrated dynamically rather than being locked inside monolithic applications. Product and engineering teams should therefore consider programmatic accessibility whenever they build or purchase enterprise software. An application with a polished user interface but limited API coverage may be significantly less valuable in an agentic environment than one whose capabilities can be securely invoked by both humans and machines. API accessibility also becomes an important consideration in vendor selection because the ability to orchestrate across systems reduces dependency on any single vendor’s interface or workflow."
       }
     ]
   },
@@ -859,11 +997,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Human-Friendly Views:",
-        "strong": true
-      },
-      {
-        "text": " While machine-readable is primary, provide generated human-readable documentation from the source (for compliance and training purposes). For instance, automatically generate flow diagrams or English descriptions from the BPMN or code so that stakeholders can review the logic. This fosters transparency and trust – everyone can see what the agents will do in a format comfortable to them."
+        "text": "Accessibility alone, however, is not sufficient. Agents also need a consistent way to discover and use the tools available to them. Enterprises should maintain an inventory or catalog of APIs, services, data sources, and other machine-accessible capabilities, with clear standards for authentication, authorization, documentation, error handling, and observability. This creates a common tooling environment in which agent developers can determine what capabilities already exist rather than repeatedly creating point solutions or bespoke integrations. Where gaps remain, organizations can prioritize new APIs or wrappers based on the business processes they are attempting to automate."
       }
     ]
   },
@@ -871,24 +1005,337 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Testing and Simulation:",
-        "strong": true
-      },
+        "text": "Event-driven architecture is an equally important part of this shift. Agents should not always have to poll systems or wait for a human to initiate work. Important business events, such as an order being placed, a support case being created, a payment failing, or an employee being hired, should be published in ways that authorized agents can detect and respond to immediately. This allows execution to begin when the state of the business changes, creating workflows that are continuous and responsive rather than dependent on manual coordination."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
       {
-        "text": " Treat processes as you would software: do QA on them. Simulate processes with test data to ensure the machine-readable SOP does what the human-intended SOP was. When possible, run processes in parallel (agent vs human) on sample cases before full deployment to verify parity."
+        "text": "As agents increasingly depend on these interfaces, APIs and integrations become mission-critical operational infrastructure. A service outage that prevents an agent from accessing a core business capability is functionally similar to preventing an entire group of employees from accessing the system they need to do their jobs. Reliability, performance, and resilience therefore become central design concerns. Practices such as monitoring, retries, circuit breakers, rate limiting, concurrency controls, integration testing, and disaster recovery must be applied consistently to the services that agents depend on."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Governance must scale with that accessibility. Every agent invocation of a business capability should occur through authenticated and authorized interfaces, with sufficient logging to reconstruct what was called, by which agent, under whose authority, and with what result. Rate limits and other safeguards should prevent a faulty or runaway agent from overwhelming downstream systems, while dependency management and fallback mechanisms should allow workflows to degrade gracefully when a required service is unavailable."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The broader objective is to make the enterprise itself programmable. Rather than organizing digital work around the applications humans happen to use, the organization exposes its core business capabilities as secure, observable, reusable services that both humans and agents can consume. When systems are designed this way, agents are no longer constrained by the interfaces created for human workers. They can discover capabilities, respond to events, coordinate across systems, and execute work directly, giving the enterprise the technical foundation required for autonomous operations."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "EXECUTIVE QUESTION",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Can an agent reach every critical business capability safely through a governed machine interface?",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "PRINCIPLE 5",
+        "strong": true
       }
     ]
   },
   {
     "kind": "h",
-    "level": 2,
+    "level": 1,
+    "text": "Agent Actions Are Auditable"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "If it is not logged, it did not happen. Every material action needs a trace, a reason, and a recovery path.",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Every action taken by an AI agent should be observable, traceable, and auditable from the moment it occurs. When agents are executing business processes, organizations need clear visibility into what they are doing, why they are doing it, what systems and data they are touching, and whether their actions are producing the intended result. Auditability is therefore is a core requirement for trust and control in an agentic enterprise."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Traditional organizations already maintain audit trails for consequential human activity: who approved a payment, who changed a customer record, when a transaction occurred, and under what authority. Agents require the same level of accountability, and in many cases more. They can act faster than humans, operate continuously, and execute at far greater scale. A single error or misconfiguration can therefore propagate across thousands of transactions before a person notices. The enterprise must be able to reconstruct exactly what happened and intervene quickly when something goes wrong."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That requires instrumentation at every meaningful step of an agent-driven workflow. Significant actions should be logged with sufficient context to understand the sequence of events: what objective the agent was pursuing, what data it accessed, which tools or APIs it invoked, what decisions it made, what outputs it produced, and what outcome followed. The record should also capture relevant technical context, such as the model or agent version involved, the rules or policies applied, and the identity or authority under which the agent was acting. For higher-risk activities, retaining the relevant prompts, responses, or decision context may also be necessary."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The goal is end-to-end traceability. If an agent changes a customer record, executes a transaction, approves a request, or invokes another agent, the organization should be able to follow that activity across the full workflow rather than seeing disconnected logs from individual systems. This becomes especially important in multi-agent environments, where responsibility may pass between several agents and services before an outcome is produced. Traceability must preserve that chain so the enterprise can determine not only what happened, but how one decision or action led to the next."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Observability must also extend beyond traditional infrastructure monitoring. Knowing that a server is healthy or an API is responding does not tell the business whether an agent is performing effectively. Agent operations need to be monitored at both the technical and business levels. Organizations should be able to see throughput, completion rates, failure rates, escalation frequency, processing time, policy violations, and other indicators of agent performance. These metrics provide an operational view of the digital workforce and make it possible to identify agents that are degrading, behaving unexpectedly, or creating bottlenecks in a broader process."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Real-time monitoring is particularly important because autonomous systems can create problems quickly. Dashboards and alerts should surface unusual behavior, repeated failures, unexpected spikes in activity, or deviations from established thresholds. If an agent becomes stuck in a loop, begins producing anomalous results, or starts invoking a service far more frequently than expected, operators should be able to detect the issue and suspend or constrain the agent before the problem spreads. In this sense, observability becomes part of the enterprise’s control system, not merely its reporting layer."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Explainability is another component of auditability, particularly when agents participate in consequential or regulated decisions. The organization should retain enough context to understand why an action occurred. In deterministic workflows, that may mean identifying the rule or policy that triggered a decision. In model-driven workflows, it may include the model version, confidence indicators, relevant inputs, or other decision context. The objective is to preserve enough evidence that the organization can investigate, justify, and govern the outcome."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This is especially important in regulated environments. Financial services, healthcare, insurance, and other industries may require organizations to demonstrate how certain decisions were reached and prove that appropriate controls were followed. Agent activity should therefore integrate with existing audit, compliance, security, and archival systems rather than exist in a separate operational silo. Logs for consequential actions should be protected from tampering and retained according to applicable regulatory and business requirements."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Ownership remains central to this model. Every agent should have a named human owner responsible for reviewing its performance, investigating anomalies, and ensuring that its behavior remains aligned with business and policy expectations. Higher-risk agents may require formal review cadences involving business, technology, risk, security, and compliance stakeholders. The purpose is to establish a level of governance proportional to the impact of the work being performed."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Auditability should also enable reversibility. Visibility into a bad action has limited value if the organization cannot correct it. Where practical, agent-driven processes should be designed with checkpoints, compensating transactions, versioning, or rollback mechanisms that allow erroneous actions to be reversed or remediated. Approvals, audit trails, and rollback should therefore be treated as native characteristics of the automation architecture rather than special controls added only to the highest-risk processes."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The broader value of observability goes beyond risk management. A detailed record of how agents behave creates the feedback loop required for continuous improvement. Organizations can identify recurring failure patterns, unnecessary escalations, inefficient tool usage, or poorly defined policies and use that information to improve agents and the processes around them. The same telemetry that provides accountability also becomes a source of operational intelligence."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "If an agent’s action matters to the business, the enterprise should be able to see it, trace it, understand its context, and correct it when necessary. In an agentic enterprise, trust does not come from assuming autonomous systems will behave correctly. It comes from building an operating environment in which their behavior is continuously visible and accountable."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "EXECUTIVE QUESTION",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Can we reconstruct why an agent took a material action, what authority it used, and how to reverse it?",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "PRINCIPLE 6",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
+    "text": "All Documentation Is Agent Interpretable"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Processes should live as structured, executable logic first, with human-readable documentation generated from the source of truth.",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Every important process, policy, and procedure in the enterprise should exist in a form that machines can understand and act upon. Human-readable documentation still matters, but it should no longer be the only source of truth. In an agentic enterprise, the operational definition of a process should be structured enough that an agent or orchestration system can interpret it consistently and, where appropriate, execute it directly."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Traditional organizations document how work gets done primarily for people. Policies live in Word documents, SOPs sit in knowledge bases, and process logic is often buried in diagrams, spreadsheets, or institutional memory. That model works when humans are responsible for interpreting ambiguity and filling in the gaps. It becomes a constraint when agents are expected to execute the work. If a process matters enough to govern business activity, its logic should not exist only as prose. The relevant rules, conditions, approvals, and decision paths should be represented in a machine-interpretable form."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The reason is simple: ambiguity is expensive in autonomous systems. Natural language is flexible, but that flexibility can create inconsistent execution. A travel policy that says employees should seek approval for “expensive” airfare leaves room for interpretation. A machine-readable rule can define exactly when approval is required, by whom, and under what conditions. The same applies to incident response, customer onboarding, compliance checks, procurement, and other repeatable processes. The more precisely the enterprise can encode how decisions should be made, the more safely and consistently agents can operate."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "There are several ways to achieve this. Workflows can be represented through Business Process Model and Notation (BPMN), decision trees, state machines, domain-specific languages, or structured configurations such as Javascript Object Notation (JSON) or YAML. Policies can be expressed as code or declarative rules that can be evaluated automatically during execution. Approval matrices, escalation paths, access rules, and compliance checks can all be turned into logic that agents consult rather than text they attempt to interpret. In some cases, even contractual or service-level commitments can become operational triggers, allowing systems and agents to respond automatically when defined conditions are met."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This does not mean every business rule must become rigid software. Some decisions will remain subjective or require human judgment. The goal is to distinguish between what should be deterministic and what should remain discretionary. Where a rule can be made explicit, it should be. Where ambiguity is unavoidable, the process should define how the agent recognizes that uncertainty and when it should escalate to a human. Machine interpretability is therefore not about eliminating judgment. It is about removing avoidable ambiguity from the parts of the enterprise that should operate consistently."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Achieving this requires organizations to capture knowledge that is currently informal. Much of how work actually gets done lives in employees’ heads or in fragmented documentation that does not fully reflect reality. Process mining, workflow analysis, interviews with subject-matter experts, and observation of existing work can help surface that knowledge and convert it into formal process models. Before automating a process, the enterprise should understand not just what the official procedure says, but how the work is actually performed, where exceptions occur, and which decisions depend on tacit expertise."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Over time, the machine-readable version should become the authoritative operational source. Human-friendly documentation can then be generated from it in the form of diagrams, written procedures, training materials, or compliance artifacts. This reverses the traditional model. Instead of maintaining a document and hoping the automation reflects it, the executable definition becomes primary and the documentation becomes a view of that underlying logic."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This shift also improves change management. When a policy changes, the enterprise should be able to update the underlying rule or process definition once and propagate that change across the agents and systems that rely on it. That is significantly more reliable than updating a document and depending on hundreds or thousands of employees to interpret and apply the new guidance consistently. It also creates a more precise audit trail because the organization can determine exactly which version of a process or policy was in effect when a particular action occurred."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Treating processes as structured assets also makes them testable. Before an agent is given responsibility for a workflow, the process logic can be evaluated against historical scenarios, synthetic test cases, or parallel human execution. Organizations can verify that the encoded process behaves as intended, identify edge cases, and refine escalation paths before granting greater autonomy. In effect, business processes begin to inherit practices from software engineering: version control, testing, simulation, approval workflows, and controlled deployment."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Reusable patterns can accelerate this transformation. Common components such as approvals, data validation, exception handling, human review, and escalation should not be redesigned for every process. Enterprises can create standard templates and building blocks that business and technology teams assemble into new workflows. This improves consistency while reducing the effort required to make additional processes agent-ready."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The deeper implication is that enterprise knowledge itself becomes operational infrastructure. Policies, procedures, and business rules are no longer passive documents that describe how the organization should work. They become active components of how work is executed. When agents can reliably interpret the enterprise’s processes and constraints, the organization becomes easier to automate, easier to govern, easier to change, and easier to scale."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "If a process is important enough to govern how the enterprise operates, its logic should be explicit enough for both humans and machines to understand. In an agentic enterprise, documentation should not merely describe the business. It should help run it.​"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "EXECUTIVE QUESTION",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "If a process matters enough to govern, is its current version represented in a form an agent can interpret and execute?",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
     "text": "Organizational Transformation"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Adopting the above principles is not just a technical endeavor, it is a profound organizational change. Leaders must spearhead a cultural and structural transformation to truly become agent-native. Below are key organizational considerations and steps to enable agents as first-class citizens:"
+        "text": "The operating model changes when managers are responsible for both people and digital workers.",
+        "em": true
       }
     ]
   },
@@ -896,25 +1343,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Leadership Vision and Buy-In:",
-        "strong": true
-      },
-      {
-        "text": " CxOs must clearly articulate the agent-native vision as a strategic priority. The senior executives should consistently communicate that the organization is embracing AI-driven operations not just to cut costs, but to unlock innovation and growth. It’s important to frame this as "
-      },
-      {
-        "text": "offense",
-        "em": true
-      },
-      {
-        "text": " (competitive advantage) as much as "
-      },
-      {
-        "text": "defense",
-        "em": true
-      },
-      {
-        "text": " (efficiency), so the organization feels energized rather than threatened. Leaders should also be realistic about the journey. It's a multi-year transformation requiring investments in people and technology."
+        "text": "The agentic enterprise cannot be implemented by the technology organization alone. Agentic operations change where work sits, how teams are measured, which capabilities are centralized, and what managers are expected to govern. The transformation therefore has to be led as an enterprise strategy, not delegated as an automation program."
       }
     ]
   },
@@ -922,46 +1351,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Workforce Upskilling and Role Evolution:",
-        "strong": true
-      },
-      {
-        "text": " An agent-native enterprise will require new skills. Employees at all levels will need training to work effectively with AI agents. This includes technical skills (like understanding how to configure or oversee agents, basic scripting, data literacy to interpret AI outputs) and soft skills (like critical thinking to validate AI decisions, and creativity to leverage AI capabilities in new ways). New roles may emerge: for example, "
-      },
-      {
-        "text": "AI Trainers",
-        "em": true
-      },
-      {
-        "text": " (people who fine-tune models or configure agent decision rules), "
-      },
-      {
-        "text": "Automation Strategists",
-        "em": true
-      },
-      {
-        "text": " (who identify what to automate next), or "
-      },
-      {
-        "text": "AI Ethics & Risk Officers",
-        "em": true
-      },
-      {
-        "text": ". Existing roles will also shift, for instance, a customer support agent may become a "
-      },
-      {
-        "text": "customer support AI coordinator",
-        "em": true
-      },
-      {
-        "text": ", supervising AI chatbots and stepping in for complex cases. Change management is crucial here: organizations should proactively manage fear of job loss by emphasizing how roles will shift to more interesting work, and by offering reskilling programs. In many cases, the introduction of AI agents increases capacity and actually "
-      },
-      {
-        "text": "augments",
-        "em": true
-      },
-      {
-        "text": " humans rather than outright replacing them ."
+        "text": "The central organizational challenge is to move from a model in which employees are valued primarily for executing tasks toward one in which people increasingly define objectives, exercise judgment, build relationships, improve systems, and supervise digital execution. Some roles will be redesigned substantially. Others will remain predominantly human. The important shift is that task ownership, job ownership, and accountability no longer have to be the same thing."
       }
     ]
   },
@@ -969,95 +1359,864 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Cross-Functional Collaboration:",
-        "strong": true
-      },
-      {
-        "text": " AI initiatives cut across silos. Technology, operations, compliance, business units all need to collaborate closely. Consider establishing an "
-      },
-      {
-        "text": "AI Transformation Task Force",
-        "em": true
-      },
-      {
-        "text": " or center of excellence that brings together stakeholders from IT, data science, process engineering, and business lines. This team can pilot agent-based processes in a controlled manner and develop best practices to roll out enterprise-wide. The task force should also partner closely with risk management and compliance teams to preemptively address regulatory and ethical concerns. A strong partnership between CIO/CTO (tech) and COO (operations) is often needed, as agent-native operations blend those domains. According to industry observations, enterprise architects and portfolio managers should align AI projects with strategic objectives and break down silos to avoid disjointed automation efforts ."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Governance and Ethical Oversight:",
-        "strong": true
-      },
-      {
-        "text": " As AI agents take on more responsibility, organizations must formalize governance. This might entail an "
-      },
-      {
-        "text": "AI Governance Committee",
-        "em": true
-      },
-      {
-        "text": " that sets policies on acceptable uses of AI, monitors compliance, and reviews incidents or near-misses involving AI agents. Ethical guidelines should be established to govern areas like data privacy (agents will be handling data – ensure they comply with GDPR, CCPA, etc.), fairness/non-discrimination in agent decisions, and transparency to customers (e.g. disclosing when customers are interacting with an AI vs a human). Some organizations may choose to appoint Chief AI Ethics Officers or expand the mandate of risk officers to include AI oversight. Internally, creating a culture of “responsible AI” is important. Teams should be encouraged to flag concerns and ensure agents are designed with safety in mind. Governance also covers the decommissioning "
-      },
-      {
-        "text": "process",
-        "strong": true
-      },
-      {
-        "text": " for agents: if an agent consistently misbehaves or is no longer needed, have a protocol to retrain, fix, or sunset it."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Organizational Structure Adjustments:",
-        "strong": true
-      },
-      {
-        "text": " To truly embed AI, some enterprises may need to restructure departments. One pattern is creating a centralized "
-      },
-      {
-        "text": "AI Platform team",
-        "em": true
-      },
-      {
-        "text": " under the CTO that provides core infrastructure (models, orchestration, data pipelines) as a service to all business units – this prevents each unit from reinventing the wheel or deploying conflicting agent systems. At the same time, domain teams (in finance, marketing, etc.) should have their own AI product owners who understand local processes and can customize agents for their needs. Striking a balance between centralized AI services and decentralized innovation is key . Additionally, consider performance incentives: update KPIs for departments to include automation goals (e.g. “% of tasks handled by AI” or reduction in cycle time due to AI). This aligns incentives so managers actively seek to leverage agents rather than view them as a threat."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Communication and Change Management:",
-        "strong": true
-      },
-      {
-        "text": " Throughout the transformation, clear communication is vital. Share success stories of agents augmenting the business (e.g. an agent that handles 1,000 routine tickets a day, freeing humans for complex cases). Recognize and reward employees who pioneer new uses of AI in their work. Also be transparent about challenges, if an AI failure occurs, treat it as a learning opportunity and reinforce the safety nets in place (which builds trust that the organization is handling this responsibly). Engaging employees in the design of AI solutions can also alleviate anxiety, for example, get frontline workers to help design the chatbot dialogue or the criteria for when it hands off to a person. This inclusion makes it a joint human-AI effort. As with any major change, there will be early adopters and resistors; leverage the enthusiasts to advocate and provide ample support/training for those hesitant."
+        "text": "Organizational Transformation Adopting the above principles is not just a technical endeavor, it is a profound organizational change. Leaders must spearhead a cultural and structural transformation to truly become agent-native. Here are some key organizational considerations and steps to enable agents as first-class citizens."
       }
     ]
   },
   {
     "kind": "h",
-    "level": 2,
+    "level": 3,
+    "text": "The Role of Leadership"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The transition to an agentic enterprise begins with leadership. Technology may enable the shift, but leaders determine whether it becomes a collection of isolated experiments or a genuine transformation of how the organization operates. Their first responsibility is to define the destination clearly. The organization needs a concrete picture of what an agentic enterprise will look like in practice, how work will flow differently, where humans will remain essential, and what new capabilities the business intends to build. Without that destination, teams will optimize locally, pursue disconnected use cases, and confuse activity with progress."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That vision should be inseparable from business strategy. AI should not sit beside the corporate strategy as a parallel initiative owned by technology. Leaders should articulate how agentic operations advance the core ambitions of the business, whether through growth, margin expansion, customer experience, speed, resilience, new products, or market differentiation. The question is not simply where AI can be inserted into existing work, but how the enterprise can operate differently because this new form of digital labor exists."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This is why the transformation should be framed as both offense and defense. Efficiency and cost reduction matter, but they are only part of the opportunity. The greater strategic value may come from compressing decision cycles, launching products faster, serving customers more consistently, operating continuously, or creating entirely new business models that were previously impractical. Leaders who frame agentic AI primarily as a cost exercise risk underselling its potential and designing a future that is only marginally better than the present."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "A strong leadership vision also requires a clear case for change. Employees and managers need to understand why the current operating model is no longer sufficient and what the organization risks by failing to evolve. That does not require artificial urgency or exaggerated claims. It requires a credible explanation of how competitors, customers, economics, and technology are changing the environment in which the business operates. The transformation becomes more compelling when people understand not only the opportunity ahead, but the consequences of maintaining the status quo."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Executive behavior must reinforce that message. If leaders describe AI as strategically important while continuing to fund only small experiments, protecting legacy processes, or treating the technology as something for lower levels of the organization to explore, employees will quickly recognize the contradiction. Leadership commitment has to be visible in the decisions executives make, the investments they authorize, the processes they are willing to challenge, and the extent to which they incorporate AI into their own work."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Visible executive sponsorship is therefore essential. The transformation should have unmistakable senior ownership rather than diffuse accountability spread across a committee. One or more executives should be clearly responsible for advancing the vision, removing barriers, and ensuring that agentic transformation remains connected to the broader direction of the company. At the same time, the leadership team must operate as a coalition. The CEO, COO, CIO or CTO, CFO, CHRO, business-unit leaders, and other key executives should share a common understanding of the destination even when their responsibilities within the transformation differ."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Leaders must also give the organization permission to rethink work itself. Teams should not assume that existing processes must survive and simply be automated step by step. Many processes are artifacts of human constraints: manual reviews, sequential handoffs, organizational boundaries, and information delays. Once those constraints change, the process should be open to redesign. Leadership needs to make it acceptable to remove steps, collapse handoffs, combine activities, or eliminate entire workflows when a better operating model becomes possible."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That same mindset should shape investment. Individual agents and narrowly scoped use cases can demonstrate value, but they should not become the destination. Organizations that remain trapped in perpetual pilots will accumulate demonstrations without building enterprise capability. Leaders should distinguish between experiments intended to generate learning and investments intended to become production capabilities. The latter require commitment to the shared foundations that make scale possible, including data, identity, APIs, orchestration, observability, security, and other reusable platform capabilities."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This also means treating the transformation as a portfolio of strategic bets rather than expecting every initiative to succeed. Some use cases will underperform, some technologies will mature more slowly than expected, and some assumptions will prove wrong. That is normal. Leadership should be willing to place multiple disciplined bets, learn quickly, stop investing where the evidence is weak, and concentrate resources where the opportunity becomes clear. The objective is not to avoid failure. It is to avoid becoming attached to pilots or technologies that are not producing strategic value."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Ultimately, leadership determines whether agentic AI remains another technology cycle or becomes a new way of operating. The role of the executive team is to define where the enterprise is going, connect that destination to business strategy, create a credible reason to move, sponsor the transformation visibly, challenge legacy assumptions, and invest with enough conviction to move from experimentation to scale. The technology will continue to change. The leadership task is to ensure the organization is positioned to take advantage of that change rather than continually reacting to it."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Organizational Structure"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Becoming an agentic enterprise may require more than new technology and new skills. It may also require changes to how the organization itself is structured. Many current operating models were designed around human specialization, functional silos, manual coordination, and sequential handoffs. As agents take on more execution and move more easily across systems and functions, some of those structural assumptions begin to weaken."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "A strong starting point is a federated model. Shared AI infrastructure and standards should typically be centralized, while business ownership remains decentralized. A central AI platform team can provide common capabilities such as model access, orchestration, identity, observability, security patterns, data integration, and reusable agent services. This reduces duplication and gives teams a consistent foundation on which to build. At the same time, business domains such as finance, marketing, operations, HR, and customer service should retain ownership of the agents and workflows that support their specific objectives."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This separation between platform ownership and business ownership is important. The team operating the enterprise agent platform should not automatically own every agent running on it. Domain teams understand the business context, process nuances, risk thresholds, and desired outcomes. They should therefore be accountable for the agents operating within their areas, while the central platform organization ensures those agents are deployed on a secure, scalable, and governed foundation."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "As adoption grows, many enterprises will also need domain-level AI product ownership. Roles such as AI Product Owners or Agent Product Managers can sit within business functions and take responsibility for the lifecycle and performance of agentic capabilities in that domain. These leaders bridge business and technology, helping translate operational needs into agent workflows while ensuring that agents remain aligned with broader enterprise standards."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "At larger scale, organizations may also need a formal Digital Workforce Management capability. Once an enterprise is operating hundreds or thousands of agents, managing them as isolated software projects becomes impractical. A digital workforce function could maintain visibility into the agent population, coordinate lifecycle management, establish deployment standards, manage shared capabilities, and ensure that the enterprise understands where agents are operating and how they are being used."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "An AI Operations capability may emerge alongside it. Similar to the way DevOps and Site Reliability Engineering evolved to support modern software systems, AI Operations can focus on the runtime health of agentic systems, including monitoring, incident response, deployment practices, model and workflow changes, production support, and operational resilience. As agents become part of core business execution, their reliability must be managed with the same discipline applied to other mission-critical systems."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Architecture responsibilities will also evolve. Enterprise architects may need to explicitly account for agent design patterns, orchestration, memory, tool access, identity, event flows, and agent-to-agent interactions. Agent architecture becomes less about selecting individual AI tools and more about ensuring that autonomous systems can operate coherently across the enterprise without creating a new generation of disconnected platforms."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The organization should also avoid concentrating all AI expertise in one central group. A centralized AI team can accelerate early adoption, but if every business unit remains dependent on that team for every use case, the organization has not truly transformed. Domain teams need enough technical and operational fluency to redesign their own processes, define their own agent requirements, and participate meaningfully in decisions about autonomy, risk, and performance."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Where common capabilities are repeatedly needed across the enterprise, dedicated shared-service teams may also make sense. Functions such as document intelligence, knowledge retrieval, identity verification, customer communication, policy evaluation, or human escalation may be valuable enough to build once and expose broadly. This reduces reinvention and allows the organization to improve those capabilities centrally while many domain agents consume them."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agentic transformation may also change management structures. If agents absorb more coordination, reporting, task assignment, status tracking, and routine supervision, some layers of management may no longer require the same shape or scale. Managers may oversee broader spans of responsibility, including both human and digital workers, while focusing more on outcomes, exceptions, and strategic direction. This does not imply eliminating management wholesale. It means reassessing which management activities continue to create value when much of the coordination burden can be automated."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The same logic applies to organizational boundaries. Many departments and handoffs exist because people needed specialized access, knowledge, or control over particular parts of a process. Agents can often move across those boundaries more fluidly. As a result, enterprises may find opportunities to organize more work around end-to-end outcomes rather than narrow functional responsibilities. Processes such as customer onboarding, claims resolution, order-to-cash, or employee onboarding may benefit from clearer end-to-end ownership rather than being fragmented across multiple departments."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Temporary transformation structures can help accelerate this shift, but they should not automatically become permanent bureaucracy. Transformation offices, AI task forces, or special program teams may be useful during the early stages, but their long-term objective should be to embed new capabilities into the normal operating model. Mature organizations should not need a separate group constantly reminding the business to use AI. The capability should increasingly become part of how product, engineering, operations, and business teams work every day."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Leadership structure should evolve with the same principle in mind. Some organizations may benefit from a Chief AI Officer or similar executive role during the transformation, particularly when coordination across multiple functions is difficult. But the purpose of that role should be to accelerate integration, not to create a permanent parallel organization responsible for everything AI-related. The long-term destination is not an enterprise with a large isolated AI department. It is an enterprise in which AI has become embedded throughout the business."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The central structural challenge is therefore balance. Too much centralization creates bottlenecks and slows innovation. Too much decentralization creates duplication, incompatible platforms, shadow systems, and inconsistent controls. A federated model provides a practical middle ground: centralize the capabilities that benefit from scale and consistency, while keeping business ownership close to the domains where value is created."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The end state is an organization in which agentic capabilities are no longer treated as special projects. Shared infrastructure supports the enterprise, domain teams own business outcomes, new operational functions manage the digital workforce at scale, and organizational boundaries evolve as the nature of work changes. The goal is not to build an AI organization inside the enterprise. It is to redesign the enterprise so that AI becomes part of its normal structure and operating model."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Workforce Transformation"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "An agentic enterprise will require new skills, new roles, and a different standard for how work gets done. Employees at every level will need to learn how to work effectively with AI agents, whether that means configuring and supervising them, interpreting their outputs, redesigning workflows around them, or exercising judgment when agents escalate exceptions. Some of these capabilities are technical, such as data literacy, basic scripting, prompt and workflow design, and understanding how agent systems operate. Others are distinctly human: critical thinking, creativity, judgment, communication, and the ability to evaluate whether an AI-generated outcome is actually good enough."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "New roles will emerge to support this operating model. Organizations may need AI Trainers who fine-tune models or configure agent behavior, Automation Strategists who identify and prioritize opportunities for autonomous execution, Agent Orchestrators who design and manage multi-agent workflows, AI Product Owners who own the performance of agents within a business domain, Knowledge Engineers who structure enterprise knowledge so agents can use it effectively, and AI Ethics and Risk Officers who establish governance and oversight. In larger enterprises, functions such as Digital Workforce Management or AI Operations may emerge to manage agents as a workforce rather than as isolated technology projects."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Existing roles will evolve as well. A customer support representative may become a customer support AI coordinator who supervises agents and handles complex escalations. An analyst may spend less time gathering information and more time validating conclusions and advising decision-makers. A compliance professional may shift from manually reviewing transactions to defining the rules, thresholds, and exception policies agents must follow. Managers may increasingly oversee a combination of human and digital workers, focusing less on task assignment and more on objectives, performance, and exceptions. The specific titles will continue to evolve, but the broader direction is clear: organizations will place greater value on people who can create leverage through AI rather than simply perform work that AI can increasingly execute on its own."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This transition will also create natural attrition, and leaders should be candid about that reality. The objective of workforce transformation should not be to promise that every existing role, job description, or employee will remain unchanged. That is neither realistic nor particularly helpful. As the organization changes, expectations change with it. Some employees will embrace the new direction, develop the required capabilities, and thrive. Others may decide that the organization the company is becoming is no longer the organization in which they want to work. Still others may make a genuine effort to adapt but ultimately not meet the performance standard required in the new operating model."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That attrition is a natural part of an evolving organization. It should not automatically be interpreted as failure. Organizations regularly change strategy, adopt new technologies, enter new markets, and raise their standards. Those changes inevitably alter the skills and behaviors the business requires. The transition to an agentic operating model is no different, although its impact may be broader and faster than previous technology shifts."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The leader’s responsibility is therefore not to eliminate discomfort. It is to create clarity. Leaders need to articulate where the organization is going, why the change is necessary, what the future operating model looks like, and what will be expected of employees within it. They should define what “good” looks like in concrete terms and establish transparent measures for evaluating progress and performance. Employees should understand which capabilities they need to develop, how their roles are likely to change, and how success will be measured in the new environment."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That clarity must be matched with genuine support. If organizations expect employees to make a meaningful transition, they should provide the tools, training, time, coaching, and access to technology required to do so. People should have a fair opportunity to build new skills and demonstrate that they can succeed under the new expectations. The organization cannot reasonably raise the bar while withholding the resources employees need to reach it."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Once those conditions are established, however, employees also have agency. They can choose to engage with the transformation or decide that the new direction is not for them. Those who engage should be evaluated against a clearly communicated performance standard, just as they would be during any other significant organizational change. Business ultimately depends on performance, and participation in the transformation alone cannot become a substitute for delivering results."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This will inevitably create movement within the workforce. Some employees will leave early because they do not want to make the shift. Others may leave later because their skills or performance no longer align with what the organization requires. That movement also creates space to bring in people with capabilities, experiences, and perspectives the organization did not previously have. New talent can accelerate the transformation, challenge legacy assumptions, and complement employees who successfully evolve with the business. In that sense, some degree of workforce renewal is a feature of transformation rather than a defect in it."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Handled well, this approach can actually strengthen trust, even when the message itself is uncomfortable. Employees are more likely to respect a leadership team that clearly explains the destination, provides meaningful support, and applies transparent standards than one that minimizes the implications of the change or makes promises it cannot keep. People may not like every outcome, but they can understand the rules of the game and make informed decisions about their own future."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The goal is not to preserve the workforce exactly as it exists today. It is to give the people in that workforce a credible opportunity to grow with the organization while ensuring the organization can acquire the capabilities it needs to compete. The strongest agentic enterprises will therefore treat workforce transformation as both an investment in existing employees and a deliberate evolution of the talent base."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Cross-Functional Collaboration"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agentic transformation cuts across the traditional boundaries of the enterprise. Technology, operations, risk, compliance, legal, finance, HR, and business leadership all have a role to play because autonomous systems affect not only how software is built, but how work is executed, governed, measured, and staffed. Treating AI as a technology initiative that periodically pulls in the business will produce fragmented automation and isolated pilots. The operating model itself has to become cross-functional."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "A strong partnership between the CIO or CTO and the COO is especially important. Technology leaders provide the platforms, architecture, integration, security, and engineering discipline required to deploy agents safely at scale. Operations leaders understand how work actually flows through the business, where handoffs break down, where exceptions occur, and which outcomes matter most. Agentic transformation sits directly at the intersection of those responsibilities. Neither side can lead it effectively alone."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Organizations should consider establishing an AI Transformation Task Force or Center of Excellence that brings together stakeholders from technology, data, operations, process engineering, risk, compliance, legal, finance, HR, and major business units. Its purpose should not be to centralize every AI decision or become another approval layer. The strongest model is typically federated: a central team provides shared platforms, governance standards, architecture patterns, reusable components, and expertise, while business units retain responsibility for designing and operating agents within their domains."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That distinction matters. A Center of Excellence should enable innovation, not become a bottleneck. Its job is to make the safe path the easy path by giving teams common infrastructure, development standards, identity patterns, observability, policy frameworks, and reusable capabilities. Domain teams should then be able to move quickly within those guardrails rather than repeatedly seeking permission for routine decisions."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Cross-functional collaboration should also move beyond temporary project teams. Agent-driven processes require ongoing optimization after deployment, which favors persistent teams that jointly own the outcome over time. Instead of a business unit writing requirements, handing them to technology, and receiving a finished solution months later, business, technology, operations, and risk stakeholders should share responsibility from process design through deployment, monitoring, and continuous improvement."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Those teams should be measured against business outcomes rather than technology outputs. Deploying an agent is not the objective. Reducing cycle time, improving customer experience, lowering cost-to-serve, increasing throughput, improving quality, or reducing risk is. Shared outcome metrics help prevent functions from optimizing locally while the end-to-end process remains inefficient."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Clear decision rights are equally important. Organizations should define who owns the business objective, who owns the agent, who determines acceptable risk thresholds, who can modify policies, who approves changes in autonomy, and who has authority to suspend an agent. Without explicit decision rights, cross-functional governance can easily turn into committee-driven ambiguity in which everyone participates but no one is accountable."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Frontline employees should also be involved in process redesign. The people performing the work often understand the exceptions, workarounds, judgment calls, and hidden dependencies that are absent from official process documentation. Their participation helps ensure that organizations automate the process that actually exists rather than the one described in a procedure manual. It also creates an opportunity for employees to help shape how their roles will evolve as agents take on more execution."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Risk, legal, privacy, security, and compliance teams should be involved during design rather than positioned as approval gates at the end. Agentic systems are significantly easier to govern when controls are embedded into workflows from the beginning. Bringing these functions into the design process allows teams to establish approval thresholds, data-access boundaries, audit requirements, escalation paths, and prohibited actions before an agent begins operating."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "HR and talent leadership should also have a seat at the table because agentic transformation will change roles, skills, organizational structures, and performance expectations. Finance plays a similarly important role by establishing consistent ways to evaluate the economics of automation, including implementation cost, ongoing digital labor cost, productivity gains, revenue impact, risk reduction, and return on investment. The transformation cannot be managed solely through a technology budget."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "At the enterprise level, leaders should maintain a portfolio view of agent initiatives. Without one, different functions may build overlapping agents, recreate the same capabilities, or make incompatible architectural decisions. Portfolio management helps identify shared dependencies and capabilities that should be built once and reused across the organization. Services such as identity verification, document processing, approvals, customer communications, fraud detection, and knowledge retrieval may support dozens of agent workflows and should often be treated as enterprise assets rather than individual project components."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The same thinking should extend to process ownership. The most valuable agentic opportunities frequently span multiple departments, yet traditional organizations tend to assign ownership to individual functions or systems. Leaders should increasingly identify owners for end-to-end business processes such as customer onboarding, order-to-cash, claims processing, or employee onboarding. Those owners can optimize the outcome across organizational boundaries rather than allowing each function to improve only its portion of the workflow."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agentic systems may ultimately expose where some of those boundaries no longer make sense. If an agent can move seamlessly across sales, finance, operations, and customer service to complete an outcome, leaders should question whether the existing handoffs and organizational seams around that work still add value. AI creates an opportunity not only to automate processes but to reconsider the structures through which those processes have historically been managed."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The goal of cross-functional collaboration is therefore not simply to get more stakeholders into the room. It is to create shared ownership of the transformation. Technology provides the foundation, operations redesigns the work, business leaders define the outcomes, risk functions establish the boundaries, HR evolves the workforce, finance measures the value, and frontline employees contribute the practical knowledge required to make the new operating model work. When those responsibilities are aligned around common outcomes and clear decision rights, agentic transformation becomes an enterprise capability rather than a collection of disconnected AI projects."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Governance and Ethics"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Governance defines who has authority and accountability for AI agents across the enterprise. Controls define what an agent may do and how its behavior is constrained, monitored, and interrupted. Ethics defines what the organization should allow an agent to do, even when the technology makes the action possible. Together, these three disciplines create the foundation for responsible autonomy."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Governance should begin with clear ownership. Every agent should have a named human owner accountable for its purpose, scope, performance, and continued fitness for use. That ownership should sit within a broader governance structure that defines enterprise-wide policy, domain-level oversight, and agent-level accountability. High-impact agents should also be subject to independent review from functions such as risk, compliance, security, legal, or internal audit so that the team benefiting from an agent is not the only group evaluating its risks."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Not every agent requires the same level of scrutiny. Organizations should classify agents according to risk factors such as financial impact, customer impact, regulatory exposure, data sensitivity, and degree of autonomy. A low-risk internal productivity agent should not be governed like an agent that approves credit, moves money, or influences employment decisions. Risk tiers can determine the level of testing, approval, monitoring, and human oversight required before and after deployment."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Autonomy itself should also be governed deliberately. Organizations can define levels ranging from read-only assistance, to recommendation, to supervised action, to bounded autonomy, and finally to broader autonomous execution. Agents should not receive maximum authority by default. Greater autonomy should be earned through demonstrated reliability, appropriate controls, and a risk profile that justifies it. This creates a progression in which organizations can expand autonomy as confidence grows rather than making an all-or-nothing decision at deployment."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Controls translate those governance decisions into enforceable boundaries. Approval thresholds, access policies, prohibited actions, escalation conditions, rate limits, and other restrictions should be embedded into the architecture wherever possible rather than relying solely on written policy. High-impact actions should include safeguards such as human approval, compensating transactions, rollback mechanisms, or other forms of reversibility. There should also be clear authority to suspend or disable an agent immediately when its behavior creates unacceptable risk."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Governance should cover the full lifecycle of the agent. The enterprise needs a consistent process for design, registration, testing, deployment, monitoring, modification, retraining, suspension, and eventual decommissioning. Material changes to the underlying model, prompts, tools, data sources, or workflows can alter behavior and should trigger an appropriate level of revalidation. An agent that was safe six months ago should not be assumed to remain safe indefinitely simply because it has not yet caused an incident."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "That same lifecycle view should extend to incident management. Agent failures and near misses should be reviewed with the same seriousness as operational, security, or compliance incidents. Organizations should understand what happened, whether existing controls functioned as intended, what the root cause was, and what changes are required before the agent resumes operation. Near misses are especially valuable because they expose weaknesses before those weaknesses create material consequences."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Governance becomes more complex as agents begin working with other agents. Delegation should preserve identity, authority, and accountability across the full chain of activity. If one agent invokes another, the enterprise should still be able to determine who initiated the work, under whose authority it occurred, what permissions were delegated, and which agent ultimately performed each action. Otherwise, multi-agent systems can create gaps in accountability precisely when the operating model becomes more autonomous."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Organizations should also anticipate the emergence of shadow agents. Employees will experiment with new tools faster than centralized governance functions can approve them. The answer should not be to make experimentation impossible, because overly burdensome controls will simply drive activity underground. Instead, organizations should make registration, approved tooling, and lightweight governance easy enough that teams have an incentive to operate within the enterprise framework."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Ethics adds a different layer of judgment. Compliance asks whether an organization is permitted to act. Ethics asks whether it should. That distinction matters because autonomous systems can make decisions at scale, amplify poorly designed incentives, and apply policies with a consistency that may expose problems that were previously masked by human discretion."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Fairness and non-discrimination are especially important when agents influence consequential decisions in areas such as employment, lending, insurance, healthcare, pricing, or access to services. Organizations should evaluate whether agent behavior produces systematically different outcomes across relevant populations and whether those differences can be justified by legitimate business or risk considerations. Ethical review should focus not only on the model itself, but also on the rules, objectives, data, and workflow within which the model operates."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The objectives given to agents deserve particular scrutiny. An agent can behave exactly as designed and still create harmful outcomes if the objective is poorly chosen. Optimizing customer service purely for speed, for example, may reduce empathy or quality. Optimizing collections purely for recovery rates may encourage excessively aggressive behavior. Ethical governance therefore has to examine what the enterprise is asking agents to optimize, not simply whether the technology is functioning correctly."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Human dignity and agency should remain part of the design. Some interactions may be technically automatable but still benefit from human involvement because empathy, discretion, trust, or social judgment are central to the experience. Organizations should avoid assuming that every interaction should become autonomous simply because it can. The appropriate question is whether automation improves the outcome for the organization and the people affected by it."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Transparency also matters. Organizations should define when customers, employees, suppliers, or other stakeholders should know they are interacting with an AI system or that an agent materially influenced a decision. The appropriate level of disclosure will vary by context, but transparency should be intentional rather than accidental."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "For consequential decisions, meaningful human recourse should remain available. People affected by an agent-generated outcome should have a path to challenge it, provide additional context, or escalate to a human decision-maker where appropriate. Human oversight is most valuable not when it mechanically repeats every automated decision, but when it provides a genuine avenue for judgment when the automated system may have missed something important."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Privacy should also be evaluated beyond minimum legal compliance. Agents may have the technical ability to combine data from many systems, infer sensitive information, or use information in ways that were never contemplated when it was originally collected. Leaders should consider whether a particular use of data is consistent with the expectations of employees and customers, not simply whether access is technically authorized."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The central principle is that responsibility does not transfer to the machine. An organization cannot defend a harmful outcome by saying that the AI made the decision. Leaders remain accountable for the objectives they set, the systems they deploy, the controls they establish, and the degree of autonomy they choose to grant."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Done well, governance should not slow the agentic enterprise down. It should make responsible deployment faster by providing clear risk tiers, preapproved patterns, reusable controls, standard review processes, and explicit decision rights. The objective is not to eliminate risk. It is to create an operating environment in which the organization can grant agents meaningful autonomy while remaining clear about who is accountable, what boundaries apply, and what the enterprise is unwilling to delegate."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Performance Indicators and Measurement"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The agentic enterprise should be measured by business outcomes, not by AI activity. The number of agents deployed, workflows automated, or prompts processed may be useful operational statistics, but they do not indicate whether the organization is actually becoming more effective. Measurement should answer a more important question: is the business becoming faster, more productive, more reliable, safer, and more valuable because agents are now part of how work gets done?"
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "A practical way to structure measurement is across four levels: adoption, performance, leverage, and outcomes. Together, these provide a balanced view of whether agents are being used, whether they are working well, whether they are increasing the productivity of the organization, and whether that productivity is translating into meaningful business results."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Adoption measures whether agentic capabilities are actually becoming embedded in the operating model. Useful indicators may include the percentage of eligible workflows that have been redesigned for agent execution, the percentage of work being performed autonomously, the number of business functions actively using agents, or the distribution of workflows across different levels of autonomy. These measures should be used carefully. A high automation rate is not automatically a sign of success if the organization is automating work that should still involve humans. The purpose of adoption metrics is to understand the pace and breadth of transformation, not to maximize automation for its own sake."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Adoption should also include measures of organizational maturity. Leaders can track how quickly teams move an agent from concept to governed production, how often enterprise services and components are reused, and whether teams are building on shared platforms rather than creating isolated solutions. Over time, the organization should become faster at deploying new agentic capabilities because the underlying architecture, governance, and operating patterns are already in place."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Performance focuses on whether individual agents and agent-driven workflows are functioning reliably and correctly. Metrics should include completion rates, failure rates, processing time, accuracy, rework, escalation frequency, and exception rates. For model-driven decisions, organizations may also need measures such as false positives, false negatives, confidence thresholds, and drift over time. These measures allow leaders to determine whether the digital workforce is performing at an acceptable standard."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Reliability should be treated with the same rigor as other production systems. Availability, latency, retry rates, mean time to recovery, and dependency failures all matter because an agent that cannot access a required system or repeatedly fails a task is not meaningfully different from an employee who cannot perform the job. Performance measurement should therefore combine traditional technical reliability with business-process reliability."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Exception rates deserve particular attention. How often an agent requires human intervention is a strong indicator of how well it understands and executes its role. A high exception rate may indicate poor process design, insufficient training, weak policies, or an agent that has been granted responsibilities beyond its capabilities. At the same time, an unusually low exception rate should not automatically be celebrated, because it may mean the agent is failing to escalate situations that actually require human judgment."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Leverage measures whether agents are materially changing the productivity of human workers and the enterprise as a whole. One of the most important measures may become the amount of work a human can effectively supervise rather than directly perform. A manager who previously coordinated ten people may eventually oversee a combination of people and dozens of agents. An analyst may be able to evaluate ten times as many opportunities because agents perform the research and preparation. A customer service team may handle substantially greater volume because humans focus only on complex or sensitive interactions."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This human leverage should be measured explicitly. Organizations can track tasks or workflows completed per human employee, capacity gained without equivalent headcount growth, time reclaimed from repetitive work, and the percentage of employee effort redirected toward higher-value activities. The goal is not simply to reduce labor. It is to increase the amount of useful output that each human can create by combining human judgment with machine execution."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Cycle-time compression is another important leverage measure. Many enterprise processes are slow not because the individual tasks are difficult, but because work waits in queues, moves through handoffs, and depends on people becoming available. Agents can eliminate much of that waiting. Organizations should compare end-to-end process times before and after agent deployment, including the time spent between individual steps rather than only the duration of the tasks themselves."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Cost should also be evaluated at the level of the outcome. Leaders should understand the total cost of completing a process before and after automation, including model inference, infrastructure, software licensing, human oversight, exception handling, and support. Over time, organizations may develop more sophisticated measures of digital labor economics, such as cost per completed task, cost per autonomous workflow, or cost per decision."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Outcomes are the ultimate measure of whether agentic transformation is working. These should remain connected to the same business results the organization already cares about: revenue, margin, customer satisfaction, risk, quality, speed, retention, and resilience. Agent metrics should not become a separate measurement universe disconnected from the rest of the enterprise."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "For revenue-generating use cases, this may mean tracking conversion, retention, sales productivity, speed-to-market, or new revenue created through AI-enabled products and services. For operational use cases, it may mean lower cost-to-serve, higher throughput, shorter cycle times, fewer errors, or greater consistency. Customer-facing agents should be measured against outcomes such as satisfaction, resolution time, abandonment, complaints, and escalation to humans. Risk-sensitive agents should be measured against compliance adherence, unauthorized actions, policy violations, near misses, and material incidents."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The organization should also compare agent performance with the human baseline it is intended to improve or replace. Without that comparison, it is difficult to know whether automation is actually creating value. Where practical, agents can initially operate in shadow mode or alongside human execution so the organization can compare speed, quality, cost, and decision outcomes before increasing autonomy."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Measurement should evolve as agents mature. Early in deployment, organizations may focus heavily on reliability, exception rates, and human oversight. As confidence grows, greater emphasis can shift toward leverage and business outcomes. Likewise, the metrics used for a low-risk internal productivity agent should differ from those used for an autonomous financial or customer-facing agent. Measurement should be proportional to both the purpose and the risk of the work being performed."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Leaders should be especially cautious about vanity metrics. “We deployed 500 agents” says little more about business performance than saying “we hired 500 employees.” The relevant question is what those agents accomplished. Likewise, increasing automation rates or reducing human involvement can be counterproductive if customer experience, accuracy, or risk deteriorates."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "At the enterprise level, leadership should ultimately maintain a small set of measures that summarize the transformation. These might include the percentage of eligible workflows redesigned for agent execution, improvements in cycle time, human leverage, autonomous transaction volume, exception rates, and measurable financial impact. Those indicators should increasingly become part of the normal operating cadence rather than appearing only in separate AI reports."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The purpose of measurement is not to prove that the organization is using AI. It is to determine whether the operating model is improving. Adoption shows whether the transformation is taking hold. Performance shows whether the digital workforce can be trusted. Leverage shows whether humans and machines are producing more together. Outcomes show whether any of it matters to the business."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Communication Adoption and Change Management"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agentic transformation will succeed only if employees understand the change, see its relevance to their work, and believe the organization is serious about following through. Communication therefore cannot be treated as a one-time launch activity. It has to become an ongoing part of the transformation, helping employees understand where the organization is going, what is changing, what has been learned, and how they fit into the new operating model."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The communication should be concrete. Employees need more than broad statements about becoming “AI-first” or embracing innovation. They need to understand how workflows will change, where agents will be introduced, which activities may disappear, which new responsibilities will emerge, and what the organization expects from them as the operating model evolves. Abstract language creates uncertainty. Specificity creates something people can act on."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Leaders should also explain the rationale for the transformation repeatedly. People need to understand why the current model is no longer sufficient, why the organization is making the change now, and what the business expects to gain from it. This message should remain consistent across executive communications, business-unit discussions, team meetings, and day-to-day management. One announcement or town hall will not carry a multi-year transformation."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Real examples are especially powerful. Employees are more likely to understand the value of agentic operations when they can see an agent resolving a thousand routine service requests, reducing a multi-day process to minutes, eliminating repetitive data entry, or freeing a team to focus on higher-value work. These examples make the transformation tangible and give employees a clearer picture of what the future operating model actually looks like."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Early wins should therefore be selected and communicated deliberately. The first agent deployments do not need to be the most ambitious. In many cases, it is more valuable to solve highly visible pain points that employees already recognize. When teams see that an agent can remove a frustrating task, shorten a cumbersome workflow, or improve the customer experience, adoption becomes easier because the benefits are experienced rather than merely described."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The organization should be equally transparent about failures. Agentic systems will make mistakes, some experiments will underperform, and some assumptions will prove wrong. Leaders should communicate what happened, what was learned, and what changes are being made in response. This is especially important when failures affect customers, employees, or critical operations. Trying to hide or minimize problems can undermine trust far more quickly than acknowledging them and demonstrating that the organization has the controls and discipline to respond."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Employee participation should be part of the change process as well. Frontline employees often understand the work at a level that executives, technologists, and transformation teams do not. They know where exceptions occur, where policies conflict with reality, which customer interactions require nuance, and where workarounds have emerged over time. Involving them in process redesign, escalation design, agent behavior, and testing can materially improve the quality of the resulting system while also giving employees a meaningful role in shaping the change."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This participation should extend beyond formal project teams. Employees need clear feedback channels where they can report poor agent behavior, identify edge cases, propose improvements, and suggest new opportunities for automation. Change management should therefore operate as a feedback loop rather than a broadcast mechanism. The organization communicates the direction, employees experience the new operating model, they provide feedback, and the system continues to improve."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Early adopters can play an important role in accelerating that cycle. Most organizations will have employees who experiment with AI quickly, identify useful applications, and become comfortable with new ways of working before their peers. Leaders should identify these people and give them opportunities to become champions, mentors, and internal translators. Peer advocacy can often be more persuasive than executive messaging because employees can see how someone doing similar work has incorporated the technology successfully."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Recognition also matters. Employees who redesign a process, discover a valuable use case, improve an agent, or help others adopt new ways of working should be visible. Recognition signals that the organization values active participation in the transformation and helps turn isolated experimentation into a broader cultural norm."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "At the same time, leaders should not assume that all resistance is simply fear or unwillingness to change. Employees may be identifying real issues with a proposed workflow, customer experience, policy, or control. Resistance can be useful information. The organization should distinguish between legitimate operational concerns and a persistent unwillingness to adapt. Treating every objection as resistance risks silencing the people who may understand the process best."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Different employees will also move at different speeds. Early adopters, the broader middle of the organization, and persistent resistors will not respond to the same interventions. Some people will need only access and permission to experiment. Others will need examples, support, and repeated exposure before they become comfortable. A smaller group may ultimately decide that the new operating model is not for them. Effective change management recognizes those differences rather than assuming a single message or training program will move everyone equally."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Progress should remain visible throughout the journey. Leaders should regularly show what has been deployed, what outcomes have improved, what has failed, what has been learned, and what comes next. This creates a sense of momentum and prevents the transformation from feeling like another initiative that was announced loudly and then quietly disappeared."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Finally, the organization should normalize the idea that there will be no single finish line. Agentic transformation is not a one-time implementation followed by steady state. Models will improve, new capabilities will emerge, workflows will be redesigned, and the division of labor between humans and agents will continue to evolve. The change capability itself therefore becomes strategic. The most successful organizations will not simply teach employees how to adapt to one generation of AI. They will build a culture that expects continuous evolution in how work gets done."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The objective of communication and change management is not to convince everyone that every aspect of the transformation is positive. It is to create enough clarity, transparency, participation, and evidence that employees understand the direction of the organization and can make informed decisions about how they will engage with it."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
     "text": "Technology Transformation"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "On the technical side, becoming agent-native requires reimagining the enterprise architecture to support autonomous agents, continuous intelligence, and seamless integration. Traditional enterprise IT is often a seven-layer stack: infrastructure, data, integration, applications, experience, plus cross-cutting security and ops. That legacy stack was built for a world of deterministic, human-triggered transactions. To make agents first-class citizens, new architectural layers and patterns must be introduced that infuse AI-driven decision-making and action-taking capabilities across the stack. The goal is an architecture where AI agents can "
-      },
-      {
-        "text": "detect (data/inputs), reason (AI/ML intelligence), act (execute via tools/APIs), and interact (collaborate with humans or other agents)",
+        "text": "The technology stack must give agents context, intelligence, tools, identity, observability, and a control plane for coordinated action.",
         "em": true
-      },
-      {
-        "text": " as seamlessly as any human employee – and do so at scale, with reliability and governance."
       }
     ]
   },
@@ -1065,7 +2224,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Leading thinkers and organizations have proposed blueprints for this agent-native architecture. A common theme is the addition of four core layers on top of (and intertwined with) the traditional IT stack :"
+        "text": "The technology strategy should remain capability-oriented. Model vendors, agent frameworks, and orchestration products will change quickly. The enterprise needs an architecture that can absorb that change while preserving the durable capabilities required for governed autonomy."
       }
     ]
   },
@@ -1073,11 +2232,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Data Layer:",
-        "strong": true
-      },
-      {
-        "text": " This provides a unified, machine-understandable representation of enterprise data, knowledge, and context. It could be implemented via knowledge graphs, ontologies, or simply a well-integrated data fabric with metadata that agents can query. The semantic layer ensures that agents “know” the meaning of data – for example, understanding that “customer ID” in one system is the same as “client reference” in another, or knowing the organizational hierarchy to interpret a manager’s role. By having a common semantic model, agents can reason across silos. This layer addresses the challenge of “lack of semantic cohesion” which, if not solved, limits agents to narrow tasks . With a semantic layer, an agent can draw insights from disparate sources and maintain context – crucial for complex workflows that span departments."
+        "text": "At a high level, an agent must be able to perceive the current state of the business, reason about an objective, act through trusted tools, maintain context, collaborate with humans or other agents, and operate inside enforceable policy. The surrounding architecture should make each of those capabilities reusable rather than rebuilding them for every use case."
       }
     ]
   },
@@ -1085,214 +2240,276 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Intelligence Layer:",
-        "strong": true
-      },
-      {
-        "text": " This is essentially an internal AI cloud – a layer that hosts machine learning models (from predictive analytics to large language models) and makes them accessible as services . It manages the lifecycle of models: training, versioning, deploying, monitoring. By centralizing AI services here, you ensure consistency (everyone uses the approved models), and security (access controls on models and data). Agents tap into this layer for perception and decision-making tasks that require ML – e.g., sentiment analysis of an email, forecasting demand, or generating a summary. The AI/ML layer might include a feature store, vector databases for embeddings (for LLM context), and other infrastructure to support intelligent behavior. Importantly, it should have embedded guardrails – for instance, it can enforce that only bias-audited models are deployed, and it monitors drift or anomalies in model outputs . In short, this layer is the “brains”, providing cognitive capabilities to agents in a controlled, scalable way."
+        "text": "Technology Transformation On the technical side, becoming agent-native requires reimagining the enterprise architecture to support autonomous agents, continuous intelligence, and seamless integration. Traditional enterprise IT is often a seven-layer stack: infrastructure, data, integration, applications, experience, plus cross-cutting security and ops. That legacy stack was built for a world of deterministic, human-triggered transactions. To make agents first-class citizens, new architectural layers and patterns must be introduced that infuse AI-driven decision-making and action-taking capabilities across the stack. The goal is an architecture where AI agents can detect (data/inputs), reason (AI/ML intelligence), act (execute via tools/APIs), and interact (collaborate with humans or other agents) as seamlessly as any human employee - and do so at scale, with reliability and governance. Leading thinkers and organizations have proposed blueprints for this agent-native architecture. A common theme is the addition of four core layers on top of (and intertwined with) the traditional IT stack :"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Data Layer"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Agentic Layer:",
-        "strong": true
-      },
-      {
-        "text": " Think of this as the runtime and management environment for the agents themselves. It provides the frameworks and tools needed to build, manage, and execute AI agents at scale . This includes agent “cognitive architecture” components like memory stores (where agents keep context or conversational state), reasoning engines or planners (especially for multi-step tasks), and tool integration interfaces. The agentic layer handles "
-      },
-      {
-        "text": "agent lifecycle",
-        "em": true
-      },
-      {
-        "text": ": launching new agent instances, allocating resources (maybe an agent needs a certain container or sandbox), and decommissioning them when done . It also may facilitate agent collaboration – protocols for agents to talk to each other or hand off tasks. For example, an order-processing agent might invoke a fraud-detection agent as part of its workflow. The agentic layer could manage such multi-agent coordination, including conflict resolution if two agents have overlapping responsibilities. Essentially, this layer treats agents as a new type of “application” that needs its own support system, similar to how an app server supports web apps. It ensures agents run with "
-      },
-      {
-        "text": "state handling, concurrency control, and governance",
-        "strong": true
-      },
-      {
-        "text": " in place ."
+        "text": "This provides a unified, machine-understandable representation of enterprise data, knowledge, and context. It could be implemented via knowledge graphs, ontologies, or simply a well-integrated data fabric with metadata that agents can query. The semantic layer ensures that agents “know” the meaning of data - for example, understanding that “customer ID” in one system is the same as “client reference” in another, or knowing the organizational hierarchy to interpret a manager’s role. By having a common semantic model, agents can reason across silos. This layer addresses the challenge of “lack of semantic cohesion” which, if not solved, limits agents to narrow tasks. With a semantic layer, an agent can draw insights from disparate sources and maintain context - crucial for complex workflows that span departments.​"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Intelligence Layer"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Enterprise Orchestration Layer:",
-        "strong": true
-      },
-      {
-        "text": " Often dubbed the “control plane” of the agent-native enterprise , this is where end-to-end workflows are coordinated across agents, humans, and traditional systems. It holds the process models (the machine-readable workflows from Principle 5) and executes them, determining which agent or service to invoke at each step . Crucially, this layer embeds business rules, compliance checks, and human-in-the-loop checkpoints into the workflows . It’s the guardian that ensures even as agents operate with autonomy, they do so in a way aligned with policies and goals. One can think of it as a super-smart workflow engine or BPM platform, enhanced with AI capabilities and real-time adaptability (hence sometimes called cognitive orchestration). This layer might interface with human task management as well – e.g., if an agent cannot complete a step or requires approval, the orchestration engine creates a task in a human workflow system for someone to handle, and then continues when done. By having this as a separate layer, the enterprise can manage complex interactions as one coherent process rather than a tangle of point-to-point automations. It addresses the challenge of governance in a nondeterministic world – you need a higher-level layer to coordinate and supervise the chaos of many agents and unpredictable events ."
+        "text": "This is essentially an internal AI cloud - a layer that hosts machine learning models (from predictive analytics to large language models) and makes them accessible as services. It manages the lifecycle of models: training, versioning, deploying, monitoring. By centralizing AI services here, you ensure consistency (everyone uses the approved models), and security (access controls on models and data). Agents tap into this layer for perception and decision-making tasks that require ML - e.g., sentiment analysis of an email, forecasting demand, or generating a summary. The AI/ML layer might include a feature store, vector databases for embeddings (for LLM context), and other infrastructure to support intelligent behavior. Importantly, it should have embedded guardrails - for instance, it can enforce that only bias-audited models are deployed, and it monitors drift or anomalies in model outputs. In short, this layer is the “brains”, providing cognitive capabilities to agents in a controlled, scalable way.​"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Agentic Layer"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "With these layers integrated into the overall architecture, the result is often described as an 11-layer stack (7 traditional + 4 new) that is "
-      },
-      {
-        "text": "outcome-centric rather than system-centric",
-        "em": true
-      },
-      {
-        "text": " . Work is no longer executed exclusively by human teams through apps, but “dynamically orchestrated and completed by an agentic workforce” with humans in oversight roles . The diagram above illustrates this concept: the new layers sit alongside and complement the existing layers, ensuring AI agents have the needed context, intelligence, operational environment, and control to function at enterprise scale."
+        "text": "Think of this as the runtime and management environment for the agents themselves. It provides the frameworks and tools needed to build, manage, and execute AI agents at scale. This includes agent “cognitive architecture” components like memory stores (where agents keep context or conversational state), reasoning engines or planners (especially for multi-step tasks), and tool integration interfaces. The agentic layer handles agent lifecycle: launching new agent instances, allocating resources (maybe an agent needs a certain container or sandbox), and decommissioning them when done. It also may facilitate agent collaboration - protocols for agents to talk to each other or hand off tasks. For example, an order-processing agent might invoke a fraud-detection agent as part of its workflow. The agentic layer could manage such multi-agent coordination, including conflict resolution if two agents have overlapping responsibilities. Essentially, this layer treats agents as a new type of “application” that needs its own support system, similar to how an app server supports web apps. It ensures agents run with state handling, concurrency control, and governance in place.​"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Enterprise Orchestration Layer"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Beyond the high-level layers, several important technical practices and components support this architecture:"
+        "text": "Often dubbed the “control plane” of the agent-native enterprise , this is where end-to-end workflows are coordinated across agents, humans, and traditional systems. It holds the process models (the machine-readable workflows from Principle 5) and executes them, determining which agent or service to invoke at each step. Crucially, this layer embeds business rules, compliance checks, and human-in-the-loop checkpoints into the workflows. It’s the guardian that ensures even as agents operate with autonomy, they do so in a way aligned with policies and goals. One can think of it as a super-smart workflow engine or BPM platform, enhanced with AI capabilities and real-time adaptability (hence sometimes called cognitive orchestration). This layer might interface with human task management as well - e.g., if an agent cannot complete a step or requires approval, the orchestration engine creates a task in a human workflow system for someone to handle, and then continues when done. By having this as a separate layer, the enterprise can manage complex interactions as one coherent process rather than a tangle of point-to-point automations. It addresses the challenge of governance in a nondeterministic world - you need a higher-level layer to coordinate and supervise the chaos of many agents and unpredictable events.​ With these layers integrated into the overall architecture, the result is often described as an 11-layer stack (7 traditional + 4 new) that is outcome-centric rather than system-centric. Work is no longer executed exclusively by human teams through apps, but “dynamically orchestrated and completed by an agentic workforce” with humans in oversight roles. The diagram above illustrates this concept: the new layers sit alongside and complement the existing layers, ensuring AI agents have the needed context, intelligence, operational environment, and control to function at enterprise scale. Beyond the high-level layers, several important technical practices and components support this architecture:"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Event-Driven and Real-Time Data Fabric"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Event-Driven and Real-Time Data Fabric:",
-        "strong": true
-      },
-      {
-        "text": " To react quickly and intelligently, agents need fresh data. Building a real-time data pipeline (with change data capture, streaming platforms like Kafka, etc.) feeds the AI/ML and semantic layers with up-to-date information . This helps close the “context gap” that many GenAI projects face, where models don’t know the latest state of the business . A data fabric that integrates previously siloed data (CRM, ERP, logs, emails, etc.) into a unified layer is foundational. Vector databases might be part of this for semantic search capabilities to give agents memory of unstructured knowledge (documents, past conversations). Low latency is key – if an agent is to make a decision now, it needs to access the current state across domains instantly."
+        "text": "To react quickly and intelligently, agents need fresh data. Building a real-time data pipeline (with change data capture, streaming platforms like Kafka, etc.) feeds the AI/ML and semantic layers with up-to-date information. This helps close the “context gap” that many GenAI projects face, where models don’t know the latest state of the business. A data fabric that integrates previously siloed data (CRM, ERP, logs, emails, etc.) into a unified layer is foundational. Vector databases might be part of this for semantic search capabilities to give agents memory of unstructured knowledge (documents, past conversations). Low latency is key - if an agent is to make a decision now, it needs to access the current state across domains instantly.​"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Integration and API Mediation"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Integration and API Mediation:",
-        "strong": true
-      },
-      {
-        "text": " As mentioned in Principle 3, robust integration infrastructure underpins everything. API gateways, message queues, and integration middleware ensure that agents in the agentic layer can invoke any needed service in the application layer or call out to external services securely. An API orchestration platform (e.g. tools like Workato, MuleSoft, or Camunda, etc.) might be employed to build complex integrations that agents use . Some emerging platforms are touting “agentic orchestration” features – essentially merging traditional workflow automation with AI decision-making . The architecture should support both UI automation (for systems with no API) and "
-      },
-      {
-        "text": "API orchestration ",
-        "em": true
-      },
-      {
-        "text": "fluidly."
+        "text": "As mentioned in Principle 3, robust integration infrastructure underpins everything. API gateways, message queues, and integration middleware ensure that agents in the agentic layer can invoke any needed service in the application layer or call out to external services securely. An API orchestration platform (e.g. tools like Workato, MuleSoft, or Camunda, etc.) might be employed to build complex integrations that agents use. Some emerging platforms are touting “agentic orchestration” features - essentially merging traditional workflow automation with AI decision-making. The architecture should support both UI automation (for systems with no API) and API orchestration fluidly.​ Security, Identity & Access Management: When agents act on behalf of humans, you need fine-grained control over what they can do. The architecture must incorporate strong identity management for agents - each agent or agent type should have roles/permissions like a virtual employee. Role-based access control (RBAC) and attribute-based policies ensure agents only access data they should and only perform allowed actions. For example, an agent that handles HR tasks shouldn’t have access to finance systems, etc. Multi-factor authentication might even apply (the agent might need a token to prove it’s authorized). Secrets management is critical, as agents will use API keys or credentials to access systems - these need to be stored securely (e.g. in vaults). Additionally, monitoring for security is needed (Principle 4 covers audit logs; from a security view, you’d feed those into anomaly detection that could flag if an agent account is behaving oddly, possibly indicating misuse or compromise).​"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Scalability and Resilience"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Security, Identity & Access Management:",
-        "strong": true
-      },
-      {
-        "text": " When agents act on behalf of humans, you need fine-grained control over what they can do. The architecture must incorporate strong identity management for agents – each agent or agent type should have roles/permissions like a virtual employee. Role-based access control (RBAC) and attribute-based policies ensure agents only access data they should and only perform allowed actions . For example, an agent that handles HR tasks shouldn’t have access to finance systems, etc. Multi-factor authentication might even apply (the agent might need a token to prove it’s authorized). Secrets management is critical, as agents will use API keys or credentials to access systems – these need to be stored securely (e.g. in vaults). Additionally, monitoring for security is needed (Principle 4 covers audit logs; from a security view, you’d feed those into anomaly detection that could flag if an agent account is behaving oddly, possibly indicating misuse or compromise)."
+        "text": "Technically, the platform should be built to scale on demand. Agents might proliferate - think hundreds or thousands of concurrent agent processes performing various tasks (especially if you have many small-grained agents vs a few monolithic ones). Containerization and orchestration (Kubernetes, serverless functions) can enable scaling up agents when workloads spike and scaling down when idle. Resilience patterns (retry logic, circuit breakers, active-active deployments across regions) ensure that the agent workforce is reliable. For instance, if one instance fails, another picks up its tasks (like how you would schedule shifts for humans, but here automated). The underlying infrastructure (GPUs for AI workloads, networking for data flows) must be robust and monitored. Edge computing might come into play for low-latency tasks (e.g. an agent handling a factory robot might run on an edge device on-site). Essentially, treat the whole system as a mission-critical digital workforce platform that cannot have lengthy downtime.​"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Proactive IT Operations (AIOps)"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Scalability and Resilience:",
-        "strong": true
-      },
-      {
-        "text": " Technically, the platform should be built to scale on demand. Agents might proliferate – think hundreds or thousands of concurrent agent processes performing various tasks (especially if you have many small-grained agents vs a few monolithic ones). Containerization and orchestration (Kubernetes, serverless functions) can enable scaling up agents when workloads spike and scaling down when idle. Resilience patterns (retry logic, circuit breakers, active-active deployments across regions) ensure that the agent workforce is reliable. For instance, if one instance fails, another picks up its tasks (like how you would schedule shifts for humans, but here automated). The underlying infrastructure (GPUs for AI workloads, networking for data flows) must be robust and monitored. Edge computing might come into play for low-latency tasks (e.g. an agent handling a factory robot might run on an edge device on-site). Essentially, treat the whole system as a mission-critical digital workforce platform that cannot have lengthy downtime."
+        "text": "The IT Ops team will need to evolve to manage this agent-native environment. Traditional monitoring (CPU, memory of servers) is necessary but not sufficient; ops teams should incorporate AI-driven tools that predict issues (like model performance degrading or a data pipeline lagging) and automatically adjust. The notion of IT Ops being telemetry-driven and agent-aware has been highlighted. This means the ops tooling itself may deploy agents that monitor other agents! For example, a watchdog agent could roam through logs to detect if another agent is stuck in an error loop and then reboot it or alert someone. Self-healing systems (one of the core ideas of autonomous architecture ) would be ideal: if an agent fails or a component crashes, the system reroutes tasks or spins up replacements without human intervention.​"
       }
     ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Testing and DevOps for AI"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Proactive IT Operations (AIOps):",
-        "strong": true
-      },
-      {
-        "text": " The IT Ops team will need to evolve to manage this agent-native environment. Traditional monitoring (CPU, memory of servers) is necessary but not sufficient; ops teams should incorporate AI-driven tools that predict issues (like model performance degrading or a data pipeline lagging) and automatically adjust. The notion of IT Ops being telemetry-driven and agent-aware has been highlighted . This means the ops tooling itself may deploy agents that monitor other agents! For example, a watchdog agent could roam through logs to detect if another agent is stuck in an error loop and then reboot it or alert someone. Self-healing systems (one of the core ideas of autonomous architecture ) would be ideal: if an agent fails or a component crashes, the system reroutes tasks or spins up replacements without human intervention."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Testing and DevOps for AI:",
-        "strong": true
-      },
-      {
-        "text": " Technically, integrating AI into enterprise processes means adopting new testing methodologies. In addition to normal software testing, you have to test AI behavior (for fairness, for edge cases). The ML models need monitoring in production for drift. The concept of "
-      },
-      {
-        "text": "MLOps",
-        "strong": true
-      },
-      {
-        "text": " intersects here – versioning models, continuous training pipelines, etc., all under the governance of the AI/ML layer. DevOps pipelines should include automated tests of end-to-end agent workflows (maybe using simulation of scenarios). Also, a safe "
-      },
-      {
-        "text": "staging environment",
-        "strong": true
-      },
-      {
-        "text": " that mirrors production where you can run agents through paces with real systems (but test data) is important to avoid deploying unvetted logic. Given the complexity, some organizations choose to "
-      },
-      {
-        "text": "incrementally roll out",
-        "em": true
-      },
-      {
-        "text": " agentic automation – perhaps starting in one domain or with read-only “copilot” mode before full autonomy – akin to how one would dark-launch a feature. Salesforce’s phased approach (information retrieval agents first, then action agents in one domain, then cross-domain orchestration, etc.) is a blueprint for gradually building confidence and capability ."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "In summary, the technical blueprint for an agent-native enterprise is about creating a "
-      },
-      {
-        "text": "platform where AI agents can thrive",
-        "strong": true
-      },
-      {
-        "text": ". It ensures agents have the knowledge (semantic layer), intelligence (ML layer), an environment to live in (agentic layer), and a boss to coordinate them (orchestration layer). It also emphasizes modern best practices in data, integration, and operations to support this new way of work. The result is a nimble, intelligent infrastructure where adding a new automated process is more about "
-      },
-      {
-        "text": "writing some code or configuring a workflow",
-        "em": true
-      },
-      {
-        "text": " than it is about "
-      },
-      {
-        "text": "reorganizing teams or purchasing a monolithic app",
-        "em": true
-      },
-      {
-        "text": ". Enterprises that succeed in this re-platforming often report that AI shifts from being a science experiment to being a core operational capability – a true force multiplier for the business ."
+        "text": "Technically, integrating AI into enterprise processes means adopting new testing methodologies. In addition to normal software testing, you have to test AI behavior (for fairness, for edge cases). The ML models need monitoring in production for drift. The concept of MLOps intersects here - versioning models, continuous training pipelines, etc., all under the governance of the AI/ML layer. DevOps pipelines should include automated tests of end-to-end agent workflows (maybe using simulation of scenarios). Also, a safe staging environment that mirrors production where you can run agents through paces with real systems (but test data) is important to avoid deploying unvetted logic. Given the complexity, organizations should roll out agentic automation incrementally: begin with bounded, observable use cases, progress to action-taking within a single domain, and only then expand into cross-domain orchestration as governance and platform maturity improve.​ In summary, the technical blueprint for an agent-native enterprise is about creating a platform where AI agents can thrive. It ensures agents have the knowledge (semantic layer), intelligence (ML layer), an environment to live in (agentic layer), and a boss to coordinate them (orchestration layer). It also emphasizes modern best practices in data, integration, and operations to support this new way of work. The result is a nimble, intelligent infrastructure where adding a new automated process is more about writing some code or configuring a workflow than it is about reorganizing teams or purchasing a monolithic app. The objective of this re-platforming is to move AI from isolated experimentation into a governed, reusable operating capability for the business."
       }
     ]
   },
   {
     "kind": "h",
     "level": 2,
-    "text": "Operational Excellence"
+    "text": "Reference capability stack"
+  },
+  {
+    "kind": "table",
+    "head": [
+      {
+        "spans": [
+          {
+            "text": "CAPABILITY"
+          }
+        ]
+      },
+      {
+        "spans": [
+          {
+            "text": "ROLE IN THE AGENTIC ENTERPRISE"
+          }
+        ]
+      }
+    ],
+    "rows": [
+      [
+        {
+          "spans": [
+            {
+              "text": "Enterprise data and context"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Current, governed, semantically understandable business data and knowledge."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Intelligence services"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Approved models, evaluation, guardrails, embeddings, and model lifecycle management."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Agent runtime"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Memory, planning, tool use, lifecycle, execution environments, and multi-agent coordination."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Integration and tools"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "APIs, events, messaging, legacy wrappers, and secure access to business capabilities."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Identity and security"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Non-human identity, delegated authority, secrets, least privilege, and policy enforcement."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Observability and audit"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Logs, traces, business metrics, model context, alerts, evidence, and recovery controls."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Enterprise orchestration"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "End-to-end workflow coordination across agents, humans, systems, rules, and approvals."
+            }
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
+    "text": "A Roadmap to the Agentic Enterprise"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "Even with the right principles, people, and technology in place, the day-to-day operation of an agent-native enterprise presents unique challenges. Traditional operating models must adapt to manage a hybrid workforce of humans and AI agents working in concert. Here we outline key operational considerations and best practices to ensure the agent-native enterprise runs safely, efficiently, and continuously improves:"
+        "text": "Autonomy should expand only as the enterprise earns the right to trust it.",
+        "em": true
       }
     ]
   },
@@ -1300,18 +2517,7 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Continuous Monitoring and Incident Response:",
-        "strong": true
-      },
-      {
-        "text": " In an AI-driven operation, you’ll be monitoring not just servers and networks, but "
-      },
-      {
-        "text": "business process health",
-        "em": true
-      },
-      {
-        "text": ". Define SLAs and SLOs for agent-driven processes (e.g. order processing agents must complete tasks within X minutes 99% of the time, with error rate below Y%). Leverage the observability data (Principle 4) to track these. If an SLA is breached – say an agent process has a backlog building up or transactions failing – have an incident response playbook. This might include automatically retrying tasks, failing over to a backup agent or even a human team as a fallback. For instance, if the customer support bot is down, route chats to human reps. The organization should treat high-severity AI incidents with the same rigor as major IT outages. Conduct blameless post-mortems for AI failures: determine root causes (Was the model output wrong? Did an integration break? Was a policy misconfigured?) and implement fixes. Often these incidents reveal edge cases that can be used to harden the system (e.g. add a new rule or expand training data)."
+        "text": "The agentic enterprise will not arrive through a single deployment. It is a maturity journey in which autonomy expands as organizational confidence and technical control improve. Trying to skip stages creates predictable failures: agents are given broad permissions before ownership is clear, workflows are automated before processes are understood, or cross-functional orchestration is attempted before systems are reliably accessible."
       }
     ]
   },
@@ -1319,241 +2525,269 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "Model and Knowledge Management:",
-        "strong": true
-      },
-      {
-        "text": " Running an agent-native enterprise means regularly updating the “brains” of your agents. As business conditions change or new data arrives, AI models need retraining or tuning. Establish an "
-      },
-      {
-        "text": "MLOps pipeline",
-        "strong": true
-      },
-      {
-        "text": " to continuously improve models – for example, retrain recommendation models weekly with new data, or fine-tune NLP agents when product names or regulations change. Similarly, keep the semantic layer’s knowledge up to date – if new terminology or new data sources come in, update the ontology or data mappings. Set review cycles for rules and policies coded in the system; what was a valid policy last year might change this year (e.g. new compliance rules from regulators). Create a schedule for periodically reviewing agent knowledge bases, just like employees have periodic training. Some organizations institute an “AI model review board” that meets say quarterly to assess all critical models for performance, bias, drift, and decide if any retraining or replacement is needed. Remember that unlike hard-coded software, AI behavior can degrade over time if data drifts – proactive maintenance is required."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Risk Management and Kill-Switches:",
-        "strong": true
-      },
-      {
-        "text": " A hallmark of operational excellence is preparing for the worst-case scenarios. For AI agents, that means defining "
-      },
-      {
-        "text": "fail-safe mechanisms",
-        "strong": true
-      },
-      {
-        "text": ". If an agent starts behaving erratically (due to a bug or a malicious input or a model glitch), there must be a way to immediately stop or isolate it. This could be an automated circuit-breaker that halts an agent’s access if it triggers certain thresholds (e.g. it tries to execute an unusual number of high-value transactions outside business hours) . Or a simple “shutdown” command that an admin can issue to pause all agents of a certain type. Conduct drills for these scenarios: e.g., simulate an agent going rogue and see if your monitoring catches it and if you can kill it quickly. Additionally, maintain "
-      },
-      {
-        "text": "manual override",
-        "em": true
-      },
-      {
-        "text": " procedures – humans should always have the ability to take control. For example, if an autonomous supply chain agent is ordering inventory at a rapid pace that seems unreasonable, a human manager should be able to freeze new orders until things are reviewed. These controls will reassure stakeholders (and regulators) that AI isn’t running wild without oversight."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Business Continuity Planning:",
-        "strong": true
-      },
-      {
-        "text": " Include AI systems in your business continuity and disaster recovery plans. If your enterprise orchestration layer or agent platform goes down, how will the business operate? Perhaps you need contingency plans for critical operations to revert to manual or alternate processes temporarily. Conversely, if humans can’t work (e.g., pandemic lockdowns, or workforce strikes), can agents fill in gaps? agent-native enterprises might consider having certain processes fully agentized as part of resilience – e.g., if your call center staff are unavailable, having a capable AI agent that can at least handle basic inquiries might keep things running. Multi-region or multi-cloud setups for AI components can add resilience (so a cloud outage doesn’t stop all agents). Regularly test these scenarios (chaos engineering could be extended to AI: intentionally disable some AI services to ensure others or humans can compensate)."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Metrics and Continuous Improvement:",
-        "strong": true
-      },
-      {
-        "text": " Traditional operations measure things like uptime, throughput, cost per transaction. In an agent-native operation, "
-      },
-      {
-        "text": "new metrics",
-        "strong": true
-      },
-      {
-        "text": " become important. You might track "
-      },
-      {
-        "text": "Automation Rate",
-        "em": true
-      },
-      {
-        "text": " (percent of tasks done by agents vs humans), "
-      },
-      {
-        "text": "Agent Efficiency",
-        "em": true
-      },
-      {
-        "text": " (how many tasks an agent completes correctly per hour), "
-      },
-      {
-        "text": "Exception Rate",
-        "em": true
-      },
-      {
-        "text": " (how often agents have to hand off to humans), "
-      },
-      {
-        "text": "False Positive/Negative rates",
-        "em": true
-      },
-      {
-        "text": " for decisions (like how often did an agent escalate something unnecessary, or fail to escalate when it should have). Business outcome metrics are the ultimate gauge – cycle time, customer satisfaction, error rates, compliance adherence, cost-to-serve, etc., should all improve if AI is delivering value . It’s important not to get blinded by vanity metrics like “number of bots deployed”; what matters is outcomes . For example, if you doubled the number of agents but average handling time of a case didn’t improve, the deployment isn’t effective. Use these metrics to drive continuous improvement: if the exception rate is high in a certain process, analyze why – maybe the agent needs retraining or the process logic needs refinement for edge cases. If customer satisfaction dips, perhaps the AI is not handling certain inquiries well – feed those back as new training data or allow more human touch. Set targets for these metrics to foster a culture of "
-      },
-      {
-        "text": "Kaizen",
-        "em": true
-      },
-      {
-        "text": " (continuous improvement) in AI operations. This could even tie into performance reviews or OKRs for teams managing the agents."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Human-in-the-Loop Mechanisms:",
-        "strong": true
-      },
-      {
-        "text": " Even in steady-state operations, maintaining some level of human oversight is healthy. This can involve sampling: e.g., a manager reviews 5% of transactions completed by an agent to ensure quality (like QA sampling). Or periodic shadow mode: occasionally, have a human perform the same task as the agent on a case to compare outcomes (this can catch any drift or new scenario the agent isn’t handling). Encourage frontline employees to provide feedback on agent decisions – e.g., a customer support rep who takes over from a chatbot can tag whether the bot’s prior answers were helpful or not, feeding back into training. "
-      },
-      {
-        "text": "Active learning",
-        "strong": true
-      },
-      {
-        "text": " frameworks can be used where an agent asks for human feedback on cases it’s uncertain about, thereby improving over time. Essentially, even as agents handle execution, keep humans in the loop as teachers and monitors. This symbiosis prevents complacency and ensures the AI doesn’t stray from acceptable bounds. Over time, as confidence in agents grows, the degree of human in loop can be dialed down, but it should never be zero for critical processes (if nothing else, to handle the unknown unknowns)."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Scaling and Sprawl Management:",
-        "strong": true
-      },
-      {
-        "text": " Once the agent-native approach gains momentum, there is a risk of uncontrolled proliferation of agents (every team might spin up their own agents). This can lead to duplication, inconsistencies, or difficulties in oversight – analogous to “shadow IT” but with AI (sometimes called “shadow AI”) . To manage this, maintain a "
-      },
-      {
-        "text": "central registry of agents",
-        "em": true
-      },
-      {
-        "text": ": what they are, who owns them, what they have access to. Reuse should be encouraged – if two departments need a similar agent, maybe one agent can be generalized or shared rather than building two. Have an "
-      },
-      {
-        "text": "Architecture Review Board",
-        "strong": true
-      },
-      {
-        "text": " or similar process for new automations that ensures they align with enterprise standards and don’t introduce undue risk. This governance helps avoid “agent sprawl” where you lose track of what’s running. At the same time, balance it with empowerment – you want to avoid stifling innovation. A good practice is to provide easy-to-use central tools (so teams use your central platform rather than hacking together their own) and guidelines for building new agents. When the business sees many agents in action, consider classifying them: e.g., "
-      },
-      {
-        "text": "Tier 1 critical agents",
-        "em": true
-      },
-      {
-        "text": " (requiring more rigorous monitoring and testing) vs "
-      },
-      {
-        "text": "Tier 3 utility bots",
-        "em": true
-      },
-      {
-        "text": " (low risk, can be deployed faster). Allocate operational attention accordingly."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Regulatory Compliance and Audit Readiness:",
-        "strong": true
-      },
-      {
-        "text": " For regulated industries especially, be prepared to show auditors how your AI-augmented processes meet requirements. This could mean maintaining documentation of how each agent works, models and rules used, and evidence of testing/validation before deployment. Keep clear records of any human overrides or manual decisions – ironically, as you automate, regulators might want proof that humans can still intervene. Some regulations (like the EU’s proposed AI Act) may require logging and risk assessments for certain AI applications – having followed Principle 4 (auditability) will put you in a good position to comply. Engage with your compliance/legal teams early and often; they should be part of the design process for agent-governed workflows, ensuring controls are in place. Many organizations set up "
-      },
-      {
-        "text": "AI governance frameworks",
-        "strong": true
-      },
-      {
-        "text": " aligned to things like ISO AI management standards or NIST AI risk management, which formalize how AI is handled. By operationalizing those frameworks (embedding them into day-to-day checks, approvals, and monitor alerts), you both reduce risk and have a ready answer when an external auditor or board member asks, “How do we know the AI is doing the right thing?”."
-      }
-    ]
-  },
-  {
-    "kind": "p",
-    "spans": [
-      {
-        "text": "Customer and Stakeholder Communication:",
-        "strong": true
-      },
-      {
-        "text": " As operations change, consider the impact on customers and partners. If AI agents interact externally (e.g., AI-generated emails to clients, or a chatbot for customers), ensure the experience is consistent with your brand and service standards. Have a way for customers to reach a human if needed (nothing frustrates users more than being stuck with an unhelpful bot). Be transparent where appropriate: some enterprises openly share that they use AI for certain tasks and highlight the benefits (faster service, 24/7 availability, etc.), while reassuring that humans are in the loop for important matters. Gather feedback from external stakeholders on the AI-driven processes – for instance, if suppliers find your automated ordering system confusing, refine it. Make AI a selling point – if done well, you can market that your organization is highly responsive and efficient thanks to advanced AI (which can build trust if you show the competence behind it). But also be prepared to handle cases where AI errors spill over (like an incorrect automated charge to a customer) – have a customer service protocol to apologize, fix it, and maybe explain it was a system error without eroding confidence. In operations, maintaining goodwill and trust is as important as internal efficiency."
+        "text": "A useful roadmap is to treat autonomy as something that must be earned. Each stage should prove value while establishing the controls required for the next. The objective is not to maximize the number of agents. It is to increase the percentage of meaningful work that can be executed safely, reliably, and measurably by a digital workforce."
       }
     ]
   },
   {
     "kind": "h",
     "level": 2,
+    "text": "Stage 1: AI Assisted"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Humans remain the primary actors. AI copilots help employees search, summarize, draft, analyze, and make decisions. The focus is adoption, data access, model governance, and learning where AI materially improves work. The organization should resist the temptation to call this agentic simply because a model is present."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Foundation: approved AI access, data controls, adoption measures, and human accountability.",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Stage 2: Task Automation"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agents take ownership of bounded tasks with clear inputs, outputs, permissions, and escalation rules. Good candidates are high-volume activities with measurable outcomes and limited downside. The goal is to establish identity, logging, ownership, evaluation, and kill-switch patterns that can be reused."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Foundation: agent identity, owner, permissions, testing, logging, and explicit stop conditions.",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Stage 3: Workflow Automation"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Multiple agent-executed tasks are connected into end-to-end workflows. Events trigger work automatically. Agents use enterprise tools and APIs, carry context across steps, and defer to humans when thresholds are crossed. At this stage, orchestration, policy-as-code, observability, and exception management become central."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Foundation: machine-accessible systems, orchestration, eventing, policy enforcement, and exception routing.",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Stage 4: Department Autonomy"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "A business function becomes agent-first for a meaningful portion of its digital work. Humans increasingly manage goals, service levels, policies, and exceptions while agents perform routine execution. Department-level metrics shift from individual task activity toward throughput, quality, cycle time, exception rate, and business outcomes."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Foundation: department-level operating metrics, service ownership, incident response, lifecycle governance, and workforce redesign.",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Stage 5: The Agentic Enterprise"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agentic workflows span functions and coordinate across the enterprise. Humans define objectives and guardrails at progressively higher levels, while a governed digital workforce executes across systems. The organization manages agents as an operating capability: with portfolio discipline, lifecycle controls, performance management, resilience engineering, and board-level governance."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Foundation: cross-enterprise standards, portfolio governance, resilience, executive metrics, and board-level risk oversight.",
+        "strong": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Operating the agentic enterprise day to day"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Once agents become part of production operations, the enterprise needs an operating discipline comparable to the disciplines used for critical software services and human teams. The following practices from the original operating model remain essential as autonomy scales."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Operational Excellence Even with the right principles, people, and technology in place, the day-to-day operation of an agent-native enterprise presents unique challenges. Traditional operating models must adapt to manage a hybrid workforce of humans and AI agents working in concert. Here we outline key operational considerations and best practices to ensure the agent-native enterprise runs safely, efficiently, and continuously improves:"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Continuous Monitoring and Incident Response"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "In an AI-driven operation, you’ll be monitoring not just servers and networks, but business process health. Define SLAs and SLOs for agent-driven processes (e.g. order processing agents must complete tasks within X minutes 99% of the time, with error rate below Y%). Leverage the observability data (Principle 4) to track these. If an SLA is breached - say an agent process has a backlog building up or transactions failing - have an incident response playbook. This might include automatically retrying tasks, failing over to a backup agent or even a human team as a fallback. For instance, if the customer support bot is down, route chats to human reps. The organization should treat high-severity AI incidents with the same rigor as major IT outages. Conduct blameless post-mortems for AI failures: determine root causes (Was the model output wrong? Did an integration break? Was a policy misconfigured?) and implement fixes. Often these incidents reveal edge cases that can be used to harden the system (e.g. add a new rule or expand training data).​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Model and Knowledge Management"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Running an agent-native enterprise means regularly updating the “brains” of your agents. As business conditions change or new data arrives, AI models need retraining or tuning. Establish an MLOps pipeline to continuously improve models - for example, retrain recommendation models weekly with new data, or fine-tune NLP agents when product names or regulations change. Similarly, keep the semantic layer’s knowledge up to date - if new terminology or new data sources come in, update the ontology or data mappings. Set review cycles for rules and policies coded in the system; what was a valid policy last year might change this year (e.g. new compliance rules from regulators). Create a schedule for periodically reviewing agent knowledge bases, just like employees have periodic training. Some organizations institute an “AI model review board” that meets say quarterly to assess all critical models for performance, bias, drift, and decide if any retraining or replacement is needed. Remember that unlike hard-coded software, AI behavior can degrade over time if data drifts - proactive maintenance is required.​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Risk Management and Kill-Switches"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "A hallmark of operational excellence is preparing for the worst-case scenarios. For AI agents, that means defining fail-safe mechanisms. If an agent starts behaving erratically (due to a bug or a malicious input or a model glitch), there must be a way to immediately stop or isolate it. This could be an automated circuit-breaker that halts an agent’s access if it triggers certain thresholds (e.g. it tries to execute an unusual number of high-value transactions outside business hours). Or a simple “shutdown” command that an admin can issue to pause all agents of a certain type. Conduct drills for these scenarios: e.g., simulate an agent going rogue and see if your monitoring catches it and if you can kill it quickly. Additionally, maintain manual override procedures - humans should always have the ability to take control. For example, if an autonomous supply chain agent is ordering inventory at a rapid pace that seems unreasonable, a human manager should be able to freeze new orders until things are reviewed. These controls will reassure stakeholders (and regulators) that AI isn’t running wild without oversight.​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Business Continuity Planning"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Include AI systems in your business continuity and disaster recovery plans. If your enterprise orchestration layer or agent platform goes down, how will the business operate? Perhaps you need contingency plans for critical operations to revert to manual or alternate processes temporarily. Conversely, if humans can’t work (e.g., pandemic lockdowns, or workforce strikes), can agents fill in gaps? agent-native enterprises might consider having certain processes fully agentized as part of resilience - e.g., if your call center staff are unavailable, having a capable AI agent that can at least handle basic inquiries might keep things running. Multi-region or multi-cloud setups for AI components can add resilience (so a cloud outage doesn’t stop all agents). Regularly test these scenarios (chaos engineering could be extended to AI: intentionally disable some AI services to ensure others or humans can compensate).​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Metrics and Continuous Improvement"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Traditional operations measure things like uptime, throughput, cost per transaction. In an agent-native operation, new metrics become important. You might track Automation Rate (percent of tasks done by agents vs humans), Agent Efficiency (how many tasks an agent completes correctly per hour), Exception Rate (how often agents have to hand off to humans), False Positive/Negative rates for decisions (like how often did an agent escalate something unnecessary, or fail to escalate when it should have). Business outcome metrics are the ultimate gauge - cycle time, customer satisfaction, error rates, compliance adherence, cost-to-serve, etc., should all improve if AI is delivering value. It’s important not to get blinded by vanity metrics like “number of bots deployed”; what matters is outcomes. For example, if you doubled the number of agents but average handling time of a case didn’t improve, the deployment isn’t effective. Use these metrics to drive continuous improvement: if the exception rate is high in a certain process, analyze why - maybe the agent needs retraining or the process logic needs refinement for edge cases. If customer satisfaction dips, perhaps the AI is not handling certain inquiries well - feed those back as new training data or allow more human touch. Set targets for these metrics to foster a culture of Kaizen (continuous improvement) in AI operations. This could even tie into performance reviews or OKRs for teams managing the agents.​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Human-in-the-Loop Mechanisms"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Even in steady-state operations, maintaining some level of human oversight is healthy. This can involve sampling: e.g., a manager reviews 5% of transactions completed by an agent to ensure quality (like QA sampling). Or periodic shadow mode: occasionally, have a human perform the same task as the agent on a case to compare outcomes (this can catch any drift or new scenario the agent isn’t handling). Encourage frontline employees to provide feedback on agent decisions - e.g., a customer support rep who takes over from a chatbot can tag whether the bot’s prior answers were helpful or not, feeding back into training. Active learning frameworks can be used where an agent asks for human feedback on cases it’s uncertain about, thereby improving over time. Essentially, even as agents handle execution, keep humans in the loop as teachers and monitors. This symbiosis prevents complacency and ensures the AI doesn’t stray from acceptable bounds. Over time, as confidence in agents grows, the degree of human in loop can be dialed down, but it should never be zero for critical processes (if nothing else, to handle the unknown unknowns).​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Scaling and Sprawl Management"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Once the agent-native approach gains momentum, there is a risk of uncontrolled proliferation of agents (every team might spin up their own agents). This can lead to duplication, inconsistencies, or difficulties in oversight - analogous to “shadow IT” but with AI (sometimes called “shadow AI”). To manage this, maintain a central registry of agents: what they are, who owns them, what they have access to. Reuse should be encouraged - if two departments need a similar agent, maybe one agent can be generalized or shared rather than building two. Have an Architecture Review Board or similar process for new automations that ensures they align with enterprise standards and don’t introduce undue risk. This governance helps avoid “agent sprawl” where you lose track of what’s running. At the same time, balance it with empowerment - you want to avoid stifling innovation. A good practice is to provide easy-to-use central tools (so teams use your central platform rather than hacking together their own) and guidelines for building new agents. When the business sees many agents in action, consider classifying them: e.g., Tier 1 critical agents (requiring more rigorous monitoring and testing) vs Tier 3 utility bots (low risk, can be deployed faster). Allocate operational attention accordingly.​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Regulatory Compliance and Audit Readiness"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "For regulated industries especially, be prepared to show auditors how your AI-augmented processes meet requirements. This could mean maintaining documentation of how each agent works, models and rules used, and evidence of testing/validation before deployment. Keep clear records of any human overrides or manual decisions - ironically, as you automate, regulators might want proof that humans can still intervene. Some regulations (like the EU’s proposed AI Act) may require logging and risk assessments for certain AI applications - having followed Principle 4 (auditability) will put you in a good position to comply. Engage with your compliance/legal teams early and often; they should be part of the design process for agent-governed workflows, ensuring controls are in place. Many organizations set up AI governance frameworks aligned to things like ISO AI management standards or NIST AI risk management, which formalize how AI is handled. By operationalizing those frameworks (embedding them into day-to-day checks, approvals, and monitor alerts), you both reduce risk and have a ready answer when an external auditor or board member asks, “How do we know the AI is doing the right thing?”.​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 3,
+    "text": "Customer and Stakeholder Communication"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "As operations change, consider the impact on customers and partners. If AI agents interact externally (e.g., AI-generated emails to clients, or a chatbot for customers), ensure the experience is consistent with your brand and service standards. Have a way for customers to reach a human if needed (nothing frustrates users more than being stuck with an unhelpful bot). Be transparent where appropriate: some enterprises openly share that they use AI for certain tasks and highlight the benefits (faster service, 24/7 availability, etc.), while reassuring that humans are in the loop for important matters. Gather feedback from external stakeholders on the AI-driven processes - for instance, if suppliers find your automated ordering system confusing, refine it. Make AI a selling point - if done well, you can market that your organization is highly responsive and efficient thanks to advanced AI (which can build trust if you show the competence behind it). But also be prepared to handle cases where AI errors spill over (like an incorrect automated charge to a customer) - have a customer service protocol to apologize, fix it, and maybe explain it was a system error without eroding confidence. In operations, maintaining goodwill and trust is as important as internal efficiency.​"
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
     "text": "Conclusion"
   },
   {
     "kind": "p",
     "spans": [
       {
-        "text": "The journey to an agent-native enterprise is unquestionably challenging – it touches every facet of the business from IT architecture to org chart to daily routines. Yet, the reward is transformational. By making AI agents first-class citizens, enterprises unlock "
-      },
-      {
-        "text": "speed",
+        "text": "AI adoption is not enough. The enterprise itself has to become capable of absorbing a new form of labor.",
         "em": true
-      },
-      {
-        "text": ", "
-      },
-      {
-        "text": "scale",
-        "em": true
-      },
-      {
-        "text": ", and "
-      },
-      {
-        "text": "intelligence",
-        "em": true
-      },
-      {
-        "text": " that far exceed what traditional operations can achieve. Imagine business processes that execute in seconds what used to take days, services that run 24/7 without fatigue, and the ability to adapt on the fly as data and conditions change. Organizations that have pioneered this approach are already reaping benefits: higher operational throughput, dramatically lower error rates, improved customer experiences through consistency, and employees liberated to focus on innovation over administration . Surveys show over 65% of professionals believe AI will significantly enhance or revolutionize automation – and "
-      },
-      {
-        "text": "“the future belongs to the organizations prepared to harness this powerful combination”",
-        "em": true
-      },
-      {
-        "text": " of AI and enterprise operations ."
       }
     ]
   },
@@ -1561,14 +2795,341 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "For enterprise leaders, the mandate is clear. "
+        "text": "The agentic enterprise is not the inevitable consequence of buying AI. It is the result of intentional redesign. The organizations that benefit most from autonomous systems will be the ones that rethink how work is assigned, how authority is delegated, how systems are exposed, how policies are encoded, and how digital execution is governed."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The six principles in this paper provide the design rules. Agents must have identities and accountable owners. Humans must define objectives and boundaries. Agents should execute by default where digital work can be safely delegated. Systems must be accessible through machine interfaces. Every action must be observable and reversible where practical. Processes and policies must become interpretable by the systems expected to execute them."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Those principles then have to be operationalized across three transformation layers. The organization must build leadership alignment, new skills, governance, and roles for managing a hybrid workforce. Operations must develop new metrics, incident practices, exception handling, and lifecycle controls. Technology must provide the data, intelligence, agent runtime, integration, security, and orchestration capabilities that make autonomous execution dependable."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "The most important leadership decision is where to start. Select a small number of high-value processes where the outcome matters, the boundaries can be made explicit, and the work can be measured. Build the controls before expanding autonomy. Learn from exceptions. Standardize what works. Then move from isolated agents to workflows, from workflows to functions, and from functions to an enterprise operating model."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "AI adoption is not enough. The competitive question is whether the enterprise itself can absorb a new form of labor. The companies that answer that question early will not simply do the same work with fewer clicks. They will create organizations that can sense, decide, and execute at a different speed. That is the promise of the agentic enterprise: humans at the helm, software at scale, and an operating architecture designed for both."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 1,
+    "text": "Appendix"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Practical tools for leaders assessing readiness and governing the transition.",
+        "em": true
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Executive readiness checklist"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "We have a clear definition of an AI agent and distinguish agents from copilots, scripts, and traditional automation."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Every production agent has a distinct identity, named owner, explicit scope, and revocation mechanism."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Business objectives and constraints can be expressed in a form agents can consume and systems can enforce."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "We maintain an inventory of high-volume digital work and know which steps truly require human involvement."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Critical systems expose the business capabilities agents need through governed APIs, tools, events, or controlled wrappers."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Agent actions are logged end to end, including relevant context, model/version information, policy decisions, and downstream effects."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Important agent actions have a practical recovery path, including rollback, compensation, or human intervention."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Critical processes and policies have a structured source of truth rather than living only in prose or tribal knowledge."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Employees are being trained to supervise, validate, improve, and collaborate with agents rather than simply use AI tools."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "We measure business outcomes such as cycle time, quality, exception rate, customer impact, and cost-to-serve rather than agent counts."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "AI incidents have defined severity levels, escalation paths, owners, and post-incident review practices."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Our roadmap expands autonomy in stages instead of jumping directly from experimentation to enterprise-wide execution."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Suggested operating metrics"
+  },
+  {
+    "kind": "table",
+    "head": [
+      {
+        "spans": [
+          {
+            "text": "METRIC"
+          }
+        ]
       },
       {
-        "text": "The true “agent-native” enterprise is not achieved by half-measures or bolt-on solutions",
+        "spans": [
+          {
+            "text": "WHAT IT TELLS LEADERS"
+          }
+        ]
+      }
+    ],
+    "rows": [
+      [
+        {
+          "spans": [
+            {
+              "text": "Automation rate"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Share of eligible work completed by agents without human execution."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Exception rate"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Share of agent cases that require human intervention."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Cycle time"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Elapsed time from business event or objective to completed outcome."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Success rate"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Share of agent tasks completed correctly within policy."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Rework / rollback rate"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Share of agent actions that must be corrected or reversed."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Policy violation rate"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Frequency of attempted or completed actions outside defined constraints."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Human leverage"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Volume or value of outcomes supervised per human owner or team."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Cost-to-serve"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Total operating cost of producing the business outcome."
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "spans": [
+            {
+              "text": "Customer / stakeholder outcome"
+            }
+          ]
+        },
+        {
+          "spans": [
+            {
+              "text": "Quality, satisfaction, resolution, or other domain-specific result."
+            }
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Glossary"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "AI agent",
         "strong": true
       },
       {
-        "text": ". It requires a holistic redesign embracing the five principles we outlined: maximizing agent automation, redefining human roles to strategic level, building API-centric ecosystems, enforcing observability and trust, and formalizing knowledge into machine-executable form. Start laying the groundwork today:"
+        "text": " - An autonomous software system powered by AI that pursues goals by perceiving context, reasoning, and taking action through tools."
       }
     ]
   },
@@ -1576,7 +3137,11 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "set bold targets for automation, invest in the enabling technologies, upskill your workforce, and instill a governance culture that guides this new digital workforce. Pilot aggressively in high-impact areas to demonstrate quick wins and learn lessons, then scale out iteratively. Tackle it in phases – perhaps begin with informational AI agents, then move into single-domain automation, and expand to cross-domain orchestration as your foundations mature ."
+        "text": "Agentic enterprise",
+        "strong": true
+      },
+      {
+        "text": " - An organization in which autonomous software agents perform much of routine digital knowledge work while humans set direction, govern, and handle exceptions."
       }
     ]
   },
@@ -1584,28 +3149,115 @@ export const atonomosDocument: DocBlock[] = [
     "kind": "p",
     "spans": [
       {
-        "text": "We are at a watershed moment akin to the early internet era or the mobile revolution – those who adapt their enterprises to be "
+        "text": "Control plane",
+        "strong": true
       },
       {
-        "text": "AI-first",
-        "em": true
+        "text": " - The orchestration and policy layer that coordinates agents, humans, systems, constraints, and approvals across workflows."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Non-human identity",
+        "strong": true
       },
       {
-        "text": " will lead their industries, while those who cling to manual processes and ad-hoc AI use will fall behind. Make agents the heart of your enterprise’s digital fabric. Treat them as you would your most valuable employees – give them the tools, training, oversight, and trust to carry out your mission. In return, they will deliver superhuman efficiency, consistency, and insight. The agent-native enterprise is the next step in the evolution of organizational excellence, where human creativity and machine execution join forces. The time to begin that journey is now. Let’s embrace this future where every process that "
+        "text": " - A machine or workload identity used by software, services, bots, or agents rather than a person."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Policy as code",
+        "strong": true
       },
       {
-        "text": "can",
-        "em": true
+        "text": " - Business, security, or compliance rules expressed in a machine-evaluable form."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Human in the loop",
+        "strong": true
       },
       {
-        "text": " be automated "
+        "text": " - A control pattern in which a person reviews, approves, corrects, or takes over an agent-driven process at defined points."
+      }
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "Machine-interpretable documentation",
+        "strong": true
       },
       {
-        "text": "is",
-        "em": true
-      },
+        "text": " - Process, policy, and procedural knowledge represented in structured or executable form so agents can reliably act on it."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "Standards and guidance referenced in the source paper"
+  },
+  {
+    "kind": "ul",
+    "items": [
+      [
+        {
+          "text": "NIST AI Risk Management Framework (AI RMF)"
+        }
+      ],
+      [
+        {
+          "text": "NIST Special Publication 800-207: Zero Trust Architecture"
+        }
+      ],
+      [
+        {
+          "text": "Cloud Security Alliance guidance on agentic trust and non-human identity"
+        }
+      ],
+      [
+        {
+          "text": "OWASP guidance on agentic applications and non-human identity risks"
+        }
+      ],
+      [
+        {
+          "text": "IETF work on workload and agent identity management"
+        }
+      ]
+    ]
+  },
+  {
+    "kind": "p",
+    "spans": [
       {
-        "text": " automated, where humans and AI each play to their strengths, and where businesses run on an intelligent, adaptive autopilot with humans at the helm. The organizations that do so will not only outperform their peers – they will redefine what it means to operate a business in the modern age. This is the new calling: build the enterprise where AI agents are first-class citizens and watch innovation take flight. "
+        "text": "Note: Standards in this area are evolving rapidly. Organizations should validate the current version and applicability of any standard before treating it as a formal control requirement."
+      }
+    ]
+  },
+  {
+    "kind": "h",
+    "level": 2,
+    "text": "About this edition"
+  },
+  {
+    "kind": "p",
+    "spans": [
+      {
+        "text": "This edition substantially restructures and edits the original Autonomous whitepaper around a clearer executive narrative: the shift from software to digital workers; the constraints of human-centric enterprise architecture; six design principles; organizational and technology transformation; and a staged maturity roadmap. The core thesis and substantive operating concepts are preserved while the flow, hierarchy, terminology, and executive framing have been tightened for publication."
       }
     ]
   }

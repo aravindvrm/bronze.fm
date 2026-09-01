@@ -74,7 +74,7 @@ test.describe('service worker media caching', () => {
     // it — 66 MB to skim this album on cellular.
     const cachedAfterProbe = await page.evaluate(async (cacheName) => {
       const cache = await caches.open(cacheName)
-      const url = '/media/audio/' + encodeURIComponent('01 - Bronze Age (Skit).mp3')
+      const url = '/media/audio/' + encodeURIComponent('01 - Bronze Age (Opening Scene).mp3')
       await cache.delete(url)
       await fetch(url, { headers: { Range: 'bytes=0-1023' } })
       await new Promise((r) => setTimeout(r, 500))
@@ -87,7 +87,7 @@ test.describe('service worker media caching', () => {
   test('explicit save stores a complete body that then serves ranges', async ({ page }) => {
     const result = await page.evaluate(async (cacheName) => {
       const mc = await import('/src/lib/mediaCache.ts')
-      const url = '/media/audio/' + encodeURIComponent('05 - Polished Bronze (Skit).mp3')
+      const url = '/media/audio/' + encodeURIComponent('05 - Polished Bronze (Scene 2).mp3')
       const cache = await caches.open(cacheName)
       await cache.delete(url)
 

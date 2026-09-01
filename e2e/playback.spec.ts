@@ -110,7 +110,7 @@ test.describe('entering playback', () => {
     await gotoContent(page)
     await expect(page.getByRole('button', { name: 'Close player' })).toHaveCount(0)
 
-    await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).click()
+    await page.getByRole('button', { name: /Bronze Age \(Opening Scene\)/ }).click()
 
     await expect(page.getByRole('button', { name: 'Close player' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Show track list' })).toBeVisible()
@@ -119,7 +119,7 @@ test.describe('entering playback', () => {
 
   test('collapsing leaves the listener where they started, still playing', async ({ page }) => {
     await gotoContent(page)
-    await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).click()
+    await page.getByRole('button', { name: /Bronze Age \(Opening Scene\)/ }).click()
     await page.getByRole('button', { name: 'Close player' }).click()
 
     // The player is an overlay, not a route: the URL never moved.
@@ -134,7 +134,7 @@ test.describe('entering playback', () => {
    */
   test('advancing a track does not reopen a collapsed player', async ({ page }) => {
     await gotoContent(page)
-    await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).click()
+    await page.getByRole('button', { name: /Bronze Age \(Opening Scene\)/ }).click()
     await page.getByRole('button', { name: 'Close player' }).click()
     await expect(page.getByRole('button', { name: 'Open player' })).toBeVisible()
 

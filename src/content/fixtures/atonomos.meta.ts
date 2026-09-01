@@ -3,4 +3,4 @@
 // Regenerate: node scripts/import-document.mjs <file> --slug atonomos
 
 /** Words in atonomosDocument, for the hub's read-time estimate. */
-export const atonomosWordCount = 10676
+export const atonomosWordCount = 19572

@@ -28,13 +28,13 @@ export const bronzeMusic: Content = {
   projectSlug: 'bronze',
   title: 'Bronze',
   published: false,
-  totalDurationMs: 2272825,
+  totalDurationMs: 2225737,
   credits: [{ creatorSlug: 'deanMaye', name: 'Dean Maye', role: 'artist' }],
   items: [
     {
       "id": "itm_01",
       "position": 1,
-      "title": "Bronze Age (Skit)",
+      "title": "Bronze Age (Opening Scene)",
       "isInterlude": true,
       "credits": [],
       "hash": "54350c3939798715",
@@ -43,7 +43,7 @@ export const bronzeMusic: Content = {
       "channels": 1,
       "sampleRate": 44100,
       "bitrate": 128000,
-      "url": "/media/audio/01%20-%20Bronze%20Age%20(Skit).mp3"
+      "url": "/media/audio/01%20-%20Bronze%20Age%20(Opening%20Scene).mp3"
     },
     {
       "id": "itm_02",
@@ -97,18 +97,18 @@ export const bronzeMusic: Content = {
           "role": "artist"
         }
       ],
-      "hash": "c5b0a68381f00620",
-      "bytes": 5221453,
-      "durationMs": 230688,
+      "hash": "752c34140ef86234",
+      "bytes": 5140502,
+      "durationMs": 230880,
       "channels": 2,
       "sampleRate": 48000,
-      "bitrate": 180171,
+      "bitrate": 176954,
       "url": "/media/audio/04%20-%20Kissy%20Face%20Emoji.mp3"
     },
     {
       "id": "itm_05",
       "position": 5,
-      "title": "Polished Bronze (Skit)",
+      "title": "Polished Bronze (Scene 2)",
       "isInterlude": true,
       "credits": [],
       "hash": "71600fe0b2bfe283",
@@ -117,7 +117,7 @@ export const bronzeMusic: Content = {
       "channels": 1,
       "sampleRate": 44100,
       "bitrate": 128000,
-      "url": "/media/audio/05%20-%20Polished%20Bronze%20(Skit).mp3"
+      "url": "/media/audio/05%20-%20Polished%20Bronze%20(Scene%202).mp3"
     },
     {
       "id": "itm_06",
@@ -162,7 +162,7 @@ export const bronzeMusic: Content = {
     {
       "id": "itm_08",
       "position": 8,
-      "title": "Bronze Alloy (Skit)",
+      "title": "Bronze Alloy (Scene 3)",
       "isInterlude": true,
       "credits": [],
       "hash": "b88413d26035c7dd",
@@ -171,7 +171,7 @@ export const bronzeMusic: Content = {
       "channels": 1,
       "sampleRate": 44100,
       "bitrate": 128000,
-      "url": "/media/audio/08%20-%20Bronze%20Alloy%20(Skit).mp3"
+      "url": "/media/audio/08%20-%20Bronze%20Alloy%20(Scene%203).mp3"
     },
     {
       "id": "itm_09",
@@ -196,7 +196,7 @@ export const bronzeMusic: Content = {
     {
       "id": "itm_10",
       "position": 10,
-      "title": "7.6 Say It",
+      "title": "WeWork",
       "isInterlude": false,
       "credits": [
         {
@@ -205,18 +205,38 @@ export const bronzeMusic: Content = {
           "role": "artist"
         }
       ],
-      "hash": "a475dd202c9c083e",
-      "bytes": 10319168,
-      "durationMs": 257976,
+      "hash": "7db83a425a3e5072",
+      "bytes": 4282808,
+      "durationMs": 190440,
       "channels": 2,
       "sampleRate": 48000,
-      "bitrate": 320000,
-      "url": "/media/audio/10%20-%207.6%20Say%20It.mp3"
+      "bitrate": 178777,
+      "url": "/media/audio/10%20-%20WeWork.mp3"
     },
     {
       "id": "itm_11",
       "position": 11,
-      "title": "Bronze Medal (Skit)",
+      "title": "Say It",
+      "isInterlude": false,
+      "credits": [
+        {
+          "creatorSlug": "deanMaye",
+          "name": "Dean Maye",
+          "role": "artist"
+        }
+      ],
+      "hash": "0b823a8c68f51182",
+      "bytes": 5095933,
+      "durationMs": 258024,
+      "channels": 2,
+      "sampleRate": 48000,
+      "bitrate": 157004,
+      "url": "/media/audio/11%20-%20Say%20It.mp3"
+    },
+    {
+      "id": "itm_12",
+      "position": 12,
+      "title": "Bronze Medal (Scene 4)",
       "isInterlude": true,
       "credits": [],
       "hash": "5d8583bd295443d7",
@@ -225,12 +245,12 @@ export const bronzeMusic: Content = {
       "channels": 1,
       "sampleRate": 44100,
       "bitrate": 128000,
-      "url": "/media/audio/11%20-%20Bronze%20Medal%20(Skit).mp3"
+      "url": "/media/audio/12%20-%20Bronze%20Medal%20(Scene%204).mp3"
     },
     {
-      "id": "itm_12",
-      "position": 12,
-      "title": "8.10 Closure",
+      "id": "itm_13",
+      "position": 13,
+      "title": "Closure",
       "isInterlude": false,
       "credits": [
         {
@@ -245,32 +265,12 @@ export const bronzeMusic: Content = {
       "channels": 2,
       "sampleRate": 48000,
       "bitrate": 320000,
-      "url": "/media/audio/12%20-%208.10%20Closure.mp3"
-    },
-    {
-      "id": "itm_13",
-      "position": 13,
-      "title": "8.3 The Wait Is Over",
-      "isInterlude": false,
-      "credits": [
-        {
-          "creatorSlug": "deanMaye",
-          "name": "Dean Maye",
-          "role": "artist"
-        }
-      ],
-      "hash": "38007b00c3d83f49",
-      "bytes": 9510848,
-      "durationMs": 237768,
-      "channels": 2,
-      "sampleRate": 48000,
-      "bitrate": 320000,
-      "url": "/media/audio/13%20-%208.3%20The%20Wait%20Is%20Over.mp3"
+      "url": "/media/audio/13%20-%20Closure.mp3"
     },
     {
       "id": "itm_14",
       "position": 14,
-      "title": "8.3 Forevermore, I Pray",
+      "title": "Forevermore, I Pray",
       "isInterlude": false,
       "credits": [
         {
@@ -285,7 +285,7 @@ export const bronzeMusic: Content = {
       "channels": 2,
       "sampleRate": 48000,
       "bitrate": 320000,
-      "url": "/media/audio/14%20-%208.3%20Forevermore%2C%20I%20Pray.mp3"
+      "url": "/media/audio/14%20-%20Forevermore%2C%20I%20Pray.mp3"
     }
   ],
   // Mirrors this row's actual created_at in Supabase, so the feed orders

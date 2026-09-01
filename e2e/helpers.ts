@@ -129,7 +129,9 @@ export async function gotoProject(page: Page, projectSlug = 'bronze') {
  */
 export async function gotoContent(page: Page, projectSlug = 'bronze') {
   await gotoCreator(page, `/${projectSlug}/music`)
-  await page.getByRole('button', { name: /Bronze Age \(Skit\)/ }).waitFor({ timeout: 10_000 })
+  await page
+    .getByRole('button', { name: /Bronze Age \(Opening Scene\)/ })
+    .waitFor({ timeout: 10_000 })
 }
 
 /** Plays a track from the open music page and waits for real playback. */

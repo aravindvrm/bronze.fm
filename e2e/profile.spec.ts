@@ -163,7 +163,7 @@ test.describe('reader', () => {
   test('renders the paper as semantic blocks, not a blob', async ({ page }) => {
     await gotoReader(page)
     const article = page.locator('article')
-    await expect(article.getByRole('heading', { name: 'Introduction' })).toBeVisible()
+    await expect(article.getByRole('heading', { name: 'Executive Brief' })).toBeVisible()
 
     // Structure survived the docx conversion: headings at more than one
     // level, real paragraphs, and lists kept as lists rather than flattened.
@@ -198,9 +198,10 @@ test.describe('reader', () => {
     await page.getByRole('button', { name: 'Contents' }).click()
 
     const entries = page.locator('nav[aria-label="Contents"] li')
-    // Sections AND subsections: filtering to the top level left six entries
-    // for a paper with twelve headings.
-    await expect(entries).toHaveCount(12)
+    // One entry per heading, at whatever depth — the reader lists every
+    // level rather than filtering to the top, which is what makes an entry
+    // meaningful on a paper this long.
+    await expect(entries).toHaveCount(53)
 
     await entries.nth(7).getByRole('button').click()
     await expect(page.getByRole('slider', { name: 'Page' })).not.toHaveAttribute(

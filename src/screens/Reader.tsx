@@ -5,7 +5,7 @@ import { useCreator } from '@/content/CreatorContext'
 import { useProject } from '@/content/ProjectContext'
 import { usePlayer } from '@/audio/playerStore'
 import type { Content, DocBlock, Span } from '@/content/types'
-import { blockText, countWords, normaliseBlocks } from '@/content/blocks'
+import { blockText, countWords, normaliseBlocks, stripTitlePage } from '@/content/blocks'
 import { projectPath } from '@/lib/tenant'
 import { AppHeader } from '@/components/AppHeader'
 import { ReaderRail, type Chapter } from '@/components/ReaderRail'
@@ -67,37 +67,6 @@ const EDGE = 0.22
  * going, which is also what makes each change legible.
  */
 const SIZE_SWIPE_PX = 45
-
-/**
- * Drops the paper's own title page, which the reader prints for itself.
- *
- * An imported .docx opens with its title set as headings — here two of them,
- * "Autonomous" and "The Agentic Enterprise", for a paper whose title is the
- * two joined.
- *
- * Only LEADING level-1 headings, and only those the title already contains,
- * so a document that opens straight into prose — or one whose first heading
- * is real content — passes through untouched. Belongs here rather than in the
- * importer: it is a fact about how this screen lays a paper out, and the
- * fixtures stay a faithful copy of the source.
- */
-function stripTitlePage(blocks: DocBlock[], title: string): DocBlock[] {
-  const normalise = (s: string) =>
-    s
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, ' ')
-      .trim()
-  const heading = normalise(title)
-  let i = 0
-  while (
-    blocks[i]?.kind === 'h' &&
-    (blocks[i] as Extract<DocBlock, { kind: 'h' }>).level === 1 &&
-    heading.includes(normalise((blocks[i] as Extract<DocBlock, { kind: 'h' }>).text))
-  ) {
-    i++
-  }
-  return i ? blocks.slice(i) : blocks
-}
 
 /**
  * A run of text, with whatever emphasis it carries.

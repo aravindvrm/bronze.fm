@@ -14,6 +14,60 @@ export function spansText(spans: Span[]): string {
   return spans.map((s) => s.text).join('')
 }
 
+/**
+ * Drops the paper's own title page, which the reader prints for itself.
+ *
+ * A cover page is not one fixed shape across documents. It opened as two
+ * level-1 headings — "Autonomous", "The Agentic Enterprise" — when Word's
+ * own Heading style was used for it; a later revision of the same paper
+ * carried the identical page ("AUTONOMOUS" / subtitle / byline / date / a
+ * hand-built table of contents) as ordinary paragraphs instead, because
+ * whoever styled that page in Word reached for a Title or body style rather
+ * than Heading 1. Nothing in the source distinguishes "this paragraph is
+ * cover-page fluff" from "this paragraph is the paper's first line" except
+ * the one fact both versions share: the very first block restates the
+ * paper's own title.
+ *
+ * So the rule is content-shaped, not style-shaped: if the leading blocks
+ * are level-1 headings the title already contains, drop only those
+ * (unchanged from before — a heading beyond the title's own words is real
+ * content, not cover matter). Otherwise, if the very FIRST block is a
+ * paragraph whose text the title already contains, treat everything up to
+ * the next heading of any level as the cover page and drop all of it —
+ * subtitle, byline, date and a duplicate table of contents included, since
+ * this screen builds its own from the real headings that follow.
+ *
+ * A document that opens straight into prose — whose first block names
+ * neither pattern — passes through untouched. Belongs here rather than in
+ * the importer: it is a fact about how this screen lays a paper out, and
+ * the fixtures stay a faithful copy of the source.
+ */
+export function stripTitlePage(blocks: DocBlock[], title: string): DocBlock[] {
+  const normalise = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim()
+  const heading = normalise(title)
+  const restatesTitle = (b: DocBlock | undefined) =>
+    !!b && heading.includes(normalise(blockText(b)))
+
+  let i = 0
+  while (
+    blocks[i]?.kind === 'h' &&
+    (blocks[i] as Extract<DocBlock, { kind: 'h' }>).level === 1 &&
+    restatesTitle(blocks[i])
+  ) {
+    i++
+  }
+
+  if (i === 0 && blocks[0]?.kind === 'p' && restatesTitle(blocks[0])) {
+    while (blocks[i] && blocks[i].kind !== 'h') i++
+  }
+
+  return i ? blocks.slice(i) : blocks
+}
+
 export function blockText(block: DocBlock): string {
   switch (block.kind) {
     case 'h':
