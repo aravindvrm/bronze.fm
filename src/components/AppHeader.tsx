@@ -60,6 +60,7 @@ export function AppHeader({
   query,
   onQueryChange,
   backTo,
+  onMedia = false,
 }: {
   /*
    * Screen-local search.
@@ -81,6 +82,19 @@ export function AppHeader({
    * — there is nothing above it to return to.
    */
   backTo?: string
+  /**
+   * The screen is placing this bar over its own photo (Music's header art,
+   * currently the only caller) rather than the page ground.
+   *
+   * Only while UNSCROLLED, which `mediaChrome` below folds in: the instant
+   * `scrolled` flips, the bar paints its own `bg-void/80` tint over
+   * whatever is behind it, and by then the photo — sized to exactly the
+   * bar's own height — has scrolled out from under it anyway. Left applied
+   * past that point, `on-media`'s fixed white would sit on a light theme's
+   * near-white scrolled tint: the same near-invisible pairing this prop
+   * exists to avoid, just arrived at from the other direction.
+   */
+  onMedia?: boolean
 }) {
   const navigate = useNavigate()
   const reduceMotion = useReducedMotion()
@@ -88,6 +102,8 @@ export function AppHeader({
   const theme = useTheme((s) => s.theme)
   const toggleTheme = useTheme((s) => s.toggle)
   const scrolled = useScrolledPast()
+  const mediaChrome = onMedia && !scrolled
+  const chromeColor = mediaChrome ? 'text-on-media' : 'text-parchment'
   const [searchOpen, setSearchOpen] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
   const screenLocal = onQueryChange !== undefined
@@ -184,7 +200,7 @@ export function AppHeader({
               <button
                 onClick={() => navigate(backTo)}
                 aria-label="Back"
-                className="p-2 text-parchment transition hover:text-ember"
+                className={`p-2 ${chromeColor} transition hover:text-ember`}
               >
                 <BackIcon className="size-6" />
               </button>
@@ -194,7 +210,7 @@ export function AppHeader({
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
                 aria-expanded={searchOpen}
-                className="p-2 text-parchment transition hover:text-ember"
+                className={`p-2 ${chromeColor} transition hover:text-ember`}
               >
                 <SearchIcon className="size-6" />
               </button>
@@ -215,7 +231,7 @@ export function AppHeader({
             aria-label="bronze.fm home"
             className="absolute inset-x-0 mx-auto w-fit"
           >
-            <Wordmark className="text-base" />
+            <Wordmark className="text-base" onMedia={mediaChrome} />
           </button>
 
           {/* Right slot: the menu, on every screen without exception. */}
@@ -223,7 +239,7 @@ export function AppHeader({
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            className="relative z-10 -mr-2 ml-auto p-2 text-parchment transition hover:text-ember"
+            className={`relative z-10 -mr-2 ml-auto p-2 ${chromeColor} transition hover:text-ember`}
           >
             <MenuIcon className="size-6" />
           </button>

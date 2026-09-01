@@ -4,6 +4,12 @@ import { artUrl } from '@/lib/art'
 // master it came from, kept for re-encoding and never imported, so the build
 // never sees it.
 import bronzeCover from '@/assets/covers/bronze.jpg'
+// The back cover, repurposed as the music page's own header art. A separate
+// file rather than a crop of bronzeCover at render time: the front cover is
+// square by convention (album art everywhere else expects that), and this is
+// a wide banner — two different shapes for two different jobs, not one image
+// doing double duty.
+import bronzeBackCover from '@/assets/covers/bronze-back.jpg'
 
 /** A real cover ships as one file, so its intrinsic size and MIME are fixed. */
 interface Cover {
@@ -45,6 +51,22 @@ export function coverForSlug(slug: string | null | undefined, size = 1400): stri
   const real = slug ? COVERS[slug] : undefined
   if (real) return real.src
   return artUrl(`${slug ?? 'bronze'}-cover`, 'cover', size)
+}
+
+/**
+ * Real art keyed by Project slug, for a music page's own header — separate
+ * from `COVERS` because most Projects will never have one. A header
+ * background is decoration a creator chose to supply, not a fallback every
+ * page needs; absent, the header stays plain rather than reaching for
+ * procedural art the way a missing cover does.
+ */
+const HEADER_BACKGROUNDS: Record<string, string> = {
+  bronze: bronzeBackCover,
+}
+
+/** A project's own art behind its music header, when it has one. */
+export function headerBackgroundUrl(projectSlug: string | null | undefined): string | undefined {
+  return projectSlug ? HEADER_BACKGROUNDS[projectSlug] : undefined
 }
 
 /**

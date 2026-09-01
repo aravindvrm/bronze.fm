@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { usePlayer } from '@/audio/playerStore'
 import { useProject } from '@/content/ProjectContext'
 import { artUrl } from '@/lib/art'
+import { headerBackgroundUrl } from '@/lib/cover'
 import { formatTime } from '@/lib/format'
 import { AppHeader } from '@/components/AppHeader'
 import { OfflineControl } from '@/components/OfflineControl'
@@ -25,10 +26,44 @@ export function Music() {
   const isCurrent = playingContentId === content.id
 
   const albumPrimary = content.credits[0]?.name ?? content.ownerSlug
+  const headerBg = headerBackgroundUrl(project.slug)
 
   return (
-    <div className="min-h-full">
-      <AppHeader backTo={projectPath(creator.slug, project.slug)} />
+    // `relative`, so the image below can be positioned against the WHOLE
+    // page rather than needing a wrapper of its own. That distinction is
+    // load-bearing: an intermediate div sized to just the header's height
+    // was tried first, and it broke `position: sticky` on the header inside
+    // it — sticky can only stay pinned as far as its own containing block
+    // extends, and a block exactly as tall as the header gives it nowhere
+    // to be sticky FOR. This container is the full page instead, so the
+    // header keeps the entire scroll to stay pinned across, same as on
+    // every other screen.
+    <div className="relative min-h-full">
+      {/*
+        Full-bleed art behind the header bar itself, when the Project
+        supplies one — Bronze's own back cover here. Absolutely positioned
+        and sized to just the bar's own box (`var(--safe-t)` plus the `h-14`
+        AppHeader uses) rather than a taller hero: this dresses the header,
+        not the page, and the title below keeps the plain background it
+        already had. `pointer-events-none` because it is decoration sitting
+        behind the header's real controls, not a hit target of its own.
+      */}
+      {headerBg && (
+        <>
+          <img
+            src={headerBg}
+            alt=""
+            className="pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--safe-t)+3.5rem)] w-full object-cover"
+          />
+          {/* A photo behind the bar still needs to lose evenly to it on
+              scroll, the way the plain header's own tint does — without
+              this, the image reappears at full strength through the blur's
+              transparency the instant it's dark enough on its own to pass
+              contrast unaided. */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--safe-t)+3.5rem)] w-full bg-gradient-to-b from-scrim/35 to-scrim/10" />
+        </>
+      )}
+      <AppHeader backTo={projectPath(creator.slug, project.slug)} onMedia={!!headerBg} />
 
       <div className="mx-auto max-w-3xl px-5 pb-2 sm:px-6">
         {/* The release's name, in the page rather than the bar: it can wrap
