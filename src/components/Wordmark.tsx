@@ -17,7 +17,6 @@
 export function Wordmark({
   className = '',
   inverted = false,
-  onMedia = false,
 }: {
   className?: string
   /**
@@ -33,19 +32,6 @@ export function Wordmark({
    * whole distinction between the two accent tokens.
    */
   inverted?: boolean
-  /**
-   * For placing the mark over a photograph rather than the page. `parchment`
-   * is which of black/white reads as ink for the CURRENT THEME — exactly
-   * wrong here, since a light theme's near-black "bronze" disappears against
-   * a dark photo the same way a dark theme's near-white would against a
-   * light one. `on-media` is the one token in the palette that answers a
-   * different question — not "which is ink today" but "what reads on top of
-   * whatever this arbitrary image turns out to be" — and is fixed rather
-   * than theme-swapped for exactly that reason. The `.fm` block is left
-   * alone: it is already a solid fill wherever it appears, never mixed with
-   * a photo's own colours, so it never had this problem.
-   */
-  onMedia?: boolean
 }) {
   return (
     <span className={`inline-flex items-baseline font-wordmark uppercase ${className}`}>
@@ -56,9 +42,7 @@ export function Wordmark({
         deliberately as the one gap that should exist.
       */}
       <span
-        className={`-mr-[0.42em] tracking-[0.42em] ${
-          inverted ? 'text-on-accent' : onMedia ? 'text-on-media' : 'text-parchment'
-        }`}
+        className={`-mr-[0.42em] tracking-[0.42em] ${inverted ? 'text-on-accent' : 'text-parchment'}`}
       >
         bronze
       </span>

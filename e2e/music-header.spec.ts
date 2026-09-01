@@ -2,70 +2,61 @@ import { expect, test } from '@playwright/test'
 import { gotoCreator } from './helpers'
 
 /**
- * Bronze's header art, and the contrast problem it creates: the header's
- * own chrome (back, search, wordmark, menu) is `text-parchment`, which is
- * near-black in the light theme — legible on the plain page ground it
- * normally sits on, invisible against this specific photo, which is almost
- * entirely near-black itself.
+ * The page header on a music release — the band carrying the title, not the
+ * app's own bar above it. Where a Project supplies art, the band wears it
+ * full-bleed and the title turns `on-media` white to sit on it.
  */
-test.describe('music header background', () => {
-  const SCROLLER = '[data-app-scroll]'
-
-  test('shows Bronze’s own art behind the bar', async ({ page }) => {
+test.describe('music page header', () => {
+  test('wears the release’s own art, full-bleed', async ({ page }) => {
     await gotoCreator(page, '/bronze/music')
-    const img = page.locator('header ~ img, img[alt=""]').first()
-    await expect(img).toBeVisible()
-    await expect(img).toHaveAttribute('src', /bronze-back/)
+    const art = page.locator('section img[alt=""]').first()
+    await expect(art).toBeVisible()
+    await expect(art).toHaveAttribute('src', /bronze-back/)
+
+    // Full-bleed means both edges: the band reaches them even though the
+    // title inside it keeps the page's own margin.
+    const band = page.locator('section').first()
+    const box = await band.boundingBox()
+    const width = page.viewportSize()!.width
+    expect(box!.x).toBe(0)
+    expect(Math.round(box!.width)).toBe(width)
   })
 
-  /*
-   * The chrome swaps to a fixed light colour while the art shows, rather
-   * than the theme's normal near-black — asserted as a real colour change
-   * rather than a class name, since the fixed token and an accidental
-   * near-white are both "not black" and only one of them is correct.
-   */
-  test('lightens the header chrome to read against the art', async ({ page }) => {
+  test('sets the title in white against the art', async ({ page }) => {
     await gotoCreator(page, '/bronze/music')
-    const back = page.getByRole('button', { name: 'Back' })
-    const color = await back.evaluate((e) => getComputedStyle(e).color)
-    // white, or near enough — the exact string is a Tailwind/oklch build
-    // detail this test should not pin to.
-    const [r, g, b] = color.match(/[\d.]+/g)!.map(Number)
+    const title = page.getByRole('heading', { name: 'Bronze', level: 1 })
+    const [r, g, b] = (await title.evaluate((e) => getComputedStyle(e).color))
+      .match(/[\d.]+/g)!
+      .map(Number)
     expect(r).toBeGreaterThan(240)
     expect(g).toBeGreaterThan(240)
     expect(b).toBeGreaterThan(240)
   })
 
   /*
-   * The bug this whole feature nearly shipped with: wrapping the header in
-   * a div sized to just its own height broke `position: sticky`, because
-   * sticky can only stay pinned as far as its containing block extends.
+   * The app bar is NOT dressed by this. It is a shared component that looks
+   * the same on every screen, and an earlier pass put the art behind it —
+   * which made the bar's own near-black chrome answer for one album's
+   * near-black photograph.
    */
-  test('stays pinned to the top on scroll, like every other header', async ({ page }) => {
+  test('leaves the app bar alone', async ({ page }) => {
     await gotoCreator(page, '/bronze/music')
-    await page.waitForTimeout(300)
-    await page.evaluate((sel) => document.querySelector(sel)?.scrollTo(0, 400), SCROLLER)
-    await expect(page.locator('header')).toHaveCSS('top', '0px')
-    const box = await page.locator('header').boundingBox()
-    expect(box?.y).toBe(0)
+    const back = page.getByRole('button', { name: 'Back' })
+    const [r, g, b] = (await back.evaluate((e) => getComputedStyle(e).color))
+      .match(/[\d.]+/g)!
+      .map(Number)
+    // The light theme's ink, unchanged — not the white the band's title uses.
+    expect(r).toBeLessThan(60)
+    expect(g).toBeLessThan(60)
+    expect(b).toBeLessThan(60)
   })
 
-  /*
-   * Once scrolled, the header takes its own translucent tint over
-   * whatever's behind it — the art has scrolled away by then, and the
-   * fixed light chrome would be unreadable against light theme's pale
-   * tint. It has to hand back to the normal theme-aware colour.
-   */
-  test('returns the chrome to normal once scrolled past the art', async ({ page }) => {
+  test('the app bar still pins to the top on scroll', async ({ page }) => {
     await gotoCreator(page, '/bronze/music')
     await page.waitForTimeout(300)
-    const back = page.getByRole('button', { name: 'Back' })
-    const before = await back.evaluate((e) => getComputedStyle(e).color)
-
-    await page.evaluate((sel) => document.querySelector(sel)?.scrollTo(0, 400), SCROLLER)
+    await page.evaluate(() => document.querySelector('[data-app-scroll]')?.scrollTo(0, 400))
     await page.waitForTimeout(300)
-    const after = await back.evaluate((e) => getComputedStyle(e).color)
-
-    expect(after).not.toBe(before)
+    const box = await page.locator('header').boundingBox()
+    expect(box?.y).toBe(0)
   })
 })

@@ -29,49 +29,51 @@ export function Music() {
   const headerBg = headerBackgroundUrl(project.slug)
 
   return (
-    // `relative`, so the image below can be positioned against the WHOLE
-    // page rather than needing a wrapper of its own. That distinction is
-    // load-bearing: an intermediate div sized to just the header's height
-    // was tried first, and it broke `position: sticky` on the header inside
-    // it — sticky can only stay pinned as far as its own containing block
-    // extends, and a block exactly as tall as the header gives it nowhere
-    // to be sticky FOR. This container is the full page instead, so the
-    // header keeps the entire scroll to stay pinned across, same as on
-    // every other screen.
-    <div className="relative min-h-full">
-      {/*
-        Full-bleed art behind the header bar itself, when the Project
-        supplies one — Bronze's own back cover here. Absolutely positioned
-        and sized to just the bar's own box (`var(--safe-t)` plus the `h-14`
-        AppHeader uses) rather than a taller hero: this dresses the header,
-        not the page, and the title below keeps the plain background it
-        already had. `pointer-events-none` because it is decoration sitting
-        behind the header's real controls, not a hit target of its own.
-      */}
-      {headerBg && (
-        <>
-          <img
-            src={headerBg}
-            alt=""
-            className="pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--safe-t)+3.5rem)] w-full object-cover"
-          />
-          {/* A photo behind the bar still needs to lose evenly to it on
-              scroll, the way the plain header's own tint does — without
-              this, the image reappears at full strength through the blur's
-              transparency the instant it's dark enough on its own to pass
-              contrast unaided. */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[calc(var(--safe-t)+3.5rem)] w-full bg-gradient-to-b from-scrim/35 to-scrim/10" />
-        </>
-      )}
-      <AppHeader backTo={projectPath(creator.slug, project.slug)} onMedia={!!headerBg} />
+    <div className="min-h-full">
+      <AppHeader backTo={projectPath(creator.slug, project.slug)} />
 
-      <div className="mx-auto max-w-3xl px-5 pb-2 sm:px-6">
-        {/* The release's name, in the page rather than the bar: it can wrap
-            here instead of truncating at a phone's width. */}
-        <h1 className="text-3xl leading-tight text-parchment sm:text-4xl">{content.title}</h1>
-        <div className="mt-5">
-          <OfflineControl content={content} />
+      {/*
+        The page's own header, on the Project's art where it has some —
+        Bronze's back cover here. Full-bleed by the same construction the
+        feed and the project hub already use for their bands: the section
+        spans both edges, and a column inside it keeps the title on the same
+        margin as everything below.
+
+        Below the app bar rather than behind it. The bar belongs to the app
+        and looks the same on every screen; this belongs to the release, and
+        putting art behind the app's own chrome made a shared component
+        answer for one album's photograph.
+      */}
+      <section className="relative">
+        {headerBg && (
+          <>
+            <img src={headerBg} alt="" className="absolute inset-0 size-full object-cover" />
+            {/*
+              A scrim, even though this particular photo is nearly black
+              already. The title is `on-media` white and the art is a field
+              the app does not control — a creator swapping in a bright
+              cover tomorrow should not be what discovers that white text
+              was resting on the picture's luck. Weighted to the bottom,
+              where the title sits.
+            */}
+            <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 via-scrim/55 to-scrim/35" />
+          </>
+        )}
+        <div className="relative mx-auto max-w-3xl px-5 pb-6 pt-8 sm:px-6">
+          {/* The release's name, in the page rather than the bar: it can wrap
+              here instead of truncating at a phone's width. */}
+          <h1
+            className={`text-3xl leading-tight sm:text-4xl ${
+              headerBg ? 'text-on-media' : 'text-parchment'
+            }`}
+          >
+            {content.title}
+          </h1>
         </div>
+      </section>
+
+      <div className="mx-auto max-w-3xl px-5 pb-2 pt-6 sm:px-6">
+        <OfflineControl content={content} />
       </div>
 
       {/* Narrower than the grids above: a track row is title on the left and a
