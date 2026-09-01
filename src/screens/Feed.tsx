@@ -443,88 +443,89 @@ export function Feed() {
                       </span>
                     </span>
 
-                    {/* The cover, where the type icon used to sit. The icon
-                        was saying what the line above it already says in
-                        words — "Whitepaper", "Music" — so it cost a slot
-                        and added nothing. The art earns that slot. */}
-                    <img
-                      src={coverUrl(project, 200)}
-                      alt=""
-                      className="pointer-events-none size-14 shrink-0 object-cover"
-                    />
-
                     {/*
-                      The action rail: heart, comment, share, stacked
-                      after the cover rather than squeezed onto the meta
-                      line. Vertical instead of horizontal is what makes
-                      three controls affordable in this row at all — a
-                      row of icons competes for the same width as the
-                      title and the date; a column only competes for
-                      height, and this row already has 56px of it doing
-                      nothing beside a 19px title and a 17px meta line.
+                      Cover and controls as one column now, rather than
+                      the cover alone with a rail beside it: the icons
+                      moved from beside the art to underneath it, which is
+                      what let the cover keep the width it already had
+                      instead of costing the title a second column.
 
-                      No counts under any of them, unlike the usual shape
-                      for this rail. Every number here would be
-                      fabricated — there is no account system counting
-                      favourites or comments yet — and an invented "1.2k"
-                      is worse than no number at all.
+                      The row settles to whichever is taller — the cover
+                      stack or the title block — and at this width that is
+                      usually the title, which is most of the height this
+                      traded back versus stacking the icons vertically.
                     */}
-                    {/*
-                      `relative` is load-bearing, not decorative: the
-                      stretched nav button is `position: absolute`, and a
-                      positioned element paints above ordinary static
-                      content in the SAME stacking context regardless of
-                      DOM order — so a plain `pointer-events-auto` span
-                      here is not enough, the nav button still wins
-                      hit-testing and swallows every tap. Making this span
-                      positioned too lifts it into the same paint tier,
-                      where DOM order (it comes after the nav button)
-                      decides, and it wins.
-                    */}
-                    <span className="pointer-events-auto relative flex shrink-0 flex-col items-center justify-center gap-0.5">
-                      <button
-                        onClick={() => toggleFavourite(content.id)}
-                        aria-pressed={favourites.has(content.id)}
-                        aria-label={
-                          favourites.has(content.id)
-                            ? `Remove ${content.title} from favourites`
-                            : `Add ${content.title} to favourites`
-                        }
-                        className={`-mx-2 shrink-0 p-2 transition ${
-                          favourites.has(content.id)
-                            ? 'text-heart'
-                            : 'text-parchment/30 hover:text-parchment/55'
-                        }`}
-                      >
-                        <HeartIcon className="size-4" filled={favourites.has(content.id)} />
-                      </button>
+                    <span className="flex shrink-0 flex-col items-center gap-1">
+                      <img
+                        src={coverUrl(project, 200)}
+                        alt=""
+                        className="pointer-events-none size-14 shrink-0 object-cover"
+                      />
 
-                      {/* Comments are a placeholder — there is nowhere yet
-                          for one to go, since the app has no accounts to
-                          write them as. `aria-disabled` says so to
-                          assistive technology rather than leaving a
-                          control that visibly does nothing when
-                          pressed. */}
-                      <button
-                        aria-disabled="true"
-                        aria-label={`Comments on ${content.title} — coming soon`}
-                        onClick={(e) => e.preventDefault()}
-                        className="-mx-2 shrink-0 cursor-default p-2 text-parchment/30"
-                      >
-                        <CommentIcon className="size-4" />
-                      </button>
+                      {/*
+                        `relative` is load-bearing, not decorative: the
+                        stretched nav button is `position: absolute`, and
+                        a positioned element paints above ordinary static
+                        content in the SAME stacking context regardless
+                        of DOM order — so a plain `pointer-events-auto`
+                        span here is not enough, the nav button still
+                        wins hit-testing and swallows every tap. Making
+                        this span positioned too lifts it into the same
+                        paint tier, where DOM order (it comes after the
+                        nav button) decides, and it wins.
 
-                      <button
-                        onClick={() => shareContent(content, project)}
-                        aria-label={`Share ${content.title}`}
-                        className={`-mx-2 shrink-0 p-2 transition ${
-                          justCopiedId === content.id
-                            ? 'text-ember'
-                            : 'text-parchment/30 hover:text-parchment/55'
-                        }`}
-                      >
-                        <ShareIcon className="size-4" done={justCopiedId === content.id} />
-                      </button>
+                        No counts under any of these, unlike the usual
+                        shape for a control row like this. Every number
+                        here would be fabricated — there is no account
+                        system yet counting favourites or comments — and
+                        an invented "1.2k" is worse than no number at
+                        all.
+                      */}
+                      <span className="pointer-events-auto relative flex shrink-0 items-center gap-1">
+                        <button
+                          onClick={() => toggleFavourite(content.id)}
+                          aria-pressed={favourites.has(content.id)}
+                          aria-label={
+                            favourites.has(content.id)
+                              ? `Remove ${content.title} from favourites`
+                              : `Add ${content.title} to favourites`
+                          }
+                          className={`-m-1 shrink-0 p-1 transition ${
+                            favourites.has(content.id)
+                              ? 'text-heart'
+                              : 'text-parchment/30 hover:text-parchment/55'
+                          }`}
+                        >
+                          <HeartIcon className="size-3.5" filled={favourites.has(content.id)} />
+                        </button>
+
+                        {/* Comments are a placeholder — there is nowhere
+                            yet for one to go, since the app has no
+                            accounts to write them as. `aria-disabled`
+                            says so to assistive technology rather than
+                            leaving a control that visibly does nothing
+                            when pressed. */}
+                        <button
+                          aria-disabled="true"
+                          aria-label={`Comments on ${content.title} — coming soon`}
+                          onClick={(e) => e.preventDefault()}
+                          className="-m-1 shrink-0 cursor-default p-1 text-parchment/30"
+                        >
+                          <CommentIcon className="size-3.5" />
+                        </button>
+
+                        <button
+                          onClick={() => shareContent(content, project)}
+                          aria-label={`Share ${content.title}`}
+                          className={`-m-1 shrink-0 p-1 transition ${
+                            justCopiedId === content.id
+                              ? 'text-ember'
+                              : 'text-parchment/30 hover:text-parchment/55'
+                          }`}
+                        >
+                          <ShareIcon className="size-3.5" done={justCopiedId === content.id} />
+                        </button>
+                      </span>
                     </span>
                   </motion.div>
                 )
