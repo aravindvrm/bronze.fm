@@ -158,6 +158,22 @@
      dark. */
   --color-on-accent: #ffffff;
 
+  /* ── Favourited ─────────────────────────────────────────────────────
+     A heart, and the one colour in the app that is NOT the accent.
+
+     Deliberately: the accent marks what the app is and what you came to
+     do, so a favourite drawn in it would read as more chrome. This is
+     the reader's own mark on something, and it needs to be legible AS a
+     different kind of signal — which a bronze heart, sitting beside
+     bronze icons on a bronze-accented row, is not.
+
+     Rose rather than a pure red for that separation: at hue 341 it sits
+     51° off the accent's 32, where a #dc2626 would sit 32° away and read
+     as a warmer bronze at a glance. 4.58:1 on the light ground and
+     4.09:1 on the dark one, both past the 3:1 an icon owes its
+     backdrop, so it holds in either theme without a second token. */
+  --color-heart: #e0245e;
+
   /* ── On artwork ─────────────────────────────────────────────────────
      Cover art is a photograph, not a surface the theme controls, so what
      sits on it is judged against the IMAGE and not the page. These stay

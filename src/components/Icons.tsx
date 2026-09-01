@@ -309,3 +309,27 @@ export const SettingsIcon = ({ className = 'size-6' }: P) => (
     <path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9 5.3 5.3" />
   </svg>
 )
+
+/**
+ * A heart, in one shape with two fills.
+ *
+ * One path rather than an outline icon and a solid one, because two
+ * different silhouettes swapping on tap is a shape change where the design
+ * only asks for a colour change — the outline reads as slightly smaller
+ * than the fill at the same size, so the row twitches when it is pressed.
+ * `filled` moves paint into the interior and leaves the edge where it is.
+ */
+export const HeartIcon = ({ className = 'size-6', filled = false }: P & { filled?: boolean }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill={filled ? 'currentColor' : 'none'}
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden
+  >
+    <path d="M12 20.3 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 1 1 19.4 13Z" />
+  </svg>
+)

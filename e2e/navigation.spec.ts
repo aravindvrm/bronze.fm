@@ -43,7 +43,7 @@ test.describe('the feed', () => {
   test('lists published interfaces newest first, and opens straight into one', async ({ page }) => {
     await gotoFeed(page)
     const feed = page.locator('section').filter({ hasText: 'New Content' }).first()
-    const rows = feed.getByTestId('feed-rows').getByRole('button')
+    const rows = feed.getByTestId('feed-rows').getByTestId('feed-row')
 
     await expect(rows).toHaveCount(2)
     await expect(rows.nth(0)).toContainText('Autonomous: The Agentic Enterprise')
@@ -216,7 +216,7 @@ test.describe('app header', () => {
    */
   test('leaves searching to the search screen', async ({ page }) => {
     await gotoFeed(page)
-    const rows = page.getByTestId('feed-rows').getByRole('button')
+    const rows = page.getByTestId('feed-rows').getByTestId('feed-row')
     const before = await rows.count()
 
     const search = await openSearch(page)

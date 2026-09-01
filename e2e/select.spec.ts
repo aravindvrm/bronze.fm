@@ -16,7 +16,7 @@ test.describe('feed type filter', () => {
 
   test('filters the feed, and says how much of each there is', async ({ page }) => {
     await gotoFeed(page)
-    const rows = page.getByTestId('feed-rows').getByRole('button')
+    const rows = page.getByTestId('feed-rows').getByTestId('feed-row')
     const all = await rows.count()
     expect(all).toBeGreaterThan(1)
 

@@ -16,6 +16,8 @@ import { artUrl } from '@/lib/art'
 import { formatRelative } from '@/lib/format'
 import { AppHeader } from '@/components/AppHeader'
 import { Select, type SelectOption } from '@/components/Select'
+import { HeartIcon } from '@/components/Icons'
+import { useFavourites } from '@/lib/favourites'
 
 /** One published interface, carrying the Project it belongs to for its link. */
 interface FeedItem {
@@ -78,6 +80,14 @@ export function Feed() {
   }, [])
 
   const creatorBySlug = useMemo(() => new Map(creators.map((c) => [c.slug, c])), [creators])
+
+  /*
+   * Selected as two separate values, not as the whole store: subscribing to
+   * the object would re-render the feed on any change to it, and picking the
+   * Set alone leaves `toggle` reaching for a stale closure.
+   */
+  const favourites = useFavourites((s) => s.ids)
+  const toggleFavourite = useFavourites((s) => s.toggle)
 
   /*
    * Flattened to one entry per typed interface, not per Project: a Project
@@ -300,27 +310,45 @@ export function Feed() {
               {shownFeed.map(({ content, project }, i) => {
                 const creator = creatorBySlug.get(project.ownerSlug)
                 return (
-                  <motion.button
+                  <motion.div
                     key={content.id}
-                    onClick={() =>
-                      navigate(
-                        projectPath(
-                          project.ownerSlug,
-                          project.slug,
-                          CONTENT_TYPE_SEGMENT[content.type],
-                        ),
-                      )
-                    }
+                    data-testid="feed-row"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 * i, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    whileTap={{ scale: 0.99 }}
                     // Negative inline margin plus matching padding: the tint
                     // on hover reaches the page margin, so it reads as the
                     // row lighting up rather than a floating band inset from
                     // the text it belongs to.
-                    className="-mx-2 flex items-center gap-3 px-2 py-3 text-left transition hover:bg-parchment/[0.04]"
+                    className="group relative -mx-2 flex items-center gap-3 px-2 py-3 text-left transition hover:bg-parchment/[0.04]"
                   >
+                    {/*
+                      The row opens the content; the heart is its own
+                      control. Two actions in one row cannot both be the
+                      row, and a <button> inside a <button> is not valid
+                      HTML — browsers recover from it inconsistently and
+                      assistive technology is told there is one control
+                      where there are two.
+
+                      So the row is a plain container and the navigation is
+                      a button stretched behind everything in it. The
+                      content above it is inert (`pointer-events-none`), so
+                      a tap anywhere on the row reaches this; the heart
+                      opts back in and sits above it.
+                    */}
+                    <button
+                      onClick={() =>
+                        navigate(
+                          projectPath(
+                            project.ownerSlug,
+                            project.slug,
+                            CONTENT_TYPE_SEGMENT[content.type],
+                          ),
+                        )
+                      }
+                      aria-label={content.title}
+                      className="absolute inset-0"
+                    />
                     {/*
                       Who made it, on the left, as a face over a handle.
 
@@ -334,7 +362,7 @@ export function Feed() {
                       the column is what you get when every row is as wide as
                       its own creator's handle.
                     */}
-                    <span className="flex w-14 shrink-0 flex-col items-center gap-1">
+                    <span className="pointer-events-none flex w-14 shrink-0 flex-col items-center gap-1">
                       <img
                         src={
                           creator?.avatarUrl ?? artUrl(`${project.ownerSlug}-hero`, 'cover', 120)
@@ -350,7 +378,7 @@ export function Feed() {
                       </span>
                     </span>
 
-                    <span className="min-w-0 flex-1">
+                    <span className="pointer-events-none relative min-w-0 flex-1">
                       {/* Two lines before truncating. The creator moving out
                           of the meta line freed the room, and these titles
                           are long enough that one line ended mid-word on a
@@ -371,12 +399,38 @@ export function Feed() {
                         was saying what the line above it already says in
                         words — "Whitepaper", "Music" — so it cost a slot
                         and added nothing. The art earns that slot. */}
+                    {/*
+                      Between the text and the cover, so the cover keeps the
+                      right margin it was moved here for.
+
+                      `p-2` around a 20px glyph rather than a 20px target:
+                      the icon is what you see, the padding is what you hit,
+                      and a bare 20px control in a list is a miss waiting to
+                      happen on a phone.
+                    */}
+                    <button
+                      onClick={() => toggleFavourite(content.id)}
+                      aria-pressed={favourites.has(content.id)}
+                      aria-label={
+                        favourites.has(content.id)
+                          ? `Remove ${content.title} from favourites`
+                          : `Add ${content.title} to favourites`
+                      }
+                      className={`pointer-events-auto relative -m-2 shrink-0 p-2 transition ${
+                        favourites.has(content.id)
+                          ? 'text-heart'
+                          : 'text-parchment/25 hover:text-parchment/50'
+                      }`}
+                    >
+                      <HeartIcon className="size-5" filled={favourites.has(content.id)} />
+                    </button>
+
                     <img
                       src={coverUrl(project, 200)}
                       alt=""
-                      className="size-14 shrink-0 object-cover"
+                      className="pointer-events-none size-14 shrink-0 object-cover"
                     />
-                  </motion.button>
+                  </motion.div>
                 )
               })}
             </div>
