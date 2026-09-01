@@ -16,7 +16,7 @@ import { artUrl } from '@/lib/art'
 import { formatRelative } from '@/lib/format'
 import { AppHeader } from '@/components/AppHeader'
 import { Select, type SelectOption } from '@/components/Select'
-import { HeartIcon } from '@/components/Icons'
+import { CommentIcon, HeartIcon, ShareIcon } from '@/components/Icons'
 import { useFavourites } from '@/lib/favourites'
 
 /** One published interface, carrying the Project it belongs to for its link. */
@@ -88,6 +88,51 @@ export function Feed() {
    */
   const favourites = useFavourites((s) => s.ids)
   const toggleFavourite = useFavourites((s) => s.toggle)
+
+  /*
+   * Which row just had its link copied, so the share glyph can turn into a
+   * checkmark on the control itself. There is nowhere else in this app to
+   * put a "copied" toast, and a confirmation that lands on the thing you
+   * tapped needs no such place.
+   */
+  const [justCopiedId, setJustCopiedId] = useState<string | null>(null)
+
+  const shareContent = async (content: Content, project: Project) => {
+    const path = projectPath(project.ownerSlug, project.slug, CONTENT_TYPE_SEGMENT[content.type])
+    const url = new URL(path, window.location.origin).href
+    const byline = creatorBySlug.get(project.ownerSlug)?.name
+    const shareData: ShareData = {
+      title: content.title,
+      text: byline ? `${content.title} — ${byline} on bronze.fm` : content.title,
+      url,
+    }
+
+    // The Share Sheet where the platform offers one — it hands the choice
+    // of destination to the OS, which is the whole point on a phone. Absent
+    // (most desktop browsers) or refused (`canShare` false for this data),
+    // it falls back to the clipboard rather than doing nothing.
+    if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch (err) {
+        // A person closing the sheet is not a failure worth falling back
+        // from — it is the sheet doing its job.
+        if (err instanceof Error && err.name === 'AbortError') return
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url)
+    } catch {
+      return
+    }
+    setJustCopiedId(content.id)
+    window.setTimeout(
+      () => setJustCopiedId((current) => (current === content.id ? null : current)),
+      1600,
+    )
+  }
 
   /*
    * Flattened to one entry per typed interface, not per Project: a Project
@@ -386,52 +431,15 @@ export function Feed() {
                       <span className="line-clamp-2 block text-sm leading-snug text-parchment">
                         {content.title}
                       </span>
-                      {/* What it is and when — the creator is the column to
-                          the left now, and saying it twice in one row was
-                          the reason this line ran out of space. */}
-                      <span className="mt-1 flex items-center gap-2">
-                        <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-parchment/40">
-                          {CONTENT_TYPE_LABEL[content.type]}
-                          {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
-                        </span>
-
-                        {/*
-                          On the meta line rather than in a column of its
-                          own. As a column it took its width from the
-                          title, which is the one thing in the row that
-                          needs it — long titles wrapped to two lines and
-                          the rows came out uneven. Here it competes with
-                          "Music · 1 week ago", which has width to spare.
-
-                          Sized to the line it sits on: a 16px glyph
-                          against a 17px line box, so it reads as part of
-                          "Music · 1 week ago" rather than as something
-                          parked next to it.
-
-                          The padding grew as the icon shrank, on purpose.
-                          The icon is what you see and the padding is what
-                          you hit, and those are allowed to differ — this
-                          keeps the same 36px target a thumb was already
-                          getting while the mark itself gets quieter.
-                          `-my-2.5` keeps that padding from pushing the row
-                          taller than the text beside it.
-                        */}
-                        <button
-                          onClick={() => toggleFavourite(content.id)}
-                          aria-pressed={favourites.has(content.id)}
-                          aria-label={
-                            favourites.has(content.id)
-                              ? `Remove ${content.title} from favourites`
-                              : `Add ${content.title} to favourites`
-                          }
-                          className={`pointer-events-auto -my-2.5 shrink-0 p-2.5 transition ${
-                            favourites.has(content.id)
-                              ? 'text-heart'
-                              : 'text-parchment/25 hover:text-parchment/50'
-                          }`}
-                        >
-                          <HeartIcon className="size-4" filled={favourites.has(content.id)} />
-                        </button>
+                      {/* What it is and when — plain again. The three
+                          controls tried living here and cost the date its
+                          width: "Whitepaper · 4 days ago" was truncating
+                          to "4 d…" the moment a third icon joined the
+                          heart. A vertical rail keeps this line to what it
+                          says, not what competes with it. */}
+                      <span className="mt-1 block truncate font-mono text-[11px] text-parchment/40">
+                        {CONTENT_TYPE_LABEL[content.type]}
+                        {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
                       </span>
                     </span>
 
@@ -444,6 +452,80 @@ export function Feed() {
                       alt=""
                       className="pointer-events-none size-14 shrink-0 object-cover"
                     />
+
+                    {/*
+                      The action rail: heart, comment, share, stacked
+                      after the cover rather than squeezed onto the meta
+                      line. Vertical instead of horizontal is what makes
+                      three controls affordable in this row at all — a
+                      row of icons competes for the same width as the
+                      title and the date; a column only competes for
+                      height, and this row already has 56px of it doing
+                      nothing beside a 19px title and a 17px meta line.
+
+                      No counts under any of them, unlike the usual shape
+                      for this rail. Every number here would be
+                      fabricated — there is no account system counting
+                      favourites or comments yet — and an invented "1.2k"
+                      is worse than no number at all.
+                    */}
+                    {/*
+                      `relative` is load-bearing, not decorative: the
+                      stretched nav button is `position: absolute`, and a
+                      positioned element paints above ordinary static
+                      content in the SAME stacking context regardless of
+                      DOM order — so a plain `pointer-events-auto` span
+                      here is not enough, the nav button still wins
+                      hit-testing and swallows every tap. Making this span
+                      positioned too lifts it into the same paint tier,
+                      where DOM order (it comes after the nav button)
+                      decides, and it wins.
+                    */}
+                    <span className="pointer-events-auto relative flex shrink-0 flex-col items-center justify-center gap-0.5">
+                      <button
+                        onClick={() => toggleFavourite(content.id)}
+                        aria-pressed={favourites.has(content.id)}
+                        aria-label={
+                          favourites.has(content.id)
+                            ? `Remove ${content.title} from favourites`
+                            : `Add ${content.title} to favourites`
+                        }
+                        className={`-mx-2 shrink-0 p-2 transition ${
+                          favourites.has(content.id)
+                            ? 'text-heart'
+                            : 'text-parchment/30 hover:text-parchment/55'
+                        }`}
+                      >
+                        <HeartIcon className="size-4" filled={favourites.has(content.id)} />
+                      </button>
+
+                      {/* Comments are a placeholder — there is nowhere yet
+                          for one to go, since the app has no accounts to
+                          write them as. `aria-disabled` says so to
+                          assistive technology rather than leaving a
+                          control that visibly does nothing when
+                          pressed. */}
+                      <button
+                        aria-disabled="true"
+                        aria-label={`Comments on ${content.title} — coming soon`}
+                        onClick={(e) => e.preventDefault()}
+                        className="-mx-2 shrink-0 cursor-default p-2 text-parchment/30"
+                      >
+                        <CommentIcon className="size-4" />
+                      </button>
+
+                      <button
+                        onClick={() => shareContent(content, project)}
+                        aria-label={`Share ${content.title}`}
+                        className={`-mx-2 shrink-0 p-2 transition ${
+                          justCopiedId === content.id
+                            ? 'text-ember'
+                            : 'text-parchment/30 hover:text-parchment/55'
+                        }`}
+                      >
+                        <ShareIcon className="size-4" done={justCopiedId === content.id} />
+                      </button>
+                    </span>
                   </motion.div>
                 )
               })}

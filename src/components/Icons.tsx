@@ -333,3 +333,48 @@ export const HeartIcon = ({ className = 'size-6', filled = false }: P & { filled
     <path d="M12 20.3 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 1 1 19.4 13Z" />
   </svg>
 )
+
+export const CommentIcon = ({ className = 'size-6' }: P) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden
+  >
+    <path d="M4 5.5h16a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1H9.7l-4.2 3.5a.6.6 0 0 1-1-.46V17H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z" />
+  </svg>
+)
+
+/**
+ * Two states in one path, the same way `HeartIcon` swaps fill rather than
+ * shape: a share glyph that turns into a checkmark once the link is on the
+ * clipboard, so the confirmation lands on the control itself rather than in
+ * a toast this app has nowhere else to put.
+ */
+export const ShareIcon = ({ className = 'size-6', done = false }: P & { done?: boolean }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden
+  >
+    {done ? (
+      <path d="m5 12.5 4.2 4.5L19 6.5" />
+    ) : (
+      <>
+        <circle cx="18" cy="5.5" r="2.5" />
+        <circle cx="6" cy="12" r="2.5" />
+        <circle cx="18" cy="18.5" r="2.5" />
+        <path d="m8.2 10.7 7.6-4.4M8.2 13.3l7.6 4.4" />
+      </>
+    )}
+  </svg>
+)
