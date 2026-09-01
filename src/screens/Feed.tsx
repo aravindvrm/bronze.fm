@@ -389,9 +389,49 @@ export function Feed() {
                       {/* What it is and when — the creator is the column to
                           the left now, and saying it twice in one row was
                           the reason this line ran out of space. */}
-                      <span className="mt-1 block truncate font-mono text-[11px] text-parchment/40">
-                        {CONTENT_TYPE_LABEL[content.type]}
-                        {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
+                      <span className="mt-1 flex items-center gap-2">
+                        <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-parchment/40">
+                          {CONTENT_TYPE_LABEL[content.type]}
+                          {content.createdAt && <> · {formatRelative(content.createdAt)}</>}
+                        </span>
+
+                        {/*
+                          On the meta line rather than in a column of its
+                          own. As a column it took its width from the
+                          title, which is the one thing in the row that
+                          needs it — long titles wrapped to two lines and
+                          the rows came out uneven. Here it competes with
+                          "Music · 1 week ago", which has width to spare.
+
+                          Sized to the line it sits on: a 16px glyph
+                          against a 17px line box, so it reads as part of
+                          "Music · 1 week ago" rather than as something
+                          parked next to it.
+
+                          The padding grew as the icon shrank, on purpose.
+                          The icon is what you see and the padding is what
+                          you hit, and those are allowed to differ — this
+                          keeps the same 36px target a thumb was already
+                          getting while the mark itself gets quieter.
+                          `-my-2.5` keeps that padding from pushing the row
+                          taller than the text beside it.
+                        */}
+                        <button
+                          onClick={() => toggleFavourite(content.id)}
+                          aria-pressed={favourites.has(content.id)}
+                          aria-label={
+                            favourites.has(content.id)
+                              ? `Remove ${content.title} from favourites`
+                              : `Add ${content.title} to favourites`
+                          }
+                          className={`pointer-events-auto -my-2.5 shrink-0 p-2.5 transition ${
+                            favourites.has(content.id)
+                              ? 'text-heart'
+                              : 'text-parchment/25 hover:text-parchment/50'
+                          }`}
+                        >
+                          <HeartIcon className="size-4" filled={favourites.has(content.id)} />
+                        </button>
                       </span>
                     </span>
 
@@ -399,32 +439,6 @@ export function Feed() {
                         was saying what the line above it already says in
                         words — "Whitepaper", "Music" — so it cost a slot
                         and added nothing. The art earns that slot. */}
-                    {/*
-                      Between the text and the cover, so the cover keeps the
-                      right margin it was moved here for.
-
-                      `p-2` around a 20px glyph rather than a 20px target:
-                      the icon is what you see, the padding is what you hit,
-                      and a bare 20px control in a list is a miss waiting to
-                      happen on a phone.
-                    */}
-                    <button
-                      onClick={() => toggleFavourite(content.id)}
-                      aria-pressed={favourites.has(content.id)}
-                      aria-label={
-                        favourites.has(content.id)
-                          ? `Remove ${content.title} from favourites`
-                          : `Add ${content.title} to favourites`
-                      }
-                      className={`pointer-events-auto relative -m-2 shrink-0 p-2 transition ${
-                        favourites.has(content.id)
-                          ? 'text-heart'
-                          : 'text-parchment/25 hover:text-parchment/50'
-                      }`}
-                    >
-                      <HeartIcon className="size-5" filled={favourites.has(content.id)} />
-                    </button>
-
                     <img
                       src={coverUrl(project, 200)}
                       alt=""
