@@ -72,17 +72,10 @@ export function Music() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-3xl px-5 pb-2 pt-6 sm:px-6">
-        <OfflineControl content={content} />
-      </div>
-
       {/* Narrower than the grids above: a track row is title on the left and a
           duration on the right, so at full width the two ends drift apart with
           nothing between them. */}
-      <ul
-        className="mx-auto max-w-3xl px-3 sm:px-6"
-        style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
-      >
+      <ul className="mx-auto max-w-3xl px-3 pt-2 sm:px-6">
         {content.items.map((item, i) => {
           const active = isCurrent && i === index
           return (
@@ -149,6 +142,22 @@ export function Music() {
           )
         })}
       </ul>
+
+      {/*
+        Below the tracklist, not above it.
+        
+        Saving the record for offline is something you decide AFTER seeing
+        what it is — above the list it was the first thing on the page after
+        the title, asking for 55 MB before showing a single track. It also
+        held the whole page's bottom inset, which moved down here with it:
+        that padding belongs to whatever ends the page.
+      */}
+      <div
+        className="mx-auto max-w-3xl px-5 pt-8 sm:px-6"
+        style={{ paddingBottom: 'calc(var(--safe-b) + 8rem)' }}
+      >
+        <OfflineControl content={content} />
+      </div>
     </div>
   )
 }
