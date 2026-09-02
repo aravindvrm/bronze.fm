@@ -33,7 +33,12 @@ export function StubTiles({ kind }: { kind: StubKind }) {
   const wide = kind === 'video' || kind === 'event'
 
   if (items?.length === 0) {
-    return <p className="text-sm text-parchment/40">Coming soon</p>
+    // Mono, like the badges on the tiles this replaces and the drawer's
+    // own. Every "coming soon" in the app is set in the same face; this was
+    // the one left in the body font, and only because it is the hardest to
+    // catch — it renders for a creator with an empty shop, which no fixture
+    // produces.
+    return <p className="font-mono text-sm text-parchment/40">Coming soon</p>
   }
 
   return (
