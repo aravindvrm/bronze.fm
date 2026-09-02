@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { content as adapter } from '@/content/adapter'
 import { usePlayer } from '@/audio/playerStore'
 import { useCreator } from '@/content/CreatorContext'
-import { CONTENT_TYPE_LABEL, CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
+import { CONTENT_TYPE_SEGMENT, type Pin, type Project } from '@/content/types'
 import { creatorPath, isDedicatedHost, projectPath } from '@/lib/tenant'
 import { artUrl } from '@/lib/art'
 import { coverUrl } from '@/lib/cover'
@@ -365,11 +365,24 @@ export function CreatorProfile() {
                     <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 from-0% via-scrim/45 via-32% to-transparent to-60%" />
                     <div className="absolute inset-x-0 bottom-0 p-4">
                       <span className="block truncate text-xl text-on-media">{project.title}</span>
-                      <span className="mt-0.5 block font-mono text-[11px] text-on-media/70">
-                        {project.contents.length
-                          ? project.contents.map((c) => CONTENT_TYPE_LABEL[c.type]).join(' · ')
-                          : 'Coming soon'}
-                      </span>
+                      {/*
+                        No line of content types under the name. It read as a
+                        label for the Project — "Bronze · Music", "Atonomos ·
+                        Whitepaper" — when it was really an inventory of what
+                        happens to be inside one, and a Project is not its
+                        contents: Bronze gains a video and the tile silently
+                        starts describing something else.
+
+                        An empty Project still says so. That is a fact about
+                        the Project itself rather than a summary of its
+                        parts, and it is the only case where the tile has
+                        anything to add to its own name.
+                      */}
+                      {project.contents.length === 0 && (
+                        <span className="mt-0.5 block font-mono text-[11px] text-on-media/70">
+                          Coming soon
+                        </span>
+                      )}
                     </div>
                   </motion.button>
                 ))}

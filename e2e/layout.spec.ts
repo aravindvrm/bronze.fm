@@ -39,27 +39,20 @@ test.describe('project hub layout', () => {
     expect(bg).toBe(tokenBg)
   })
 
-  test('shows the cover as a thumbnail on the right of the title card', async ({ page }) => {
+  /*
+   * The cover thumbnail used to sit to the right of the title here, and is
+   * gone: the band behind the title carries the release's own back cover
+   * now, and the front cover on top of it was art laid over art.
+   *
+   * Kept as a test rather than deleted, inverted — the thumbnail's absence
+   * is the deliberate part, and a screen that quietly grows a second piece
+   * of artwork again should have to argue with something.
+   */
+  test('carries no cover thumbnail beside the title', async ({ page }) => {
     await gotoProject(page)
+    await expect(page.getByAltText(/Bronze cover/i)).toHaveCount(0)
 
-    // Scoped by the alt text rather than by `header`: the screen now has two,
-    // the sticky nav bar and this title card.
-    const thumb = page.getByAltText(/Bronze cover/i)
-    const card = page.locator('header').filter({ has: thumb })
-
-    await expect(thumb).toBeVisible()
-
-    // Real artwork, not a broken or empty image.
-    expect(await thumb.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0)
-
-    const box = (await thumb.boundingBox())!
-    expect(Math.round(box.width)).toBe(96)
-    expect(Math.round(box.height)).toBe(96)
-
-    // To the right of the title, and inside the card.
-    const title = (await card.getByRole('heading', { name: 'Bronze' }).boundingBox())!
-    const cardBox = (await card.boundingBox())!
-    expect(box.x).toBeGreaterThan(title.x + title.width - 1)
-    expect(box.x + box.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 1)
+    // The band itself is still there, wearing the art.
+    await expect(page.getByTestId('header-art')).toHaveAttribute('src', /bronze-back/)
   })
 })

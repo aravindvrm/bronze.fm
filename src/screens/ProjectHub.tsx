@@ -5,7 +5,7 @@ import { useProject } from '@/content/ProjectContext'
 import { CONTENT_TYPE_SEGMENT, type Content } from '@/content/types'
 import { countWords } from '@/content/blocks'
 import { creatorPath, projectPath } from '@/lib/tenant'
-import { coverUrl } from '@/lib/cover'
+import { coverUrl, headerBackgroundUrl } from '@/lib/cover'
 import { artUrl } from '@/lib/art'
 import { formatTotal } from '@/lib/format'
 import { AppHeader } from '@/components/AppHeader'
@@ -50,6 +50,7 @@ export function ProjectHub() {
   const navigate = useNavigate()
   const creator = useCreator()
   const project = useProject()
+  const headerBg = headerBackgroundUrl(project.slug)
 
   return (
     <div className="min-h-full">
@@ -58,22 +59,45 @@ export function ProjectHub() {
       <AppHeader backTo={creatorPath(creator.slug)} />
 
       {/*
-        The same full-bleed `ink` band the feed puts behind its creators row,
-        for the same reason and by the same construction: outside the content
-        column so the colour reaches both edges, with its own column within,
-        and flush to the header so no stripe of page shows between them.
+        A full-bleed band, by the same construction the feed uses for its
+        creators row: outside the content column so it reaches both edges,
+        with its own column within, and flush to the header so no stripe of
+        page shows between them.
 
-        The card's border goes with it. A band and a box around the same
-        content is framing twice — the band is already saying "this is a
-        thing apart", and the border was only there because nothing else was.
+        On the Project's own art where it has some — Bronze's back cover —
+        and on flat `ink` where it does not, which is every other Project
+        today. The band was the flat colour first; the art is the same idea
+        with something to say.
       */}
-      <section className="bg-ink">
-        <div className="mx-auto max-w-[var(--app-w)] px-5 pb-4 pt-3 sm:px-8 sm:pb-6 sm:pt-5">
+      <section className={`relative ${headerBg ? '' : 'bg-ink'}`}>
+        {headerBg && (
+          <>
+            <img
+              src={headerBg}
+              alt=""
+              data-testid="header-art"
+              className="absolute inset-0 size-full object-cover"
+            />
+            {/*
+              A heavy scrim, and measured rather than eyeballed. This art is
+              near-black across half its area but carries candle flames and a
+              city window that reach the top of the range — sampled, its
+              brightest thousandth sits at 0.58 relative luminance. `object-
+              cover` crops differently at every width, so there is no
+              knowing which part lands behind the text: the floor has to
+              hold anywhere, not on average. 70% is where white clears
+              4.5:1 against that worst case, so the gradient never goes
+              lighter than that, only heavier towards the foot.
+            */}
+            <div className="absolute inset-0 bg-gradient-to-t from-scrim/90 via-scrim/80 to-scrim/70" />
+          </>
+        )}
+        <div className="relative mx-auto max-w-[var(--app-w)] px-5 pb-4 pt-3 sm:px-8 sm:pb-6 sm:pt-5">
           <motion.header
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-4 sm:gap-8"
+            className="flex items-center"
           >
             <div className="min-w-0 flex-1">
               {/*
@@ -110,25 +134,40 @@ export function ProjectHub() {
                   alt=""
                   className="size-8 shrink-0 rounded-full object-cover ring-1 ring-ember/50"
                 />
-                <span className="text-xs uppercase tracking-[0.22em] text-ember/70 transition group-hover:text-ember">
+                {/*
+                  Ember everywhere else, white on the art. The accent is a
+                  mid-tone bronze: sampled against this photo's brightest
+                  areas it manages 1.9:1 and under, which is not a contrast
+                  so much as an absence. The ring above keeps the accent —
+                  it is a shape, not something anyone has to read.
+                */}
+                <span
+                  className={`text-xs uppercase tracking-[0.22em] transition ${
+                    headerBg
+                      ? 'text-on-media group-hover:text-on-media/80'
+                      : 'text-ember/70 group-hover:text-ember'
+                  }`}
+                >
                   {creator.name}
                 </span>
               </button>
-              <h1 className="mt-2.5 text-4xl leading-[1.08] tracking-tight text-parchment sm:text-6xl">
+              <h1
+                className={`mt-2.5 text-4xl leading-[1.08] tracking-tight sm:text-6xl ${
+                  headerBg ? 'text-on-media' : 'text-parchment'
+                }`}
+              >
                 {project.title}
               </h1>
               {project.description && (
-                <p className="mt-3 text-sm leading-relaxed text-parchment/50">
+                <p
+                  className={`mt-3 text-sm leading-relaxed ${
+                    headerBg ? 'text-on-media/85' : 'text-parchment/50'
+                  }`}
+                >
                   {project.description}
                 </p>
               )}
             </div>
-
-            <img
-              src={coverUrl(project, 400)}
-              alt={`${project.title} cover`}
-              className="size-24 shrink-0 self-center object-cover shadow-lg shadow-scrim/50 sm:size-44"
-            />
           </motion.header>
         </div>
       </section>

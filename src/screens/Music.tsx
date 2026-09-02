@@ -47,16 +47,31 @@ export function Music() {
       <section className="relative">
         {headerBg && (
           <>
-            <img src={headerBg} alt="" className="absolute inset-0 size-full object-cover" />
+            <img
+              src={headerBg}
+              alt=""
+              data-testid="header-art"
+              className="absolute inset-0 size-full object-cover"
+            />
             {/*
-              A scrim, even though this particular photo is nearly black
-              already. The title is `on-media` white and the art is a field
-              the app does not control — a creator swapping in a bright
-              cover tomorrow should not be what discovers that white text
-              was resting on the picture's luck. Weighted to the bottom,
-              where the title sits.
+              A heavy scrim, floored at 70%.
+
+              This was `to-scrim/35` first, picked by eye on the grounds
+              that the art "looks nearly black". At THIS crop that happened
+              to be fine — measured on the rendered page, white cleared
+              about 6:1 either way. The floor is not for this crop.
+              `object-cover` frames the image differently at every width,
+              and the parts it can bring into view are not uniformly dark:
+              sampled, the source carries candle flames and a lit city
+              window whose brightest thousandth reaches 0.58 relative
+              luminance. Against that, 35% leaves white at 2.5:1 and 70%
+              puts it at 4.7:1.
+
+              So the number guards the crop nobody has looked at yet, not
+              the one on screen. Matches the project hub's band, which
+              faces the same photo with smaller text on it.
             */}
-            <div className="absolute inset-0 bg-gradient-to-t from-scrim/85 via-scrim/55 to-scrim/35" />
+            <div className="absolute inset-0 bg-gradient-to-t from-scrim/90 via-scrim/80 to-scrim/70" />
           </>
         )}
         <div className="relative mx-auto max-w-3xl px-5 pb-6 pt-8 sm:px-6">
