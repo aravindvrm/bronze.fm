@@ -23,7 +23,7 @@ import {
  * Fixed order, so the row does not reshuffle as platforms are connected.
  *
  * A platform with no URL in `creator.socials` renders dimmed rather than
- * being dropped — the same "not yet" register as the SOON tags on the tiles
+ * being dropped — the same "not yet" register as the COMING SOON tags on the tiles
  * below. Hiding it would read as an oversight; linking a guessed handle would
  * point at someone else's account.
  */
@@ -385,13 +385,13 @@ export function CreatorProfile() {
             standalone /@deanMaye/store and /@deanMaye/events routes. */}
         {tab === 'store' && (
           <section className="mt-6" data-testid="panel-store">
-            <StubTiles kind="store" emptyLabel={`${creator.name} has nothing here yet.`} />
+            <StubTiles kind="store" />
           </section>
         )}
 
         {tab === 'events' && (
           <section className="mt-6" data-testid="panel-events">
-            <StubTiles kind="event" emptyLabel={`${creator.name} has nothing here yet.`} />
+            <StubTiles kind="event" />
           </section>
         )}
       </div>

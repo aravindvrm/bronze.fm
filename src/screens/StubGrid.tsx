@@ -28,7 +28,7 @@ export function StubGrid({ kind, title, blurb }: { kind: StubKind; title: string
       >
         <h1 className="font-display text-3xl leading-tight text-parchment sm:text-4xl">{title}</h1>
         <p className="mb-6 mt-3 text-xs leading-relaxed text-parchment/40">{blurb}</p>
-        <StubTiles kind={kind} emptyLabel={`${creator.name} has nothing here yet.`} />
+        <StubTiles kind={kind} />
       </div>
     </div>
   )

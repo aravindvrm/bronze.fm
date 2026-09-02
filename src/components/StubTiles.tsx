@@ -9,14 +9,14 @@ import { artUrl } from '@/lib/art'
  *
  * Shared rather than duplicated: these tiles render both as a tab on the
  * creator profile and as the whole of the standalone `/@deanMaye/store` route,
- * and the two must not drift — a card that says SOON in one place and not
+ * and the two must not drift — a card that says COMING SOON in one place and not
  * the other is worse than either.
  *
  * Fetching lives here too, so a caller only names the kind. On the profile
  * that means the request is made when the tab is first opened rather than on
  * page load, which is the point of putting it behind a tab.
  */
-export function StubTiles({ kind, emptyLabel }: { kind: StubKind; emptyLabel: string }) {
+export function StubTiles({ kind }: { kind: StubKind }) {
   const [items, setItems] = useState<StubItem[] | null>(null)
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function StubTiles({ kind, emptyLabel }: { kind: StubKind; emptyLabel: st
   const wide = kind === 'video' || kind === 'event'
 
   if (items?.length === 0) {
-    return <p className="text-sm text-parchment/40">{emptyLabel}</p>
+    return <p className="text-sm text-parchment/40">Coming soon</p>
   }
 
   return (
@@ -59,8 +59,8 @@ export function StubTiles({ kind, emptyLabel }: { kind: StubKind; emptyLabel: st
 
           {/* Corner badge, not inline — on two-column cards an inline badge
               ate enough width to truncate "Bronze Tee" to "Bronz…". */}
-          <span className="absolute right-3 top-3 border border-ember/25 bg-scrim/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-ember/70 backdrop-blur-sm">
-            Soon
+          <span className="absolute right-3 top-3 whitespace-nowrap border border-ember/25 bg-scrim/40 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-ember/70 backdrop-blur-sm">
+            Coming soon
           </span>
 
           <div className="absolute inset-x-0 bottom-0 p-4">

@@ -24,7 +24,7 @@ import {
  *
  * Account and Settings are listed but disabled rather than hidden: the
  * platform is going to have both, and showing them greyed says "not yet"
- * where omitting them would say "never" — the same register the SOON badges
+ * where omitting them would say "never" — the same register the COMING SOON badges
  * on the Store and Events tiles already use. They are rendered as `<span>`,
  * not disabled `<button>`, so the tab order skips them entirely instead of
  * offering focus to something that cannot be actioned.
@@ -434,8 +434,8 @@ export function AppHeader({
                     >
                       <Icon className="size-5" />
                       {label}
-                      <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.15em] text-on-accent/65">
-                        Soon
+                      <span className="ml-auto whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.15em] text-on-accent/65">
+                        Coming soon
                       </span>
                     </span>
                   ),
